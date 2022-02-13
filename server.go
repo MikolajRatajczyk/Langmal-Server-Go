@@ -14,17 +14,32 @@ func main() {
 
 	apiRoutes := server.Group("/api")
 	{
-		//	TODO: add id
 		//	TODO: create model, controller... and architecure
 		//	TODO: https
-		apiRoutes.GET("/question", func(c *gin.Context) {
-			c.JSON(200, gin.H{
-				"title":   "Some question from the server",
-				"options": []string{"Answer A", "Answer B", "Answer C"},
-				"answer":  "Answer B",
-			})
+		apiRoutes.GET("/questions", func(c *gin.Context) {
+			c.JSON(200, createQuestions())
 		})
 	}
 
 	server.Run(":5001")
+}
+
+//	TODO: remove
+func createQuestions() []gin.H {
+	question1 := gin.H{
+		"title":   "First question from the server",
+		"options": []string{"Answer A", "Answer B", "Answer C"},
+		"answer":  "Answer A",
+	}
+	question2 := gin.H{
+		"title":   "Second question from the server",
+		"options": []string{"Answer A", "Answer B", "Answer C"},
+		"answer":  "Answer B",
+	}
+	question3 := gin.H{
+		"title":   "Third question from the server",
+		"options": []string{"Answer A", "Answer B", "Answer C"},
+		"answer":  "Answer C",
+	}
+	return []gin.H{question1, question2, question3}
 }
