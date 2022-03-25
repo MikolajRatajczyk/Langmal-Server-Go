@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/MikolajRatajczyk/Langmal-Server/controller"
+	"github.com/MikolajRatajczyk/Langmal-Server/middlewares"
 	"github.com/MikolajRatajczyk/Langmal-Server/repository"
 	"github.com/MikolajRatajczyk/Langmal-Server/service"
 	"github.com/gin-gonic/gin"
@@ -21,7 +22,7 @@ func main() {
 		gindump.Dump(),
 	)
 
-	apiRoutes := server.Group("/api")
+	apiRoutes := server.Group("/api", middlewares.AuthorizeJWT())
 	{
 		//	TODO: https
 		apiRoutes.GET("/questions", func(c *gin.Context) {
