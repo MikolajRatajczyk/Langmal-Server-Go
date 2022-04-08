@@ -53,7 +53,7 @@ func (js *jwtService) GenerateToken(username string) string {
 }
 
 func (js *jwtService) ValidateToken(tokenString string) (*jwt.Token, error) {
-	return jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+	return jwt.Parse(tokenString, func(token *jwt.Token) (any, error) {
 		//	signing method validation
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); ok == false {
 			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
