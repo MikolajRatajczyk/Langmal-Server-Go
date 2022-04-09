@@ -1,5 +1,6 @@
 package service
 
+//	TODO: update (sign-up-->sign-in-->JWT flow)
 type LoginServiceInterface interface {
 	Login(username string, password string) bool
 }

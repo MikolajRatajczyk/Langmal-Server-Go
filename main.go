@@ -19,6 +19,10 @@ var (
 	loginService    service.LoginServiceInterface       = service.NewLoginService()
 	jwtService      service.JWTServiceInterface         = service.NewJWTService()
 	loginController controller.LoginControllerInterface = controller.NewLoginController(loginService, jwtService)
+
+	credentialsRepository repository.CredentialsRepositoryInterface = repository.NewCredentialsRepository()
+	signUpService         service.SignUpServiceInterface            = service.NewSignUpService(credentialsRepository)
+	signUpController      controller.SignUpControllerInterface      = controller.NewSignUpController(signUpService)
 )
 
 func main() {
@@ -29,6 +33,7 @@ func main() {
 	)
 
 	//	Login endpoint: authentication + token creation
+	//	TODO: update (sign-up-->sign-in-->JWT flow)
 	server.POST("/login", func(ctx *gin.Context) {
 		token := loginController.Login(ctx)
 		if token != "" {
@@ -37,6 +42,19 @@ func main() {
 			})
 		} else {
 			ctx.JSON(http.StatusUnauthorized, nil)
+		}
+	})
+
+	server.POST("/sign-up", func(ctx *gin.Context) {
+		success := signUpController.SignUp(ctx)
+		if success {
+			ctx.JSON(http.StatusOK, gin.H{
+				"message": "User has been created.",
+			})
+		} else {
+			ctx.JSON(http.StatusConflict, gin.H{
+				"message": "Failed to create a user.",
+			})
 		}
 	})
 
