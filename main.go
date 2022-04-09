@@ -16,9 +16,14 @@ var (
 	questionService    service.QuestionService       = service.NewQuestionService(questionRepository)
 	questionController controller.QuestionController = controller.NewQuestionController(questionService)
 
-	loginService    service.LoginServiceInterface       = service.NewLoginService()
-	jwtService      service.JWTServiceInterface         = service.NewJWTService()
-	loginController controller.LoginControllerInterface = controller.NewLoginController(loginService, jwtService)
+	cryptoService         service.CryptoServiceInterface            = service.NewCryptoService()
+	credentialsRepository repository.CredentialsRepositoryInterface = repository.NewCredentialsRepository()
+	jwtService            service.JWTServiceInterface               = service.NewJWTService()
+	signInService         service.SignInServiceInterface            = service.NewSingInService(credentialsRepository, cryptoService, jwtService)
+	signInController      controller.SignInControllerInterface      = controller.NewSignInController(signInService)
+
+	signUpService    service.SignUpServiceInterface       = service.NewSignUpService(credentialsRepository, cryptoService)
+	signUpController controller.SignUpControllerInterface = controller.NewSignUpController(signUpService)
 )
 
 func main() {
@@ -28,15 +33,30 @@ func main() {
 		gindump.Dump(),
 	)
 
-	//	Login endpoint: authentication + token creation
-	server.POST("/login", func(ctx *gin.Context) {
-		token := loginController.Login(ctx)
+	//	Sign-in endpoint: authentication + token creation
+	server.POST("/sign-in", func(ctx *gin.Context) {
+		token := signInController.SignIn(ctx)
 		if token != "" {
 			ctx.JSON(http.StatusOK, gin.H{
 				"token": token,
 			})
 		} else {
-			ctx.JSON(http.StatusUnauthorized, nil)
+			ctx.JSON(http.StatusUnauthorized, gin.H{
+				"message": "User not authenticated.",
+			})
+		}
+	})
+
+	server.POST("/sign-up", func(ctx *gin.Context) {
+		success := signUpController.SignUp(ctx)
+		if success {
+			ctx.JSON(http.StatusOK, gin.H{
+				"message": "User has been created.",
+			})
+		} else {
+			ctx.JSON(http.StatusConflict, gin.H{
+				"message": "Failed to create a user.",
+			})
 		}
 	})
 
