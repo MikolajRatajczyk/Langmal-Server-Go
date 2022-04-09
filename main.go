@@ -21,7 +21,8 @@ var (
 	loginController controller.LoginControllerInterface = controller.NewLoginController(loginService, jwtService)
 
 	credentialsRepository repository.CredentialsRepositoryInterface = repository.NewCredentialsRepository()
-	signUpService         service.SignUpServiceInterface            = service.NewSignUpService(credentialsRepository)
+	cryptoService         service.CryptoServiceInterface            = service.NewCryptoService()
+	signUpService         service.SignUpServiceInterface            = service.NewSignUpService(credentialsRepository, cryptoService)
 	signUpController      controller.SignUpControllerInterface      = controller.NewSignUpController(signUpService)
 )
 

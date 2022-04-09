@@ -9,17 +9,31 @@ type SignUpServiceInterface interface {
 	SignUp(credentials entity.Credentials) bool
 }
 
-func NewSignUpService(credentialsRepository repository.CredentialsRepositoryInterface) SignUpServiceInterface {
+func NewSignUpService(credentialsRepository repository.CredentialsRepositoryInterface,
+	cryptoService CryptoServiceInterface) SignUpServiceInterface {
 	return &signUpService{
 		credentialsRepository: credentialsRepository,
+		cryptoService:         cryptoService,
 	}
 }
 
 type signUpService struct {
 	credentialsRepository repository.CredentialsRepositoryInterface
+	cryptoService         CryptoServiceInterface
 }
 
 func (sus *signUpService) SignUp(credentials entity.Credentials) bool {
-	success := sus.credentialsRepository.Create(credentials)
+	password := credentials.Password
+	hashedPassword, err := sus.cryptoService.Hash(password)
+	if err != nil {
+		return false
+	}
+
+	hashedCredentials := entity.HashedCredentials{
+		Username:     credentials.Username,
+		PasswordHash: hashedPassword,
+	}
+
+	success := sus.credentialsRepository.Create(hashedCredentials)
 	return success
 }

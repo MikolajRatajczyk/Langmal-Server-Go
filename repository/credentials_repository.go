@@ -9,7 +9,7 @@ import (
 )
 
 type CredentialsRepositoryInterface interface {
-	Create(credentials entity.Credentials) bool
+	Create(credentials entity.HashedCredentials) bool
 	CloseDB()
 }
 
@@ -23,7 +23,7 @@ type credentialsRepository struct {
 	db *gorm.DB
 }
 
-func (cr *credentialsRepository) Create(credentials entity.Credentials) bool {
+func (cr *credentialsRepository) Create(credentials entity.HashedCredentials) bool {
 	if err := cr.db.Create(credentials).Error; err != nil {
 		log.Println("Failed to create a new user in DB!")
 		return false
@@ -45,6 +45,6 @@ func getDb() *gorm.DB {
 	if err != nil {
 		panic("Failed to connect to the database")
 	}
-	db.AutoMigrate(entity.Credentials{})
+	db.AutoMigrate(entity.HashedCredentials{})
 	return db
 }
