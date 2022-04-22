@@ -7,6 +7,7 @@ import (
 	"github.com/MikolajRatajczyk/Langmal-Server/middlewares"
 	"github.com/MikolajRatajczyk/Langmal-Server/repository"
 	"github.com/MikolajRatajczyk/Langmal-Server/service"
+	"github.com/MikolajRatajczyk/Langmal-Server/utils"
 	"github.com/gin-gonic/gin"
 	gindump "github.com/tpkeeper/gin-dump"
 )
@@ -16,13 +17,13 @@ var (
 	questionService    service.QuestionService       = service.NewQuestionService(questionRepository)
 	questionController controller.QuestionController = controller.NewQuestionController(questionService)
 
-	cryptoService         service.CryptoServiceInterface            = service.NewCryptoService()
+	cryptoUtil            utils.CryptoUtilInterface                 = utils.NewCryptoUtil()
 	credentialsRepository repository.CredentialsRepositoryInterface = repository.NewCredentialsRepository()
 	jwtService            service.JWTServiceInterface               = service.NewJWTService()
-	signInService         service.SignInServiceInterface            = service.NewSingInService(credentialsRepository, cryptoService, jwtService)
+	signInService         service.SignInServiceInterface            = service.NewSingInService(credentialsRepository, cryptoUtil, jwtService)
 	signInController      controller.SignInControllerInterface      = controller.NewSignInController(signInService)
 
-	signUpService    service.SignUpServiceInterface       = service.NewSignUpService(credentialsRepository, cryptoService)
+	signUpService    service.SignUpServiceInterface       = service.NewSignUpService(credentialsRepository, cryptoUtil)
 	signUpController controller.SignUpControllerInterface = controller.NewSignUpController(signUpService)
 )
 

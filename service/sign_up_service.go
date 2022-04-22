@@ -3,6 +3,7 @@ package service
 import (
 	"github.com/MikolajRatajczyk/Langmal-Server/entity"
 	"github.com/MikolajRatajczyk/Langmal-Server/repository"
+	"github.com/MikolajRatajczyk/Langmal-Server/utils"
 )
 
 type SignUpServiceInterface interface {
@@ -10,21 +11,21 @@ type SignUpServiceInterface interface {
 }
 
 func NewSignUpService(credentialsRepository repository.CredentialsRepositoryInterface,
-	cryptoService CryptoServiceInterface) SignUpServiceInterface {
+	cryptoUtil utils.CryptoUtilInterface) SignUpServiceInterface {
 	return &signUpService{
 		credentialsRepository: credentialsRepository,
-		cryptoService:         cryptoService,
+		cryptoUtil:            cryptoUtil,
 	}
 }
 
 type signUpService struct {
 	credentialsRepository repository.CredentialsRepositoryInterface
-	cryptoService         CryptoServiceInterface
+	cryptoUtil            utils.CryptoUtilInterface
 }
 
 func (sus *signUpService) SignUp(credentials entity.Credentials) bool {
 	password := credentials.Password
-	hashedPassword, err := sus.cryptoService.Hash(password)
+	hashedPassword, err := sus.cryptoUtil.Hash(password)
 	if err != nil {
 		return false
 	}
