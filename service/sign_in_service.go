@@ -13,12 +13,11 @@ type SignInServiceInterface interface {
 	SignIn(credentials entity.Credentials) (string, error)
 }
 
-func NewSingInService(credentialsRepository repository.CredentialsRepositoryInterface,
-	jwtUtil utils.JWTUtilInterface) SignInServiceInterface {
+func NewSingInService(credentialsRepository repository.CredentialsRepositoryInterface) SignInServiceInterface {
 	return &signInService{
 		credentialsRepository: credentialsRepository,
 		cryptoUtil:            utils.NewCryptoUtil(),
-		jwtUtil:               jwtUtil,
+		jwtUtil:               utils.NewJWTUtil(),
 	}
 }
 
