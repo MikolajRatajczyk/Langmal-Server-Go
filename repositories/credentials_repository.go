@@ -1,16 +1,16 @@
-package repository
+package repositories
 
 import (
 	"log"
 
-	"github.com/MikolajRatajczyk/Langmal-Server/entity"
+	"github.com/MikolajRatajczyk/Langmal-Server/entities"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
 type CredentialsRepositoryInterface interface {
-	Create(credentials entity.HashedCredentials) bool
-	Find(username string) entity.HashedCredentials
+	Create(credentials entities.HashedCredentials) bool
+	Find(username string) entities.HashedCredentials
 	CloseDB()
 }
 
@@ -24,7 +24,7 @@ type credentialsRepository struct {
 	db *gorm.DB
 }
 
-func (cr *credentialsRepository) Create(credentials entity.HashedCredentials) bool {
+func (cr *credentialsRepository) Create(credentials entities.HashedCredentials) bool {
 	if err := cr.db.Create(credentials).Error; err != nil {
 		log.Println("Failed to create a new user in DB!")
 		return false
@@ -33,8 +33,8 @@ func (cr *credentialsRepository) Create(credentials entity.HashedCredentials) bo
 	}
 }
 
-func (cr *credentialsRepository) Find(username string) entity.HashedCredentials {
-	var hashedCredentials entity.HashedCredentials
+func (cr *credentialsRepository) Find(username string) entities.HashedCredentials {
+	var hashedCredentials entities.HashedCredentials
 	cr.db.Where("username = ?", username).First(&hashedCredentials)
 	return hashedCredentials
 }
@@ -52,6 +52,6 @@ func getDb() *gorm.DB {
 	if err != nil {
 		panic("Failed to connect to the database")
 	}
-	db.AutoMigrate(entity.HashedCredentials{})
+	db.AutoMigrate(entities.HashedCredentials{})
 	return db
 }

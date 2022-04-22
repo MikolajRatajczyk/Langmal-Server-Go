@@ -3,27 +3,25 @@ package main
 import (
 	"net/http"
 
-	"github.com/MikolajRatajczyk/Langmal-Server/controller"
+	"github.com/MikolajRatajczyk/Langmal-Server/controllers"
 	"github.com/MikolajRatajczyk/Langmal-Server/middlewares"
-	"github.com/MikolajRatajczyk/Langmal-Server/repository"
-	"github.com/MikolajRatajczyk/Langmal-Server/service"
+	"github.com/MikolajRatajczyk/Langmal-Server/repositories"
+	"github.com/MikolajRatajczyk/Langmal-Server/services"
 	"github.com/gin-gonic/gin"
 	gindump "github.com/tpkeeper/gin-dump"
 )
 
 var (
-	questionRepository repository.QuestionRepository = repository.NewQuestionRepository()
-	questionService    service.QuestionService       = service.NewQuestionService(questionRepository)
-	questionController controller.QuestionController = controller.NewQuestionController(questionService)
+	questionRepository repositories.QuestionRepository = repositories.NewQuestionRepository()
+	questionService    services.QuestionService        = services.NewQuestionService(questionRepository)
+	questionController controllers.QuestionController  = controllers.NewQuestionController(questionService)
 
-	cryptoService         service.CryptoServiceInterface            = service.NewCryptoService()
-	credentialsRepository repository.CredentialsRepositoryInterface = repository.NewCredentialsRepository()
-	jwtService            service.JWTServiceInterface               = service.NewJWTService()
-	signInService         service.SignInServiceInterface            = service.NewSingInService(credentialsRepository, cryptoService, jwtService)
-	signInController      controller.SignInControllerInterface      = controller.NewSignInController(signInService)
+	credentialsRepository repositories.CredentialsRepositoryInterface = repositories.NewCredentialsRepository()
+	signInService         services.SignInServiceInterface             = services.NewSingInService(credentialsRepository)
+	signInController      controllers.SignInControllerInterface       = controllers.NewSignInController(signInService)
 
-	signUpService    service.SignUpServiceInterface       = service.NewSignUpService(credentialsRepository, cryptoService)
-	signUpController controller.SignUpControllerInterface = controller.NewSignUpController(signUpService)
+	signUpService    services.SignUpServiceInterface       = services.NewSignUpService(credentialsRepository)
+	signUpController controllers.SignUpControllerInterface = controllers.NewSignUpController(signUpService)
 )
 
 func main() {
