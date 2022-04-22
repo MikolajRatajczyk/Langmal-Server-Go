@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"log"
+	"net/http"
 
 	"github.com/MikolajRatajczyk/Langmal-Server/entities"
 	"github.com/MikolajRatajczyk/Langmal-Server/services"
@@ -9,7 +9,7 @@ import (
 )
 
 type SignInControllerInterface interface {
-	SignIn(ctx *gin.Context) string
+	SignIn(ctx *gin.Context)
 }
 
 func NewSignInController(signInService services.SignInServiceInterface) SignInControllerInterface {
@@ -22,19 +22,25 @@ type signInController struct {
 	signInService services.SignInServiceInterface
 }
 
-func (sic *signInController) SignIn(ctx *gin.Context) string {
+func (sic *signInController) SignIn(ctx *gin.Context) {
 	var credentials entities.Credentials
 	err := ctx.ShouldBind(&credentials)
 	if err != nil {
-		log.Println("Wrong credentials structure")
-		return ""
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "Wrong credentials structure.",
+		})
+		return
 	}
 
 	token, err := sic.signInService.SignIn(credentials)
 	if err != nil {
-		log.Println("User not authenticated")
-		return ""
-	} else {
-		return token
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+		return
 	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"token": token,
+	})
 }
