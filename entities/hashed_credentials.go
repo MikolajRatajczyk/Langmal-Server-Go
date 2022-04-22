@@ -1,4 +1,4 @@
-package entity
+package entities
 
 type HashedCredentials struct {
 	Username     string `gorm:"primaryKey"`

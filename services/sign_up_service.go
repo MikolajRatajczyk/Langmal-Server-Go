@@ -1,16 +1,16 @@
-package service
+package services
 
 import (
-	"github.com/MikolajRatajczyk/Langmal-Server/entity"
-	"github.com/MikolajRatajczyk/Langmal-Server/repository"
+	"github.com/MikolajRatajczyk/Langmal-Server/entities"
+	"github.com/MikolajRatajczyk/Langmal-Server/repositories"
 	"github.com/MikolajRatajczyk/Langmal-Server/utils"
 )
 
 type SignUpServiceInterface interface {
-	SignUp(credentials entity.Credentials) bool
+	SignUp(credentials entities.Credentials) bool
 }
 
-func NewSignUpService(credentialsRepository repository.CredentialsRepositoryInterface) SignUpServiceInterface {
+func NewSignUpService(credentialsRepository repositories.CredentialsRepositoryInterface) SignUpServiceInterface {
 	return &signUpService{
 		credentialsRepository: credentialsRepository,
 		cryptoUtil:            utils.NewCryptoUtil(),
@@ -18,18 +18,18 @@ func NewSignUpService(credentialsRepository repository.CredentialsRepositoryInte
 }
 
 type signUpService struct {
-	credentialsRepository repository.CredentialsRepositoryInterface
+	credentialsRepository repositories.CredentialsRepositoryInterface
 	cryptoUtil            utils.CryptoUtilInterface
 }
 
-func (sus *signUpService) SignUp(credentials entity.Credentials) bool {
+func (sus *signUpService) SignUp(credentials entities.Credentials) bool {
 	password := credentials.Password
 	hashedPassword, err := sus.cryptoUtil.Hash(password)
 	if err != nil {
 		return false
 	}
 
-	hashedCredentials := entity.HashedCredentials{
+	hashedCredentials := entities.HashedCredentials{
 		Username:     credentials.Username,
 		PasswordHash: hashedPassword,
 	}

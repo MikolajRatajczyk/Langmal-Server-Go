@@ -1,19 +1,19 @@
-package service
+package services
 
 import (
 	"errors"
 	"log"
 
-	"github.com/MikolajRatajczyk/Langmal-Server/entity"
-	"github.com/MikolajRatajczyk/Langmal-Server/repository"
+	"github.com/MikolajRatajczyk/Langmal-Server/entities"
+	"github.com/MikolajRatajczyk/Langmal-Server/repositories"
 	"github.com/MikolajRatajczyk/Langmal-Server/utils"
 )
 
 type SignInServiceInterface interface {
-	SignIn(credentials entity.Credentials) (string, error)
+	SignIn(credentials entities.Credentials) (string, error)
 }
 
-func NewSingInService(credentialsRepository repository.CredentialsRepositoryInterface) SignInServiceInterface {
+func NewSingInService(credentialsRepository repositories.CredentialsRepositoryInterface) SignInServiceInterface {
 	return &signInService{
 		credentialsRepository: credentialsRepository,
 		cryptoUtil:            utils.NewCryptoUtil(),
@@ -22,12 +22,12 @@ func NewSingInService(credentialsRepository repository.CredentialsRepositoryInte
 }
 
 type signInService struct {
-	credentialsRepository repository.CredentialsRepositoryInterface
+	credentialsRepository repositories.CredentialsRepositoryInterface
 	cryptoUtil            utils.CryptoUtilInterface
 	jwtUtil               utils.JWTUtilInterface
 }
 
-func (sis *signInService) SignIn(credentials entity.Credentials) (string, error) {
+func (sis *signInService) SignIn(credentials entities.Credentials) (string, error) {
 	username := credentials.Username
 	hashedCredentials := sis.credentialsRepository.Find(username)
 	isAuthenticated := sis.cryptoUtil.Compare(credentials.Password, hashedCredentials.PasswordHash)
