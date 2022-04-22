@@ -22,6 +22,7 @@ var (
 	signUpController controllers.SignUpControllerInterface = controllers.NewSignUpController(signUpService)
 )
 
+//	TODO: HTTPS
 func main() {
 	server := gin.New()
 	server.Use(gin.Recovery(),
@@ -31,13 +32,9 @@ func main() {
 
 	server.POST("/sign-up", signUpController.SignUp)
 	server.POST("/sign-in", signInController.SignIn)
-
 	apiRoutes := server.Group("/api", middlewares.AuthorizeJWT())
 	{
-		//	TODO: https
-		apiRoutes.GET("/questions", func(c *gin.Context) {
-			c.JSON(200, questionController.FindAll())
-		})
+		apiRoutes.GET("/questions", questionController.Questions)
 	}
 
 	server.Run(":5001")

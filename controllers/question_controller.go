@@ -1,12 +1,14 @@
 package controllers
 
 import (
-	"github.com/MikolajRatajczyk/Langmal-Server/entities"
+	"net/http"
+
 	"github.com/MikolajRatajczyk/Langmal-Server/services"
+	"github.com/gin-gonic/gin"
 )
 
 type QuestionController interface {
-	FindAll() []entities.Question
+	Questions(ctx *gin.Context)
 }
 
 func NewQuestionController(service services.QuestionService) QuestionController {
@@ -19,6 +21,6 @@ type questionControllerImpl struct {
 	service services.QuestionService
 }
 
-func (qc *questionControllerImpl) FindAll() []entities.Question {
-	return qc.service.FindAll()
+func (qc *questionControllerImpl) Questions(ctx *gin.Context) {
+	ctx.JSON(http.StatusOK, qc.service.FindAll())
 }
