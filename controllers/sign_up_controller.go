@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"log"
+	"net/http"
 
 	"github.com/MikolajRatajczyk/Langmal-Server/entities"
 	"github.com/MikolajRatajczyk/Langmal-Server/services"
@@ -9,7 +9,7 @@ import (
 )
 
 type SignUpControllerInterface interface {
-	SignUp(ctx *gin.Context) bool
+	SignUp(ctx *gin.Context)
 }
 
 func NewSignUpController(signUpService services.SignUpServiceInterface) SignUpControllerInterface {
@@ -22,13 +22,25 @@ type signUpController struct {
 	service services.SignUpServiceInterface
 }
 
-func (suc *signUpController) SignUp(ctx *gin.Context) bool {
+func (suc *signUpController) SignUp(ctx *gin.Context) {
 	var credentials entities.Credentials
 	err := ctx.ShouldBind(&credentials)
 	if err != nil {
-		log.Println("Wrong credentials structure - can't sign-up")
-		return false
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "Wrong credentials structure - failed to create a user.",
+		})
+		return
 	}
+
 	success := suc.service.SignUp(credentials)
-	return success
+	if success == false {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Failed to create a user.",
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "User has been created.",
+	})
 }

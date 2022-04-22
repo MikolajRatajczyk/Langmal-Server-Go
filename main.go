@@ -1,8 +1,6 @@
 package main
 
 import (
-	"net/http"
-
 	"github.com/MikolajRatajczyk/Langmal-Server/controllers"
 	"github.com/MikolajRatajczyk/Langmal-Server/middlewares"
 	"github.com/MikolajRatajczyk/Langmal-Server/repositories"
@@ -31,20 +29,8 @@ func main() {
 		gindump.Dump(),
 	)
 
+	server.POST("/sign-up", signUpController.SignUp)
 	server.POST("/sign-in", signInController.SignIn)
-
-	server.POST("/sign-up", func(ctx *gin.Context) {
-		success := signUpController.SignUp(ctx)
-		if success {
-			ctx.JSON(http.StatusOK, gin.H{
-				"message": "User has been created.",
-			})
-		} else {
-			ctx.JSON(http.StatusConflict, gin.H{
-				"message": "Failed to create a user.",
-			})
-		}
-	})
 
 	apiRoutes := server.Group("/api", middlewares.AuthorizeJWT())
 	{
