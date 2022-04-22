@@ -31,19 +31,7 @@ func main() {
 		gindump.Dump(),
 	)
 
-	//	Sign-in endpoint: authentication + token creation
-	server.POST("/sign-in", func(ctx *gin.Context) {
-		token := signInController.SignIn(ctx)
-		if token != "" {
-			ctx.JSON(http.StatusOK, gin.H{
-				"token": token,
-			})
-		} else {
-			ctx.JSON(http.StatusUnauthorized, gin.H{
-				"message": "User not authenticated.",
-			})
-		}
-	})
+	server.POST("/sign-in", signInController.SignIn)
 
 	server.POST("/sign-up", func(ctx *gin.Context) {
 		success := signUpController.SignUp(ctx)
