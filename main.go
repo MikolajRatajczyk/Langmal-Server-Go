@@ -19,8 +19,8 @@ var (
 
 	cryptoUtil            utils.CryptoUtilInterface                 = utils.NewCryptoUtil()
 	credentialsRepository repository.CredentialsRepositoryInterface = repository.NewCredentialsRepository()
-	jwtService            service.JWTServiceInterface               = service.NewJWTService()
-	signInService         service.SignInServiceInterface            = service.NewSingInService(credentialsRepository, cryptoUtil, jwtService)
+	jwtUtil               utils.JWTUtilInterface                    = utils.NewJWTUtil()
+	signInService         service.SignInServiceInterface            = service.NewSingInService(credentialsRepository, cryptoUtil, jwtUtil)
 	signInController      controller.SignInControllerInterface      = controller.NewSignInController(signInService)
 
 	signUpService    service.SignUpServiceInterface       = service.NewSignUpService(credentialsRepository, cryptoUtil)

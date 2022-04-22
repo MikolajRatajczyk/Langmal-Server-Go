@@ -15,18 +15,18 @@ type SignInServiceInterface interface {
 
 func NewSingInService(credentialsRepository repository.CredentialsRepositoryInterface,
 	cryptoUtil utils.CryptoUtilInterface,
-	jwtService JWTServiceInterface) SignInServiceInterface {
+	jwtUtil utils.JWTUtilInterface) SignInServiceInterface {
 	return &signInService{
 		credentialsRepository: credentialsRepository,
 		cryptoUtil:            cryptoUtil,
-		jwtService:            jwtService,
+		jwtUtil:               jwtUtil,
 	}
 }
 
 type signInService struct {
 	credentialsRepository repository.CredentialsRepositoryInterface
 	cryptoUtil            utils.CryptoUtilInterface
-	jwtService            JWTServiceInterface
+	jwtUtil               utils.JWTUtilInterface
 }
 
 func (sis *signInService) SignIn(credentials entity.Credentials) (string, error) {
@@ -34,7 +34,7 @@ func (sis *signInService) SignIn(credentials entity.Credentials) (string, error)
 	hashedCredentials := sis.credentialsRepository.Find(username)
 	isAuthenticated := sis.cryptoUtil.Compare(credentials.Password, hashedCredentials.PasswordHash)
 	if isAuthenticated {
-		jwtToken := sis.jwtService.GenerateToken(username)
+		jwtToken := sis.jwtUtil.GenerateToken(username)
 		return jwtToken, nil
 	} else {
 		log.Println("User does not exists!")

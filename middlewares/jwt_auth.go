@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/MikolajRatajczyk/Langmal-Server/service"
+	"github.com/MikolajRatajczyk/Langmal-Server/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
 )
@@ -21,7 +21,7 @@ func AuthorizeJWT() gin.HandlerFunc {
 		}
 
 		tokenString := authHeader[bearerSchemaLen:]
-		token, err := service.NewJWTService().ValidateToken(tokenString)
+		token, err := utils.NewJWTUtil().ValidateToken(tokenString)
 		if token.Valid {
 			claims := token.Claims.(jwt.MapClaims)
 			log.Println("claims.name: ", claims["name"])
