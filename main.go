@@ -17,13 +17,12 @@ var (
 	questionService    service.QuestionService       = service.NewQuestionService(questionRepository)
 	questionController controller.QuestionController = controller.NewQuestionController(questionService)
 
-	cryptoUtil            utils.CryptoUtilInterface                 = utils.NewCryptoUtil()
 	credentialsRepository repository.CredentialsRepositoryInterface = repository.NewCredentialsRepository()
 	jwtUtil               utils.JWTUtilInterface                    = utils.NewJWTUtil()
-	signInService         service.SignInServiceInterface            = service.NewSingInService(credentialsRepository, cryptoUtil, jwtUtil)
+	signInService         service.SignInServiceInterface            = service.NewSingInService(credentialsRepository, jwtUtil)
 	signInController      controller.SignInControllerInterface      = controller.NewSignInController(signInService)
 
-	signUpService    service.SignUpServiceInterface       = service.NewSignUpService(credentialsRepository, cryptoUtil)
+	signUpService    service.SignUpServiceInterface       = service.NewSignUpService(credentialsRepository)
 	signUpController controller.SignUpControllerInterface = controller.NewSignUpController(signUpService)
 )
 

@@ -14,11 +14,10 @@ type SignInServiceInterface interface {
 }
 
 func NewSingInService(credentialsRepository repository.CredentialsRepositoryInterface,
-	cryptoUtil utils.CryptoUtilInterface,
 	jwtUtil utils.JWTUtilInterface) SignInServiceInterface {
 	return &signInService{
 		credentialsRepository: credentialsRepository,
-		cryptoUtil:            cryptoUtil,
+		cryptoUtil:            utils.NewCryptoUtil(),
 		jwtUtil:               jwtUtil,
 	}
 }

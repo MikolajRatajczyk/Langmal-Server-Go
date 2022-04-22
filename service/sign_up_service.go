@@ -10,11 +10,10 @@ type SignUpServiceInterface interface {
 	SignUp(credentials entity.Credentials) bool
 }
 
-func NewSignUpService(credentialsRepository repository.CredentialsRepositoryInterface,
-	cryptoUtil utils.CryptoUtilInterface) SignUpServiceInterface {
+func NewSignUpService(credentialsRepository repository.CredentialsRepositoryInterface) SignUpServiceInterface {
 	return &signUpService{
 		credentialsRepository: credentialsRepository,
-		cryptoUtil:            cryptoUtil,
+		cryptoUtil:            utils.NewCryptoUtil(),
 	}
 }
 
