@@ -7,7 +7,7 @@ import (
 )
 
 type SignUpServiceInterface interface {
-	SignUp(credentials entities.Credentials) bool
+	SignUp(credentialsDto entities.CredentialsDto) bool
 }
 
 func NewSignUpService(credentialsRepository repositories.CredentialsRepositoryInterface) SignUpServiceInterface {
@@ -22,15 +22,15 @@ type signUpService struct {
 	cryptoUtil            utils.CryptoUtilInterface
 }
 
-func (sus *signUpService) SignUp(credentials entities.Credentials) bool {
-	password := credentials.Password
+func (sus *signUpService) SignUp(credentialsDto entities.CredentialsDto) bool {
+	password := credentialsDto.Password
 	hashedPassword, err := sus.cryptoUtil.Hash(password)
 	if err != nil {
 		return false
 	}
 
 	hashedCredentials := entities.HashedCredentials{
-		Username:     credentials.Username,
+		Username:     credentialsDto.Username,
 		PasswordHash: hashedPassword,
 	}
 

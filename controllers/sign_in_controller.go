@@ -23,8 +23,8 @@ type signInController struct {
 }
 
 func (sic *signInController) SignIn(ctx *gin.Context) {
-	var credentials entities.Credentials
-	err := ctx.ShouldBind(&credentials)
+	var credentialsDto entities.CredentialsDto
+	err := ctx.ShouldBind(&credentialsDto)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"message": "Wrong credentials structure.",
@@ -32,7 +32,7 @@ func (sic *signInController) SignIn(ctx *gin.Context) {
 		return
 	}
 
-	token, err := sic.signInService.SignIn(credentials)
+	token, err := sic.signInService.SignIn(credentialsDto)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),
