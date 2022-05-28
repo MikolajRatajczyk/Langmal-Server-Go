@@ -20,6 +20,10 @@ var (
 
 	signUpService    services.SignUpServiceInterface       = services.NewSignUpService(credentialsRepository)
 	signUpController controllers.SignUpControllerInterface = controllers.NewSignUpController(signUpService)
+
+	resultRepo        repositories.ResultRepositoryInterface = repositories.NewResultRepository()
+	resultService     services.ResultServiceInterface        = services.NewResultService(resultRepo)
+	resultsController controllers.ResultsControllerInterface = controllers.NewResultsController(resultService)
 )
 
 //	TODO: HTTPS
@@ -32,10 +36,11 @@ func main() {
 
 	server.POST("/sign-up", signUpController.SignUp)
 	server.POST("/sign-in", signInController.SignIn)
+
 	apiRoutes := server.Group("/api", middlewares.AuthorizeJWT())
-	{
-		apiRoutes.GET("/questions", questionController.Questions)
-	}
+	apiRoutes.GET("/questions", questionController.Questions)
+	apiRoutes.POST("/results", resultsController.SaveResults)
+	apiRoutes.GET("/results", resultsController.GetResults)
 
 	server.Run(":5001")
 }

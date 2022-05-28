@@ -10,7 +10,7 @@ import (
 )
 
 type SignInServiceInterface interface {
-	SignIn(credentials entities.Credentials) (string, error)
+	SignIn(credentialsDto entities.CredentialsDto) (string, error)
 }
 
 func NewSingInService(credentialsRepository repositories.CredentialsRepositoryInterface) SignInServiceInterface {
@@ -27,10 +27,10 @@ type signInService struct {
 	jwtUtil               utils.JWTUtilInterface
 }
 
-func (sis *signInService) SignIn(credentials entities.Credentials) (string, error) {
-	username := credentials.Username
+func (sis *signInService) SignIn(credentialsDto entities.CredentialsDto) (string, error) {
+	username := credentialsDto.Username
 	hashedCredentials := sis.credentialsRepository.Find(username)
-	isAuthenticated := sis.cryptoUtil.Compare(credentials.Password, hashedCredentials.PasswordHash)
+	isAuthenticated := sis.cryptoUtil.Compare(credentialsDto.Password, hashedCredentials.PasswordHash)
 	if isAuthenticated {
 		jwtToken := sis.jwtUtil.GenerateToken(username)
 		return jwtToken, nil

@@ -4,7 +4,6 @@ import (
 	"log"
 
 	"github.com/MikolajRatajczyk/Langmal-Server/entities"
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
@@ -16,7 +15,7 @@ type CredentialsRepositoryInterface interface {
 
 func NewCredentialsRepository() CredentialsRepositoryInterface {
 	return &credentialsRepository{
-		db: getDb(),
+		db: getDb("credentials", entities.HashedCredentials{}),
 	}
 }
 
@@ -45,13 +44,4 @@ func (cr *credentialsRepository) CloseDB() {
 		panic("Failed to get SQL DB!")
 	}
 	sqlDB.Close()
-}
-
-func getDb() *gorm.DB {
-	db, err := gorm.Open(sqlite.Open("credentials.db"), &gorm.Config{})
-	if err != nil {
-		panic("Failed to connect to the database")
-	}
-	db.AutoMigrate(entities.HashedCredentials{})
-	return db
 }

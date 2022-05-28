@@ -11,6 +11,7 @@ import (
 type JWTUtilInterface interface {
 	GenerateToken(username string) string
 	ValidateToken(tokenString string) (*jwt.Token, error)
+	GetUsername(tokenString string) (string, error)
 }
 
 func NewJWTUtil() JWTUtilInterface {
@@ -60,6 +61,27 @@ func (ju *jwtUtil) ValidateToken(tokenString string) (*jwt.Token, error) {
 		}
 		return []byte(ju.secret), nil
 	})
+}
+
+//	TODO: Replace it with extracting user's ID + use the ID as primary key in DB
+func (ju *jwtUtil) GetUsername(tokenString string) (string, error) {
+	//	important: use &
+	token, err := jwt.ParseWithClaims(tokenString, &jwtCustomClaims{}, func(t *jwt.Token) (interface{}, error) {
+		return []byte(ju.secret), nil
+	})
+
+	if err != nil {
+		return "", err
+	}
+
+	//	important: use *
+	customClaims, ok := token.Claims.(*jwtCustomClaims)
+
+	if ok == false {
+		return "", fmt.Errorf("Can't cast claims to custom claims")
+	}
+
+	return customClaims.Name, nil
 }
 
 //	Custom claims extending standard ones

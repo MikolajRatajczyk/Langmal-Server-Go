@@ -23,8 +23,8 @@ type signUpController struct {
 }
 
 func (suc *signUpController) SignUp(ctx *gin.Context) {
-	var credentials entities.Credentials
-	err := ctx.ShouldBind(&credentials)
+	var credentialsDto entities.CredentialsDto
+	err := ctx.ShouldBind(&credentialsDto)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"message": "Wrong credentials structure - failed to create a user.",
@@ -32,7 +32,7 @@ func (suc *signUpController) SignUp(ctx *gin.Context) {
 		return
 	}
 
-	success := suc.service.SignUp(credentials)
+	success := suc.service.SignUp(credentialsDto)
 	if success == false {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"message": "Failed to create a user.",
