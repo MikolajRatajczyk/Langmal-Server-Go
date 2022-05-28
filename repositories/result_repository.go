@@ -4,7 +4,6 @@ import (
 	"log"
 
 	"github.com/MikolajRatajczyk/Langmal-Server/entities"
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
@@ -14,15 +13,8 @@ type ResultRepositoryInterface interface {
 }
 
 func NewResultRepository() ResultRepositoryInterface {
-	//	TODO: Reuse getDb() from this package
-	db, err := gorm.Open(sqlite.Open("results.db"), &gorm.Config{})
-	if err != nil {
-		panic("Failed to connect to the database!")
-	}
-	db.AutoMigrate(entities.Result{})
-
 	return &resultRepository{
-		db: db,
+		db: getDb("results", entities.Result{}),
 	}
 }
 
