@@ -36,12 +36,11 @@ func main() {
 
 	server.POST("/sign-up", signUpController.SignUp)
 	server.POST("/sign-in", signInController.SignIn)
+
 	apiRoutes := server.Group("/api", middlewares.AuthorizeJWT())
-	{
-		apiRoutes.GET("/questions", questionController.Questions)
-		apiRoutes.POST("/results", resultsController.SaveResults)
-		apiRoutes.GET("/results", resultsController.GetResults)
-	}
+	apiRoutes.GET("/questions", questionController.Questions)
+	apiRoutes.POST("/results", resultsController.SaveResults)
+	apiRoutes.GET("/results", resultsController.GetResults)
 
 	server.Run(":5001")
 }
