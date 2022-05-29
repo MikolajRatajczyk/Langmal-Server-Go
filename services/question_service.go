@@ -6,7 +6,7 @@ import (
 )
 
 type QuestionService interface {
-	FindAll() []entities.Question
+	FindAll() []entities.QuestionDto
 }
 
 func NewQuestionService(repo repositories.QuestionRepository) QuestionService {
@@ -19,6 +19,6 @@ type questionServiceImpl struct {
 	repo repositories.QuestionRepository
 }
 
-func (qs *questionServiceImpl) FindAll() []entities.Question {
+func (qs *questionServiceImpl) FindAll() []entities.QuestionDto {
 	return qs.repo.FindAll()
 }
