@@ -17,25 +17,23 @@ type SignInServiceInterface interface {
 func NewSingInService(credentialsRepository repositories.CredentialsRepositoryInterface) SignInServiceInterface {
 	return &signInService{
 		credentialsRepository: credentialsRepository,
-		cryptoUtil:            utils.NewCryptoUtil(),
-		jwtUtil:               utils.NewJWTUtil(),
 	}
 }
 
 type signInService struct {
 	credentialsRepository repositories.CredentialsRepositoryInterface
-	cryptoUtil            utils.CryptoUtilInterface
-	jwtUtil               utils.JWTUtilInterface
 }
 
 func (sis *signInService) SignIn(credentialsDto entities.CredentialsDto) (string, error) {
 	email := credentialsDto.Email
 	credentials := sis.credentialsRepository.Find(email)
 
-	isAuthenticated := sis.cryptoUtil.Compare(credentialsDto.Password, credentials.PasswordHash)
+	cryptoUtil := utils.NewCryptoUtil()
+	isAuthenticated := cryptoUtil.Compare(credentialsDto.Password, credentials.PasswordHash)
 	if isAuthenticated {
 		id := credentials.Id
-		jwtToken := sis.jwtUtil.GenerateToken(id)
+		jwtUtil := utils.NewJWTUtil()
+		jwtToken := jwtUtil.GenerateToken(id)
 		return jwtToken, nil
 	} else {
 		log.Println("User does not exists!")

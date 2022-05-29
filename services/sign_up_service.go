@@ -14,18 +14,17 @@ type SignUpServiceInterface interface {
 func NewSignUpService(credentialsRepository repositories.CredentialsRepositoryInterface) SignUpServiceInterface {
 	return &signUpService{
 		credentialsRepository: credentialsRepository,
-		cryptoUtil:            utils.NewCryptoUtil(),
 	}
 }
 
 type signUpService struct {
 	credentialsRepository repositories.CredentialsRepositoryInterface
-	cryptoUtil            utils.CryptoUtilInterface
 }
 
 func (sus *signUpService) SignUp(credentialsDto entities.CredentialsDto) bool {
 	password := credentialsDto.Password
-	hashedPassword, err := sus.cryptoUtil.Hash(password)
+	cryptoUtil := utils.NewCryptoUtil()
+	hashedPassword, err := cryptoUtil.Hash(password)
 	if err != nil {
 		return false
 	}
