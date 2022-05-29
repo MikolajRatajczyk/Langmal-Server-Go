@@ -20,5 +20,22 @@ type questionServiceImpl struct {
 }
 
 func (qs *questionServiceImpl) FindAll() []entities.QuestionDto {
-	return qs.repo.FindAll()
+	questions := qs.repo.FindAll()
+	questionDtos := mapQuestionsToDtos(questions)
+	return questionDtos
+}
+
+func mapQuestionsToDtos(questions []entities.Question) []entities.QuestionDto {
+	dtos := []entities.QuestionDto{}
+
+	for _, question := range questions {
+		dto := entities.QuestionDto{
+			Title:   question.Title,
+			Options: question.Options,
+			Answer:  question.Answer,
+		}
+		dtos = append(dtos, dto)
+	}
+
+	return dtos
 }
