@@ -9,7 +9,7 @@ import (
 
 type CredentialsRepositoryInterface interface {
 	Create(credentials entities.HashedCredentials) bool
-	Find(username string) entities.HashedCredentials
+	Find(email string) entities.HashedCredentials
 	CloseDB()
 }
 
@@ -32,9 +32,9 @@ func (cr *credentialsRepository) Create(credentials entities.HashedCredentials) 
 	}
 }
 
-func (cr *credentialsRepository) Find(username string) entities.HashedCredentials {
+func (cr *credentialsRepository) Find(email string) entities.HashedCredentials {
 	var hashedCredentials entities.HashedCredentials
-	cr.db.Where("username = ?", username).First(&hashedCredentials)
+	cr.db.Where("email = ?", email).First(&hashedCredentials)
 	return hashedCredentials
 }
 

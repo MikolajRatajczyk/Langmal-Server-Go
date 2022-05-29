@@ -4,6 +4,7 @@ import (
 	"github.com/MikolajRatajczyk/Langmal-Server/entities"
 	"github.com/MikolajRatajczyk/Langmal-Server/repositories"
 	"github.com/MikolajRatajczyk/Langmal-Server/utils"
+	"github.com/google/uuid"
 )
 
 type SignUpServiceInterface interface {
@@ -29,8 +30,14 @@ func (sus *signUpService) SignUp(credentialsDto entities.CredentialsDto) bool {
 		return false
 	}
 
+	uuid, err := uuid.NewRandom()
+	if err != nil {
+		return false
+	}
+
 	hashedCredentials := entities.HashedCredentials{
-		Username:     credentialsDto.Username,
+		Id:           uuid.String(),
+		Email:        credentialsDto.Email,
 		PasswordHash: hashedPassword,
 	}
 

@@ -5,5 +5,5 @@ type Result struct {
 	Total     int
 	TestId    string
 	CreatedAt int64
-	Username  string
+	UserId    string
 }

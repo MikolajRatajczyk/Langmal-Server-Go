@@ -24,33 +24,33 @@ type resultService struct {
 }
 
 func (rs *resultService) Save(resultDto entities.ResultDto, token string) bool {
-	username, err := rs.jwtUtil.GetUsername(token)
+	userId, err := rs.jwtUtil.GetUserId(token)
 	if err != nil {
 		return false
 	}
 
-	result := mapResultDtoToResult(resultDto, username)
+	result := mapResultDtoToResult(resultDto, userId)
 
 	success := rs.repo.Create(result)
 	return success
 }
 
 func (rs *resultService) Find(token string) []entities.ResultDto {
-	username, err := rs.jwtUtil.GetUsername(token)
+	userId, err := rs.jwtUtil.GetUserId(token)
 	if err != nil {
 		return []entities.ResultDto{}
 	}
 
-	results := rs.repo.Find(username)
+	results := rs.repo.Find(userId)
 	return mapResultsToDtos(results)
 }
 
-func mapResultDtoToResult(resultDto entities.ResultDto, username string) entities.Result {
+func mapResultDtoToResult(resultDto entities.ResultDto, userId string) entities.Result {
 	result := entities.Result{
 		Correct:   resultDto.Correct,
 		Total:     resultDto.Total,
 		TestId:    resultDto.TestId,
-		Username:  username,
+		UserId:    userId,
 		CreatedAt: resultDto.CreatedAt,
 	}
 	return result

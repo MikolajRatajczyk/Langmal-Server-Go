@@ -1,6 +1,7 @@
 package entities
 
 type HashedCredentials struct {
-	Username     string `gorm:"primaryKey"`
+	Id           string `gorm:"primaryKey"`
+	Email        string `gorm:"unique"`
 	PasswordHash []byte
 }

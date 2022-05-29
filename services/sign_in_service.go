@@ -10,6 +10,7 @@ import (
 )
 
 type SignInServiceInterface interface {
+	//	Returns JWT token
 	SignIn(credentialsDto entities.CredentialsDto) (string, error)
 }
 
@@ -28,11 +29,13 @@ type signInService struct {
 }
 
 func (sis *signInService) SignIn(credentialsDto entities.CredentialsDto) (string, error) {
-	username := credentialsDto.Username
-	hashedCredentials := sis.credentialsRepository.Find(username)
+	email := credentialsDto.Email
+	hashedCredentials := sis.credentialsRepository.Find(email)
+
 	isAuthenticated := sis.cryptoUtil.Compare(credentialsDto.Password, hashedCredentials.PasswordHash)
 	if isAuthenticated {
-		jwtToken := sis.jwtUtil.GenerateToken(username)
+		id := hashedCredentials.Id
+		jwtToken := sis.jwtUtil.GenerateToken(id)
 		return jwtToken, nil
 	} else {
 		log.Println("User does not exists!")
