@@ -29,13 +29,7 @@ func (rs *resultService) Save(resultDto entities.ResultDto, token string) bool {
 		return false
 	}
 
-	result := entities.Result{
-		Correct:   resultDto.Correct,
-		Total:     resultDto.Total,
-		TestId:    resultDto.TestId,
-		Username:  username,
-		CreatedAt: resultDto.CreatedAt,
-	}
+	result := mapResultDtoToResult(resultDto, username)
 
 	success := rs.repo.Create(result)
 	return success
@@ -49,6 +43,17 @@ func (rs *resultService) Find(token string) []entities.ResultDto {
 
 	results := rs.repo.Find(username)
 	return mapResultsToDtos(results)
+}
+
+func mapResultDtoToResult(resultDto entities.ResultDto, username string) entities.Result {
+	result := entities.Result{
+		Correct:   resultDto.Correct,
+		Total:     resultDto.Total,
+		TestId:    resultDto.TestId,
+		Username:  username,
+		CreatedAt: resultDto.CreatedAt,
+	}
+	return result
 }
 
 func mapResultsToDtos(results []entities.Result) []entities.ResultDto {
