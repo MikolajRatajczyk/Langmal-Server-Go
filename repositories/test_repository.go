@@ -2,26 +2,26 @@ package repositories
 
 import "github.com/MikolajRatajczyk/Langmal-Server/entities"
 
-type QuestionRepository interface {
-	FindAll() []entities.Question
+type TestRepository interface {
+	FindAll() []entities.Test
 }
 
-func NewQuestionRepository() QuestionRepository {
-	//	TODO: open DB session and pass it to questionRepositoryImpl
-	return &questionRepositoryImpl{}
+func NewTestRepository() TestRepository {
+	//	TODO: open DB session and pass it to testRepository
+	return &testRepository{}
 }
 
-type questionRepositoryImpl struct {
+type testRepository struct {
 	//	TODO: add `connection *gorm.DB` or similar and use it
 }
 
-func (qr *questionRepositoryImpl) FindAll() []entities.Question {
-	questions := createQuestions()
-	return questions
+func (tr *testRepository) FindAll() []entities.Test {
+	test := createTest()
+	return []entities.Test{test}
 }
 
 //	TODO: remove and use DB instead
-func createQuestions() []entities.Question {
+func createTest() entities.Test {
 	question1 := entities.Question{
 		Title:   "First question from the server",
 		Options: []string{"Answer A", "Answer B", "Answer C"},
@@ -37,5 +37,12 @@ func createQuestions() []entities.Question {
 		Options: []string{"Answer A", "Answer B", "Answer C"},
 		Answer:  "Answer C",
 	}
-	return []entities.Question{question1, question2, question3}
+
+	test := entities.Test{
+		Name:      "First test",
+		Id:        "4e2778d3-57df-4fe9-83ec-af5ffec1ec5c",
+		Questions: []entities.Question{question1, question2, question3},
+	}
+
+	return test
 }
