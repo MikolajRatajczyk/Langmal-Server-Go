@@ -30,11 +30,11 @@ type signInService struct {
 
 func (sis *signInService) SignIn(credentialsDto entities.CredentialsDto) (string, error) {
 	email := credentialsDto.Email
-	hashedCredentials := sis.credentialsRepository.Find(email)
+	credentials := sis.credentialsRepository.Find(email)
 
-	isAuthenticated := sis.cryptoUtil.Compare(credentialsDto.Password, hashedCredentials.PasswordHash)
+	isAuthenticated := sis.cryptoUtil.Compare(credentialsDto.Password, credentials.PasswordHash)
 	if isAuthenticated {
-		id := hashedCredentials.Id
+		id := credentials.Id
 		jwtToken := sis.jwtUtil.GenerateToken(id)
 		return jwtToken, nil
 	} else {

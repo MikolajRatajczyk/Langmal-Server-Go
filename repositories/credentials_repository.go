@@ -8,14 +8,14 @@ import (
 )
 
 type CredentialsRepositoryInterface interface {
-	Create(credentials entities.HashedCredentials) bool
-	Find(email string) entities.HashedCredentials
+	Create(credentials entities.Credentials) bool
+	Find(email string) entities.Credentials
 	CloseDB()
 }
 
 func NewCredentialsRepository() CredentialsRepositoryInterface {
 	return &credentialsRepository{
-		db: getDb("credentials", entities.HashedCredentials{}),
+		db: getDb("credentials", entities.Credentials{}),
 	}
 }
 
@@ -23,7 +23,7 @@ type credentialsRepository struct {
 	db *gorm.DB
 }
 
-func (cr *credentialsRepository) Create(credentials entities.HashedCredentials) bool {
+func (cr *credentialsRepository) Create(credentials entities.Credentials) bool {
 	if err := cr.db.Create(credentials).Error; err != nil {
 		log.Println("Failed to create a new user in DB!")
 		return false
@@ -32,10 +32,10 @@ func (cr *credentialsRepository) Create(credentials entities.HashedCredentials) 
 	}
 }
 
-func (cr *credentialsRepository) Find(email string) entities.HashedCredentials {
-	var hashedCredentials entities.HashedCredentials
-	cr.db.Where("email = ?", email).First(&hashedCredentials)
-	return hashedCredentials
+func (cr *credentialsRepository) Find(email string) entities.Credentials {
+	var credentials entities.Credentials
+	cr.db.Where("email = ?", email).First(&credentials)
+	return credentials
 }
 
 func (cr *credentialsRepository) CloseDB() {

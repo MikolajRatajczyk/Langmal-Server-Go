@@ -35,12 +35,12 @@ func (sus *signUpService) SignUp(credentialsDto entities.CredentialsDto) bool {
 		return false
 	}
 
-	hashedCredentials := entities.HashedCredentials{
+	credentials := entities.Credentials{
 		Id:           uuid.String(),
 		Email:        credentialsDto.Email,
 		PasswordHash: hashedPassword,
 	}
 
-	success := sus.credentialsRepository.Create(hashedCredentials)
+	success := sus.credentialsRepository.Create(credentials)
 	return success
 }
