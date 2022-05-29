@@ -15,6 +15,7 @@ func AuthorizeJWT() gin.HandlerFunc {
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 				"message": "No token",
 			})
+			return
 		}
 
 		_, err := utils.NewJWTUtil().ValidateToken(tokenString)
