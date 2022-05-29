@@ -1,8 +1,6 @@
 package services
 
 import (
-	"time"
-
 	"github.com/MikolajRatajczyk/Langmal-Server/entities"
 	"github.com/MikolajRatajczyk/Langmal-Server/repositories"
 	"github.com/MikolajRatajczyk/Langmal-Server/utils"
@@ -26,31 +24,36 @@ type resultService struct {
 }
 
 func (rs *resultService) Save(resultDto entities.ResultDto, token string) bool {
-	username, err := rs.jwtUtil.GetUsername(token)
+	userId, err := rs.jwtUtil.GetUserId(token)
 	if err != nil {
 		return false
 	}
 
-	result := entities.Result{
-		Correct:  resultDto.Correct,
-		Total:    resultDto.Total,
-		TestId:   resultDto.TestId,
-		Username: username,
-		Created:  time.Now().Unix(),
-	}
+	result := mapResultDtoToResult(resultDto, userId)
 
 	success := rs.repo.Create(result)
 	return success
 }
 
 func (rs *resultService) Find(token string) []entities.ResultDto {
-	username, err := rs.jwtUtil.GetUsername(token)
+	userId, err := rs.jwtUtil.GetUserId(token)
 	if err != nil {
 		return []entities.ResultDto{}
 	}
 
-	results := rs.repo.Find(username)
+	results := rs.repo.Find(userId)
 	return mapResultsToDtos(results)
+}
+
+func mapResultDtoToResult(resultDto entities.ResultDto, userId string) entities.Result {
+	result := entities.Result{
+		Correct:   resultDto.Correct,
+		Total:     resultDto.Total,
+		TestId:    resultDto.TestId,
+		UserId:    userId,
+		CreatedAt: resultDto.CreatedAt,
+	}
+	return result
 }
 
 func mapResultsToDtos(results []entities.Result) []entities.ResultDto {
@@ -58,9 +61,10 @@ func mapResultsToDtos(results []entities.Result) []entities.ResultDto {
 
 	for _, result := range results {
 		resultDto := entities.ResultDto{
-			Correct: result.Correct,
-			Total:   result.Total,
-			TestId:  result.TestId,
+			Correct:   result.Correct,
+			Total:     result.Total,
+			TestId:    result.TestId,
+			CreatedAt: result.CreatedAt,
 		}
 		resultDtos = append(resultDtos, resultDto)
 	}

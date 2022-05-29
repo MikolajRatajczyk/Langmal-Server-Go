@@ -10,29 +10,30 @@ import (
 )
 
 type SignInServiceInterface interface {
+	//	Returns JWT token
 	SignIn(credentialsDto entities.CredentialsDto) (string, error)
 }
 
 func NewSingInService(credentialsRepository repositories.CredentialsRepositoryInterface) SignInServiceInterface {
 	return &signInService{
 		credentialsRepository: credentialsRepository,
-		cryptoUtil:            utils.NewCryptoUtil(),
-		jwtUtil:               utils.NewJWTUtil(),
 	}
 }
 
 type signInService struct {
 	credentialsRepository repositories.CredentialsRepositoryInterface
-	cryptoUtil            utils.CryptoUtilInterface
-	jwtUtil               utils.JWTUtilInterface
 }
 
 func (sis *signInService) SignIn(credentialsDto entities.CredentialsDto) (string, error) {
-	username := credentialsDto.Username
-	hashedCredentials := sis.credentialsRepository.Find(username)
-	isAuthenticated := sis.cryptoUtil.Compare(credentialsDto.Password, hashedCredentials.PasswordHash)
+	email := credentialsDto.Email
+	credentials := sis.credentialsRepository.Find(email)
+
+	cryptoUtil := utils.NewCryptoUtil()
+	isAuthenticated := cryptoUtil.Compare(credentialsDto.Password, credentials.PasswordHash)
 	if isAuthenticated {
-		jwtToken := sis.jwtUtil.GenerateToken(username)
+		id := credentials.Id
+		jwtUtil := utils.NewJWTUtil()
+		jwtToken := jwtUtil.GenerateToken(id)
 		return jwtToken, nil
 	} else {
 		log.Println("User does not exists!")

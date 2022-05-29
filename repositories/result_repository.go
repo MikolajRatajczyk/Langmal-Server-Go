@@ -9,7 +9,7 @@ import (
 
 type ResultRepositoryInterface interface {
 	Create(result entities.Result) bool
-	Find(username string) []entities.Result
+	Find(userId string) []entities.Result
 }
 
 func NewResultRepository() ResultRepositoryInterface {
@@ -22,9 +22,9 @@ type resultRepository struct {
 	db *gorm.DB
 }
 
-func (rr *resultRepository) Find(username string) []entities.Result {
+func (rr *resultRepository) Find(userId string) []entities.Result {
 	var results []entities.Result
-	rr.db.Where("username = ?", username).Find(&results)
+	rr.db.Where("user_id = ?", userId).Find(&results)
 	return results
 }
 

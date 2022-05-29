@@ -9,9 +9,9 @@ import (
 )
 
 type JWTUtilInterface interface {
-	GenerateToken(username string) string
+	GenerateToken(id string) string
 	ValidateToken(tokenString string) (*jwt.Token, error)
-	GetUsername(tokenString string) (string, error)
+	GetUserId(tokenString string) (string, error)
 }
 
 func NewJWTUtil() JWTUtilInterface {
@@ -34,12 +34,12 @@ type jwtUtil struct {
 	issuer string
 }
 
-func (ju *jwtUtil) GenerateToken(username string) string {
+func (ju *jwtUtil) GenerateToken(id string) string {
 	claims := &jwtCustomClaims{
-		Name: username,
 		StandardClaims: jwt.StandardClaims{
 			Issuer:   ju.issuer,
 			IssuedAt: time.Now().Unix(),
+			Subject:  id,
 		},
 	}
 
@@ -63,8 +63,7 @@ func (ju *jwtUtil) ValidateToken(tokenString string) (*jwt.Token, error) {
 	})
 }
 
-//	TODO: Replace it with extracting user's ID + use the ID as primary key in DB
-func (ju *jwtUtil) GetUsername(tokenString string) (string, error) {
+func (ju *jwtUtil) GetUserId(tokenString string) (string, error) {
 	//	important: use &
 	token, err := jwt.ParseWithClaims(tokenString, &jwtCustomClaims{}, func(t *jwt.Token) (interface{}, error) {
 		return []byte(ju.secret), nil
@@ -81,11 +80,11 @@ func (ju *jwtUtil) GetUsername(tokenString string) (string, error) {
 		return "", fmt.Errorf("Can't cast claims to custom claims")
 	}
 
-	return customClaims.Name, nil
+	return customClaims.Subject, nil
 }
 
 //	Custom claims extending standard ones
+//	TODO: Extending is not needed (only standard properties are used)
 type jwtCustomClaims struct {
-	Name string `json:"name"`
 	jwt.StandardClaims
 }
