@@ -1,9 +1,9 @@
 package entities
 
 type Result struct {
-	Correct  int
-	Total    int
-	TestId   string
-	Username string
-	Created  int64
+	Correct   int
+	Total     int
+	TestId    string
+	CreatedAt int64
+	Username  string
 }

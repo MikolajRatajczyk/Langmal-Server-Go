@@ -1,8 +1,6 @@
 package services
 
 import (
-	"time"
-
 	"github.com/MikolajRatajczyk/Langmal-Server/entities"
 	"github.com/MikolajRatajczyk/Langmal-Server/repositories"
 	"github.com/MikolajRatajczyk/Langmal-Server/utils"
@@ -32,11 +30,11 @@ func (rs *resultService) Save(resultDto entities.ResultDto, token string) bool {
 	}
 
 	result := entities.Result{
-		Correct:  resultDto.Correct,
-		Total:    resultDto.Total,
-		TestId:   resultDto.TestId,
-		Username: username,
-		Created:  time.Now().Unix(),
+		Correct:   resultDto.Correct,
+		Total:     resultDto.Total,
+		TestId:    resultDto.TestId,
+		Username:  username,
+		CreatedAt: resultDto.CreatedAt,
 	}
 
 	success := rs.repo.Create(result)
@@ -58,9 +56,10 @@ func mapResultsToDtos(results []entities.Result) []entities.ResultDto {
 
 	for _, result := range results {
 		resultDto := entities.ResultDto{
-			Correct: result.Correct,
-			Total:   result.Total,
-			TestId:  result.TestId,
+			Correct:   result.Correct,
+			Total:     result.Total,
+			TestId:    result.TestId,
+			CreatedAt: result.CreatedAt,
 		}
 		resultDtos = append(resultDtos, resultDto)
 	}
