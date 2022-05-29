@@ -10,9 +10,9 @@ import (
 )
 
 var (
-	questionRepository repositories.QuestionRepository = repositories.NewQuestionRepository()
-	questionService    services.QuestionService        = services.NewQuestionService(questionRepository)
-	questionController controllers.QuestionController  = controllers.NewQuestionController(questionService)
+	testRepository repositories.TestRepository = repositories.NewTestRepository()
+	testService    services.TestService        = services.NewTestService(testRepository)
+	testController controllers.TestController  = controllers.NewTestController(testService)
 
 	credentialsRepository repositories.CredentialsRepositoryInterface = repositories.NewCredentialsRepository()
 	signInService         services.SignInServiceInterface             = services.NewSingInService(credentialsRepository)
@@ -38,7 +38,7 @@ func main() {
 	server.POST("/sign-in", signInController.SignIn)
 
 	apiRoutes := server.Group("/api", middlewares.AuthorizeJWT())
-	apiRoutes.GET("/questions", questionController.Questions)
+	apiRoutes.GET("/test", testController.GetTest)
 	apiRoutes.POST("/results", resultsController.SaveResults)
 	apiRoutes.GET("/results", resultsController.GetResults)
 
