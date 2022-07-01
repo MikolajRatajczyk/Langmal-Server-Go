@@ -38,7 +38,7 @@ func main() {
 	server.POST("/sign-in", signInController.SignIn)
 
 	apiRoutes := server.Group("/api", middlewares.AuthorizeJWT())
-	apiRoutes.GET("/test", testController.GetTest)
+	apiRoutes.GET("/tests", testController.GetTests)
 	apiRoutes.POST("/results", resultsController.SaveResults)
 	apiRoutes.GET("/results", resultsController.GetResults)
 
