@@ -6,8 +6,8 @@ import (
 )
 
 type TestService interface {
-	//	TODO: Implement finding using param (now it returns only first test)
-	Find() (entities.TestDto, bool)
+	//	TODO: Implement finding using param
+	Find() ([]entities.TestDto, bool)
 }
 
 func NewTestService(repo repositories.TestRepository) TestService {
@@ -20,23 +20,29 @@ type testService struct {
 	repo repositories.TestRepository
 }
 
-func (qs *testService) Find() (entities.TestDto, bool) {
+func (qs *testService) Find() ([]entities.TestDto, bool) {
 	tests := qs.repo.FindAll()
 
 	if len(tests) > 0 == false {
-		return entities.TestDto{}, false
+		return []entities.TestDto{}, false
 	}
 
-	testDto := mapTestToDto(tests[0])
+	testDto := mapTestsToDtos(tests)
 	return testDto, true
 }
 
-func mapTestToDto(test entities.Test) entities.TestDto {
-	return entities.TestDto{
-		Name:      test.Name,
-		Id:        test.Id,
-		Questions: mapQuestionsToDtos(test.Questions),
+func mapTestsToDtos(tests []entities.Test) []entities.TestDto {
+	dtos := []entities.TestDto{}
+	for _, test := range tests {
+		dto := entities.TestDto{
+			Name:      test.Name,
+			Id:        test.Id,
+			Questions: mapQuestionsToDtos(test.Questions),
+		}
+		dtos = append(dtos, dto)
 	}
+
+	return dtos
 }
 
 func mapQuestionsToDtos(questions []entities.Question) []entities.QuestionDto {

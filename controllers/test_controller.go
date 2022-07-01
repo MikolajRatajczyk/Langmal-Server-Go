@@ -8,7 +8,7 @@ import (
 )
 
 type TestController interface {
-	GetTest(ctx *gin.Context)
+	GetTests(ctx *gin.Context)
 }
 
 func NewTestController(service services.TestService) TestController {
@@ -21,14 +21,14 @@ type testController struct {
 	service services.TestService
 }
 
-func (tc *testController) GetTest(ctx *gin.Context) {
-	test, ok := tc.service.Find()
+func (tc *testController) GetTests(ctx *gin.Context) {
+	tests, ok := tc.service.Find()
 
 	if ok {
-		ctx.JSON(http.StatusOK, test)
+		ctx.JSON(http.StatusOK, tests)
 	} else {
 		ctx.JSON(http.StatusNotFound, gin.H{
-			"message": "No test found",
+			"message": "No tests found",
 		})
 	}
 }
