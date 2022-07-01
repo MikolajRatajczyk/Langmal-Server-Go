@@ -29,7 +29,7 @@ func (rr *resultRepository) Find(userId string) []entities.Result {
 }
 
 func (rr *resultRepository) Create(result entities.Result) bool {
-	err := rr.db.Create(result).Error
+	err := rr.db.Create(&result).Error
 	if err != nil {
 		log.Println("Failed to create a new result in DB!")
 		return false
