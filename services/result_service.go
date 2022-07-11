@@ -48,7 +48,7 @@ func (rs *resultService) Find(token string) []entities.ResultDto {
 func mapResultDtoToResult(resultDto entities.ResultDto, userId string) entities.Result {
 	result := entities.Result{
 		Correct:   resultDto.Correct,
-		Total:     resultDto.Total,
+		Wrong:     resultDto.Wrong,
 		TestId:    resultDto.TestId,
 		UserId:    userId,
 		CreatedAt: resultDto.CreatedAt,
@@ -62,7 +62,7 @@ func mapResultsToDtos(results []entities.Result) []entities.ResultDto {
 	for _, result := range results {
 		resultDto := entities.ResultDto{
 			Correct:   result.Correct,
-			Total:     result.Total,
+			Wrong:     result.Wrong,
 			TestId:    result.TestId,
 			CreatedAt: result.CreatedAt,
 		}
