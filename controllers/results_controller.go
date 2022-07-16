@@ -28,16 +28,18 @@ func (rc *resultsController) SaveResults(ctx *gin.Context) {
 	var resultDto entities.ResultDto
 	err := ctx.ShouldBind(&resultDto)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"message": "Wrong result structure.",
 		})
+		return
 	}
 
 	tokenString := middlewares.GetTokenString(ctx)
 	if tokenString == "" {
-		ctx.JSON(http.StatusBadRequest, gin.H{
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"message": "No token.",
 		})
+		return
 	}
 
 	saved := rc.resultService.Save(resultDto, tokenString)
