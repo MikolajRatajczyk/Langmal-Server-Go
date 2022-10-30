@@ -33,7 +33,7 @@ func (suc *signUpController) SignUp(ctx *gin.Context) {
 	}
 
 	success := suc.service.SignUp(credentialsDto)
-	if success == false {
+	if !success {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"message": "Failed to create a user.",
 		})

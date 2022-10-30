@@ -37,6 +37,6 @@ func (sis *signInService) SignIn(credentialsDto entities.CredentialsDto) (string
 		return jwtToken, nil
 	} else {
 		log.Println("User does not exists!")
-		return "", errors.New("User does not exist!")
+		return "", errors.New("user does not exist")
 	}
 }
