@@ -26,7 +26,7 @@ var (
 	resultsController controllers.ResultsControllerInterface = controllers.NewResultsController(resultService)
 )
 
-//	TODO: HTTPS
+// TODO: HTTPS
 func main() {
 	server := gin.New()
 	server.Use(gin.Recovery(),
