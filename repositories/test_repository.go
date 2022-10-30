@@ -20,7 +20,7 @@ func (tr *testRepository) FindAll() []entities.Test {
 	return []entities.Test{test}
 }
 
-//	TODO: remove and use DB instead
+// TODO: remove and use DB instead
 func createTest() entities.Test {
 	question1 := entities.Question{
 		Title:   "First question from the server",

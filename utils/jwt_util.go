@@ -56,8 +56,8 @@ func (ju *jwtUtil) GenerateToken(id string) string {
 func (ju *jwtUtil) ValidateToken(tokenString string) (*jwt.Token, error) {
 	return jwt.Parse(tokenString, func(token *jwt.Token) (any, error) {
 		//	signing method validation
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); ok == false {
-			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
 		return []byte(ju.secret), nil
 	})
@@ -76,15 +76,15 @@ func (ju *jwtUtil) GetUserId(tokenString string) (string, error) {
 	//	important: use *
 	customClaims, ok := token.Claims.(*jwtCustomClaims)
 
-	if ok == false {
-		return "", fmt.Errorf("Can't cast claims to custom claims")
+	if !ok {
+		return "", fmt.Errorf("can't cast claims to custom claims")
 	}
 
 	return customClaims.Subject, nil
 }
 
-//	Custom claims extending standard ones
-//	TODO: Extending is not needed (only standard properties are used)
+// Custom claims extending standard ones
+// TODO: Extending is not needed (only standard properties are used)
 type jwtCustomClaims struct {
 	jwt.StandardClaims
 }

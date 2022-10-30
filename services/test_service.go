@@ -23,7 +23,7 @@ type testService struct {
 func (qs *testService) Find() ([]entities.TestDto, bool) {
 	tests := qs.repo.FindAll()
 
-	if len(tests) > 0 == false {
+	if !(len(tests) > 0) {
 		return []entities.TestDto{}, false
 	}
 
@@ -49,11 +49,7 @@ func mapQuestionsToDtos(questions []entities.Question) []entities.QuestionDto {
 	dtos := []entities.QuestionDto{}
 
 	for _, question := range questions {
-		dto := entities.QuestionDto{
-			Title:   question.Title,
-			Options: question.Options,
-			Answer:  question.Answer,
-		}
+		dto := entities.QuestionDto(question)
 		dtos = append(dtos, dto)
 	}
 
