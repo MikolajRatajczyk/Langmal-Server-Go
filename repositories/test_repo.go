@@ -2,20 +2,20 @@ package repositories
 
 import "github.com/MikolajRatajczyk/Langmal-Server/entities"
 
-type TestRepository interface {
+type TestRepo interface {
 	FindAll() []entities.Test
 }
 
-func NewTestRepository() TestRepository {
-	//	TODO: open DB session and pass it to testRepository
-	return &testRepository{}
+func NewTestRepo() TestRepo {
+	//	TODO: open DB session and pass it to testRepo
+	return &testRepo{}
 }
 
-type testRepository struct {
+type testRepo struct {
 	//	TODO: add `connection *gorm.DB` or similar and use it
 }
 
-func (tr *testRepository) FindAll() []entities.Test {
+func (tr *testRepo) FindAll() []entities.Test {
 	test := createTest()
 	return []entities.Test{test}
 }

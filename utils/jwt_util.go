@@ -11,7 +11,7 @@ import (
 type JWTUtilInterface interface {
 	GenerateToken(id string) string
 	ValidateToken(tokenString string) (*jwt.Token, error)
-	GetUserId(tokenString string) (string, error)
+	GetAccountId(tokenString string) (string, error)
 }
 
 func NewJWTUtil() JWTUtilInterface {
@@ -63,7 +63,7 @@ func (ju *jwtUtil) ValidateToken(tokenString string) (*jwt.Token, error) {
 	})
 }
 
-func (ju *jwtUtil) GetUserId(tokenString string) (string, error) {
+func (ju *jwtUtil) GetAccountId(tokenString string) (string, error) {
 	//	important: use &
 	token, err := jwt.ParseWithClaims(tokenString, &jwtCustomClaims{}, func(t *jwt.Token) (interface{}, error) {
 		return []byte(ju.secret), nil

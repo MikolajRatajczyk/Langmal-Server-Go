@@ -5,5 +5,5 @@ type Result struct {
 	Wrong     int
 	TestId    string
 	CreatedAt int64
-	UserId    string
+	AccountId string
 }

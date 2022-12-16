@@ -10,18 +10,15 @@ import (
 )
 
 var (
-	testRepository repositories.TestRepository = repositories.NewTestRepository()
-	testService    services.TestService        = services.NewTestService(testRepository)
-	testController controllers.TestController  = controllers.NewTestController(testService)
+	testRepo       repositories.TestRepo      = repositories.NewTestRepo()
+	testService    services.TestService       = services.NewTestService(testRepo)
+	testController controllers.TestController = controllers.NewTestController(testService)
 
-	credentialsRepository repositories.CredentialsRepositoryInterface = repositories.NewCredentialsRepository()
-	signInService         services.SignInServiceInterface             = services.NewSingInService(credentialsRepository)
-	signInController      controllers.SignInControllerInterface       = controllers.NewSignInController(signInService)
+	accountRepo       repositories.AccountRepoInterface      = repositories.NewAccountRepo()
+	accountService    services.AccountServiceInterface       = services.NewAccountService(accountRepo)
+	accountController controllers.AccountControllerInterface = controllers.NewAccountController(accountService)
 
-	signUpService    services.SignUpServiceInterface       = services.NewSignUpService(credentialsRepository)
-	signUpController controllers.SignUpControllerInterface = controllers.NewSignUpController(signUpService)
-
-	resultRepo        repositories.ResultRepositoryInterface = repositories.NewResultRepository()
+	resultRepo        repositories.ResultRepoInterface       = repositories.NewResultRepo()
 	resultService     services.ResultServiceInterface        = services.NewResultService(resultRepo)
 	resultsController controllers.ResultsControllerInterface = controllers.NewResultsController(resultService)
 )
@@ -34,13 +31,14 @@ func main() {
 		gindump.Dump(),
 	)
 
-	server.POST("/sign-up", signUpController.SignUp)
-	server.POST("/sign-in", signInController.SignIn)
+	accountRoutes := server.Group("/account")
+	accountRoutes.POST("/register", accountController.Register)
+	accountRoutes.POST("/login", accountController.Login)
 
-	apiRoutes := server.Group("/api", middlewares.AuthorizeJWT())
-	apiRoutes.GET("/tests", testController.GetTests)
-	apiRoutes.POST("/results", resultsController.SaveResults)
-	apiRoutes.GET("/results", resultsController.GetResults)
+	contentRoutes := server.Group("/content", middlewares.AuthorizeJWT())
+	contentRoutes.GET("/tests", testController.GetTests)
+	contentRoutes.POST("/results", resultsController.SaveResults)
+	contentRoutes.GET("/results", resultsController.GetResults)
 
 	server.Run(":5001")
 }
