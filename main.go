@@ -33,13 +33,14 @@ func main() {
 		gindump.Dump(),
 	)
 
-	server.POST("/register", registerController.Register)
-	server.POST("/login", loginController.Login)
+	accountRoutes := server.Group("/account")
+	accountRoutes.POST("/register", registerController.Register)
+	accountRoutes.POST("/login", loginController.Login)
 
-	apiRoutes := server.Group("/api", middlewares.AuthorizeJWT())
-	apiRoutes.GET("/tests", testController.GetTests)
-	apiRoutes.POST("/results", resultsController.SaveResults)
-	apiRoutes.GET("/results", resultsController.GetResults)
+	contentRoutes := server.Group("/content", middlewares.AuthorizeJWT())
+	contentRoutes.GET("/tests", testController.GetTests)
+	contentRoutes.POST("/results", resultsController.SaveResults)
+	contentRoutes.GET("/results", resultsController.GetResults)
 
 	server.Run(":5001")
 }
