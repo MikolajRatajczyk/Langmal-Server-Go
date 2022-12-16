@@ -11,23 +11,23 @@ import (
 )
 
 type AccountServiceInterface interface {
-	Register(credentialsDto entities.CredentialsDto) bool
+	Register(accountDto entities.AccountDto) bool
 	//	Returns JWT token
-	Login(credentialsDto entities.CredentialsDto) (string, error)
+	Login(accountDto entities.AccountDto) (string, error)
 }
 
-func NewAccountService(credentialsRepo repositories.CredentialsRepoInterface) AccountServiceInterface {
+func NewAccountService(accountRepo repositories.AccountRepoInterface) AccountServiceInterface {
 	return &accountService{
-		credentialsRepo: credentialsRepo,
+		accountRepo: accountRepo,
 	}
 }
 
 type accountService struct {
-	credentialsRepo repositories.CredentialsRepoInterface
+	accountRepo repositories.AccountRepoInterface
 }
 
-func (as *accountService) Register(credentialsDto entities.CredentialsDto) bool {
-	password := credentialsDto.Password
+func (as *accountService) Register(accountDto entities.AccountDto) bool {
+	password := accountDto.Password
 	cryptoUtil := utils.NewCryptoUtil()
 	hashedPassword, err := cryptoUtil.Hash(password)
 	if err != nil {
@@ -39,29 +39,29 @@ func (as *accountService) Register(credentialsDto entities.CredentialsDto) bool 
 		return false
 	}
 
-	credentials := entities.Credentials{
+	account := entities.Account{
 		Id:           uuid.String(),
-		Email:        credentialsDto.Email,
+		Email:        accountDto.Email,
 		PasswordHash: hashedPassword,
 	}
 
-	success := as.credentialsRepo.Create(credentials)
+	success := as.accountRepo.Create(account)
 	return success
 }
 
-func (as *accountService) Login(credentialsDto entities.CredentialsDto) (string, error) {
-	email := credentialsDto.Email
-	credentials := as.credentialsRepo.Find(email)
+func (as *accountService) Login(accountDto entities.AccountDto) (string, error) {
+	email := accountDto.Email
+	account := as.accountRepo.Find(email)
 
 	cryptoUtil := utils.NewCryptoUtil()
-	isAuthenticated := cryptoUtil.Compare(credentialsDto.Password, credentials.PasswordHash)
+	isAuthenticated := cryptoUtil.Compare(accountDto.Password, account.PasswordHash)
 	if isAuthenticated {
-		id := credentials.Id
+		id := account.Id
 		jwtUtil := utils.NewJWTUtil()
 		jwtToken := jwtUtil.GenerateToken(id)
 		return jwtToken, nil
 	} else {
-		log.Println("User does not exists!")
-		return "", errors.New("user does not exist")
+		log.Println("Account does not exists!")
+		return "", errors.New("account does not exist")
 	}
 }

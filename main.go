@@ -14,8 +14,8 @@ var (
 	testService    services.TestService       = services.NewTestService(testRepo)
 	testController controllers.TestController = controllers.NewTestController(testService)
 
-	credentailsRepo   repositories.CredentialsRepoInterface  = repositories.NewCredentialsRepo()
-	accountService    services.AccountServiceInterface       = services.NewAccountService(credentailsRepo)
+	accountRepo       repositories.AccountRepoInterface      = repositories.NewAccountRepo()
+	accountService    services.AccountServiceInterface       = services.NewAccountService(accountRepo)
 	accountController controllers.AccountControllerInterface = controllers.NewAccountController(accountService)
 
 	resultRepo        repositories.ResultRepoInterface       = repositories.NewResultRepo()

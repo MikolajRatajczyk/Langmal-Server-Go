@@ -24,39 +24,39 @@ type accountController struct {
 }
 
 func (ac *accountController) Register(ctx *gin.Context) {
-	var credentialsDto entities.CredentialsDto
-	err := ctx.ShouldBind(&credentialsDto)
+	var accountDto entities.AccountDto
+	err := ctx.ShouldBind(&accountDto)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"message": "Wrong credentials structure - failed to register a user.",
+			"message": "Wrong account structure - failed to register an account.",
 		})
 		return
 	}
 
-	success := ac.accountService.Register(credentialsDto)
+	success := ac.accountService.Register(accountDto)
 	if !success {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
-			"message": "Failed to register a user.",
+			"message": "Failed to register an account.",
 		})
 		return
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{
-		"message": "User has been registered.",
+		"message": "Account has been registered.",
 	})
 }
 
 func (ac *accountController) Login(ctx *gin.Context) {
-	var credentialsDto entities.CredentialsDto
-	err := ctx.ShouldBind(&credentialsDto)
+	var accountDto entities.AccountDto
+	err := ctx.ShouldBind(&accountDto)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"message": "Wrong credentials structure - failed to login a user.",
+			"message": "Wrong account structure - failed to login an account.",
 		})
 		return
 	}
 
-	token, err := ac.accountService.Login(credentialsDto)
+	token, err := ac.accountService.Login(accountDto)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),

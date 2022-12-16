@@ -4,9 +4,9 @@ import "testing"
 
 func TestReturnsNonEmptyToken(t *testing.T) {
 	sut := NewJWTUtil()
-	username := "someUser"
+	accountName := "someAccount"
 
-	token := sut.GenerateToken(username)
+	token := sut.GenerateToken(accountName)
 
 	if token == "" {
 		t.Error("Token is empty")
@@ -15,7 +15,7 @@ func TestReturnsNonEmptyToken(t *testing.T) {
 
 func TestValidatesValidToken(t *testing.T) {
 	sut := NewJWTUtil()
-	token := sut.GenerateToken("someUser")
+	token := sut.GenerateToken("someAccount")
 
 	_, err := sut.ValidateToken(token)
 
