@@ -15,9 +15,8 @@ var (
 	testController controllers.TestController  = controllers.NewTestController(testService)
 
 	credentialsRepository repositories.CredentialsRepositoryInterface = repositories.NewCredentialsRepository()
-	loginService          services.LoginServiceInterface              = services.NewLoginService(credentialsRepository)
-	registerService       services.RegisterServiceInterface           = services.NewRegisterService(credentialsRepository)
-	accountController     controllers.AccountControllerInterface      = controllers.NewAccountController(registerService, loginService)
+	accountService        services.AccountServiceInterface            = services.NewAccountService(credentialsRepository)
+	accountController     controllers.AccountControllerInterface      = controllers.NewAccountController(accountService)
 
 	resultRepo        repositories.ResultRepositoryInterface = repositories.NewResultRepository()
 	resultService     services.ResultServiceInterface        = services.NewResultService(resultRepo)

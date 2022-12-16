@@ -13,17 +13,14 @@ type AccountControllerInterface interface {
 	Login(ctx *gin.Context)
 }
 
-func NewAccountController(registerService services.RegisterServiceInterface,
-	loginService services.LoginServiceInterface) AccountControllerInterface {
+func NewAccountController(accountService services.AccountServiceInterface) AccountControllerInterface {
 	return &accountController{
-		registerService: registerService,
-		loginService:    loginService,
+		accountService: accountService,
 	}
 }
 
 type accountController struct {
-	registerService services.RegisterServiceInterface
-	loginService    services.LoginServiceInterface
+	accountService services.AccountServiceInterface
 }
 
 func (ac *accountController) Register(ctx *gin.Context) {
@@ -36,7 +33,7 @@ func (ac *accountController) Register(ctx *gin.Context) {
 		return
 	}
 
-	success := ac.registerService.Register(credentialsDto)
+	success := ac.accountService.Register(credentialsDto)
 	if !success {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"message": "Failed to register a user.",
@@ -59,7 +56,7 @@ func (ac *accountController) Login(ctx *gin.Context) {
 		return
 	}
 
-	token, err := ac.loginService.Login(credentialsDto)
+	token, err := ac.accountService.Login(credentialsDto)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),
