@@ -7,23 +7,23 @@ import (
 	"gorm.io/gorm"
 )
 
-type CredentialsRepositoryInterface interface {
+type CredentialsRepoInterface interface {
 	Create(credentials entities.Credentials) bool
 	Find(email string) entities.Credentials
 	CloseDB()
 }
 
-func NewCredentialsRepository() CredentialsRepositoryInterface {
-	return &credentialsRepository{
+func NewCredentialsRepo() CredentialsRepoInterface {
+	return &credentialsRepo{
 		db: getDb("credentials", entities.Credentials{}),
 	}
 }
 
-type credentialsRepository struct {
+type credentialsRepo struct {
 	db *gorm.DB
 }
 
-func (cr *credentialsRepository) Create(credentials entities.Credentials) bool {
+func (cr *credentialsRepo) Create(credentials entities.Credentials) bool {
 	if err := cr.db.Create(credentials).Error; err != nil {
 		log.Println("Failed to create a new user in DB!")
 		return false
@@ -32,13 +32,13 @@ func (cr *credentialsRepository) Create(credentials entities.Credentials) bool {
 	}
 }
 
-func (cr *credentialsRepository) Find(email string) entities.Credentials {
+func (cr *credentialsRepo) Find(email string) entities.Credentials {
 	var credentials entities.Credentials
 	cr.db.Where("email = ?", email).First(&credentials)
 	return credentials
 }
 
-func (cr *credentialsRepository) CloseDB() {
+func (cr *credentialsRepo) CloseDB() {
 	sqlDB, err := cr.db.DB()
 	if err != nil {
 		panic("Failed to get SQL DB!")

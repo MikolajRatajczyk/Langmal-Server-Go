@@ -11,7 +11,7 @@ type ResultServiceInterface interface {
 	Find(token string) []entities.ResultDto
 }
 
-func NewResultService(repo repositories.ResultRepositoryInterface) ResultServiceInterface {
+func NewResultService(repo repositories.ResultRepoInterface) ResultServiceInterface {
 	return &resultService{
 		jwtUtil: utils.NewJWTUtil(),
 		repo:    repo,
@@ -20,7 +20,7 @@ func NewResultService(repo repositories.ResultRepositoryInterface) ResultService
 
 type resultService struct {
 	jwtUtil utils.JWTUtilInterface
-	repo    repositories.ResultRepositoryInterface
+	repo    repositories.ResultRepoInterface
 }
 
 func (rs *resultService) Save(resultDto entities.ResultDto, token string) bool {

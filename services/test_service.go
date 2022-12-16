@@ -10,14 +10,14 @@ type TestService interface {
 	Find() ([]entities.TestDto, bool)
 }
 
-func NewTestService(repo repositories.TestRepository) TestService {
+func NewTestService(repo repositories.TestRepo) TestService {
 	return &testService{
 		repo: repo,
 	}
 }
 
 type testService struct {
-	repo repositories.TestRepository
+	repo repositories.TestRepo
 }
 
 func (qs *testService) Find() ([]entities.TestDto, bool) {

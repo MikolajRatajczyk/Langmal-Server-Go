@@ -16,14 +16,14 @@ type AccountServiceInterface interface {
 	Login(credentialsDto entities.CredentialsDto) (string, error)
 }
 
-func NewAccountService(credentialsRepository repositories.CredentialsRepositoryInterface) AccountServiceInterface {
+func NewAccountService(credentialsRepo repositories.CredentialsRepoInterface) AccountServiceInterface {
 	return &accountService{
-		credentialsRepository: credentialsRepository,
+		credentialsRepo: credentialsRepo,
 	}
 }
 
 type accountService struct {
-	credentialsRepository repositories.CredentialsRepositoryInterface
+	credentialsRepo repositories.CredentialsRepoInterface
 }
 
 func (as *accountService) Register(credentialsDto entities.CredentialsDto) bool {
@@ -45,13 +45,13 @@ func (as *accountService) Register(credentialsDto entities.CredentialsDto) bool 
 		PasswordHash: hashedPassword,
 	}
 
-	success := as.credentialsRepository.Create(credentials)
+	success := as.credentialsRepo.Create(credentials)
 	return success
 }
 
 func (as *accountService) Login(credentialsDto entities.CredentialsDto) (string, error) {
 	email := credentialsDto.Email
-	credentials := as.credentialsRepository.Find(email)
+	credentials := as.credentialsRepo.Find(email)
 
 	cryptoUtil := utils.NewCryptoUtil()
 	isAuthenticated := cryptoUtil.Compare(credentialsDto.Password, credentials.PasswordHash)

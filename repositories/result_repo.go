@@ -7,28 +7,28 @@ import (
 	"gorm.io/gorm"
 )
 
-type ResultRepositoryInterface interface {
+type ResultRepoInterface interface {
 	Create(result entities.Result) bool
 	Find(userId string) []entities.Result
 }
 
-func NewResultRepository() ResultRepositoryInterface {
-	return &resultRepository{
+func NewResultRepo() ResultRepoInterface {
+	return &resultRepo{
 		db: getDb("results", entities.Result{}),
 	}
 }
 
-type resultRepository struct {
+type resultRepo struct {
 	db *gorm.DB
 }
 
-func (rr *resultRepository) Find(userId string) []entities.Result {
+func (rr *resultRepo) Find(userId string) []entities.Result {
 	var results []entities.Result
 	rr.db.Where("user_id = ?", userId).Find(&results)
 	return results
 }
 
-func (rr *resultRepository) Create(result entities.Result) bool {
+func (rr *resultRepo) Create(result entities.Result) bool {
 	err := rr.db.Create(&result).Error
 	if err != nil {
 		log.Println("Failed to create a new result in DB!")
