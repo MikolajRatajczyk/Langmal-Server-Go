@@ -16,9 +16,8 @@ var (
 
 	credentialsRepository repositories.CredentialsRepositoryInterface = repositories.NewCredentialsRepository()
 	loginService          services.LoginServiceInterface              = services.NewLoginService(credentialsRepository)
-	loginController       controllers.LoginControllerInterface        = controllers.NewLoginController(loginService)
 	registerService       services.RegisterServiceInterface           = services.NewRegisterService(credentialsRepository)
-	registerController    controllers.RegisterControllerInterface     = controllers.NewRegisterController(registerService)
+	accountController     controllers.AccountControllerInterface      = controllers.NewAccountController(registerService, loginService)
 
 	resultRepo        repositories.ResultRepositoryInterface = repositories.NewResultRepository()
 	resultService     services.ResultServiceInterface        = services.NewResultService(resultRepo)
@@ -34,8 +33,8 @@ func main() {
 	)
 
 	accountRoutes := server.Group("/account")
-	accountRoutes.POST("/register", registerController.Register)
-	accountRoutes.POST("/login", loginController.Login)
+	accountRoutes.POST("/register", accountController.Register)
+	accountRoutes.POST("/login", accountController.Login)
 
 	contentRoutes := server.Group("/content", middlewares.AuthorizeJWT())
 	contentRoutes.GET("/tests", testController.GetTests)
