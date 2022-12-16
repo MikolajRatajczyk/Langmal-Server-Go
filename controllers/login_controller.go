@@ -8,21 +8,21 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type SignInControllerInterface interface {
-	SignIn(ctx *gin.Context)
+type LoginControllerInterface interface {
+	Login(ctx *gin.Context)
 }
 
-func NewSignInController(signInService services.SignInServiceInterface) SignInControllerInterface {
-	return &signInController{
-		signInService: signInService,
+func NewLoginController(loginService services.LoginServiceInterface) LoginControllerInterface {
+	return &loginController{
+		loginService: loginService,
 	}
 }
 
-type signInController struct {
-	signInService services.SignInServiceInterface
+type loginController struct {
+	loginService services.LoginServiceInterface
 }
 
-func (sic *signInController) SignIn(ctx *gin.Context) {
+func (lc *loginController) Login(ctx *gin.Context) {
 	var credentialsDto entities.CredentialsDto
 	err := ctx.ShouldBind(&credentialsDto)
 	if err != nil {
@@ -32,7 +32,7 @@ func (sic *signInController) SignIn(ctx *gin.Context) {
 		return
 	}
 
-	token, err := sic.signInService.SignIn(credentialsDto)
+	token, err := lc.loginService.Login(credentialsDto)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),

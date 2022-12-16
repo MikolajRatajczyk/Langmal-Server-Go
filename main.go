@@ -15,11 +15,10 @@ var (
 	testController controllers.TestController  = controllers.NewTestController(testService)
 
 	credentialsRepository repositories.CredentialsRepositoryInterface = repositories.NewCredentialsRepository()
-	signInService         services.SignInServiceInterface             = services.NewSingInService(credentialsRepository)
-	signInController      controllers.SignInControllerInterface       = controllers.NewSignInController(signInService)
-
-	signUpService    services.SignUpServiceInterface       = services.NewSignUpService(credentialsRepository)
-	signUpController controllers.SignUpControllerInterface = controllers.NewSignUpController(signUpService)
+	loginService          services.LoginServiceInterface              = services.NewLoginService(credentialsRepository)
+	loginController       controllers.LoginControllerInterface        = controllers.NewLoginController(loginService)
+	registerService       services.RegisterServiceInterface           = services.NewRegisterService(credentialsRepository)
+	registerController    controllers.RegisterControllerInterface     = controllers.NewRegisterController(registerService)
 
 	resultRepo        repositories.ResultRepositoryInterface = repositories.NewResultRepository()
 	resultService     services.ResultServiceInterface        = services.NewResultService(resultRepo)
@@ -34,8 +33,8 @@ func main() {
 		gindump.Dump(),
 	)
 
-	server.POST("/sign-up", signUpController.SignUp)
-	server.POST("/sign-in", signInController.SignIn)
+	server.POST("/register", registerController.Register)
+	server.POST("/login", loginController.Login)
 
 	apiRoutes := server.Group("/api", middlewares.AuthorizeJWT())
 	apiRoutes.GET("/tests", testController.GetTests)

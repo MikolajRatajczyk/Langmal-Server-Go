@@ -9,24 +9,24 @@ import (
 	"github.com/MikolajRatajczyk/Langmal-Server/utils"
 )
 
-type SignInServiceInterface interface {
+type LoginServiceInterface interface {
 	//	Returns JWT token
-	SignIn(credentialsDto entities.CredentialsDto) (string, error)
+	Login(credentialsDto entities.CredentialsDto) (string, error)
 }
 
-func NewSingInService(credentialsRepository repositories.CredentialsRepositoryInterface) SignInServiceInterface {
-	return &signInService{
+func NewLoginService(credentialsRepository repositories.CredentialsRepositoryInterface) LoginServiceInterface {
+	return &loginService{
 		credentialsRepository: credentialsRepository,
 	}
 }
 
-type signInService struct {
+type loginService struct {
 	credentialsRepository repositories.CredentialsRepositoryInterface
 }
 
-func (sis *signInService) SignIn(credentialsDto entities.CredentialsDto) (string, error) {
+func (ls *loginService) Login(credentialsDto entities.CredentialsDto) (string, error) {
 	email := credentialsDto.Email
-	credentials := sis.credentialsRepository.Find(email)
+	credentials := ls.credentialsRepository.Find(email)
 
 	cryptoUtil := utils.NewCryptoUtil()
 	isAuthenticated := cryptoUtil.Compare(credentialsDto.Password, credentials.PasswordHash)
