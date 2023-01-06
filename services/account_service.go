@@ -51,7 +51,10 @@ func (as *accountService) Register(accountDto entities.AccountDto) bool {
 
 func (as *accountService) Login(accountDto entities.AccountDto) (string, error) {
 	email := accountDto.Email
-	account := as.accountRepo.Find(email)
+	account, ok := as.accountRepo.Find(email)
+	if !ok {
+		return "", errors.New("account does not exist")
+	}
 
 	cryptoUtil := utils.NewCryptoUtil()
 	isAuthenticated := cryptoUtil.Compare(accountDto.Password, account.PasswordHash)

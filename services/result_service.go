@@ -8,7 +8,7 @@ import (
 
 type ResultServiceInterface interface {
 	Save(result entities.ResultDto, token string) bool
-	Find(token string) []entities.ResultDto
+	Find(token string) ([]entities.ResultDto, bool)
 }
 
 func NewResultService(repo repositories.ResultRepoInterface) ResultServiceInterface {
@@ -35,14 +35,14 @@ func (rs *resultService) Save(resultDto entities.ResultDto, token string) bool {
 	return success
 }
 
-func (rs *resultService) Find(token string) []entities.ResultDto {
+func (rs *resultService) Find(token string) ([]entities.ResultDto, bool) {
 	accountId, err := rs.jwtUtil.GetAccountId(token)
 	if err != nil {
-		return []entities.ResultDto{}
+		return []entities.ResultDto{}, false
 	}
 
-	results := rs.repo.Find(accountId)
-	return mapResultsToDtos(results)
+	results, success := rs.repo.Find(accountId)
+	return mapResultsToDtos(results), success
 }
 
 func mapResultDtoToResult(resultDto entities.ResultDto, accountId string) entities.Result {

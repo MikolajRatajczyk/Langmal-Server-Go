@@ -9,12 +9,12 @@ import (
 
 type ResultRepoInterface interface {
 	Create(result entities.Result) bool
-	Find(accountId string) []entities.Result
+	Find(accountId string) ([]entities.Result, bool)
 }
 
-func NewResultRepo() ResultRepoInterface {
+func NewResultRepo(dbName string) ResultRepoInterface {
 	return &resultRepo{
-		db: getDb("results", entities.Result{}),
+		db: getDb(dbName, entities.Result{}),
 	}
 }
 
@@ -22,10 +22,11 @@ type resultRepo struct {
 	db *gorm.DB
 }
 
-func (rr *resultRepo) Find(accountId string) []entities.Result {
+func (rr *resultRepo) Find(accountId string) ([]entities.Result, bool) {
 	var results []entities.Result
 	rr.db.Where("account_id = ?", accountId).Find(&results)
-	return results
+	success := len(results) > 0
+	return results, success
 }
 
 func (rr *resultRepo) Create(result entities.Result) bool {

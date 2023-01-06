@@ -56,6 +56,11 @@ func (rc *resultsController) SaveResults(ctx *gin.Context) {
 
 func (rc *resultsController) GetResults(ctx *gin.Context) {
 	tokenString := middlewares.GetTokenString(ctx)
-	resultDtos := rc.resultService.Find(tokenString)
+	resultDtos, success := rc.resultService.Find(tokenString)
+
+	if !success {
+		ctx.JSON(http.StatusOK, []entities.ResultDto{})
+	}
+
 	ctx.JSON(http.StatusOK, resultDtos)
 }
