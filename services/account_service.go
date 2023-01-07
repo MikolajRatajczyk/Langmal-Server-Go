@@ -2,7 +2,6 @@ package services
 
 import (
 	"errors"
-	"log"
 
 	"github.com/MikolajRatajczyk/Langmal-Server/entities"
 	"github.com/MikolajRatajczyk/Langmal-Server/repositories"
@@ -64,7 +63,6 @@ func (as *accountService) Login(accountDto entities.AccountDto) (string, error) 
 		jwtToken := jwtUtil.GenerateToken(id)
 		return jwtToken, nil
 	} else {
-		log.Println("Account does not exists!")
-		return "", errors.New("account does not exist")
+		return "", errors.New("passwords don't match")
 	}
 }

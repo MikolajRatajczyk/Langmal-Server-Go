@@ -2,11 +2,11 @@ package repositories
 
 import "github.com/MikolajRatajczyk/Langmal-Server/entities"
 
-type TestRepo interface {
+type TestRepoInterface interface {
 	FindAll() []entities.Test
 }
 
-func NewTestRepo() TestRepo {
+func NewTestRepo() TestRepoInterface {
 	//	TODO: open DB session and pass it to testRepo
 	return &testRepo{}
 }
