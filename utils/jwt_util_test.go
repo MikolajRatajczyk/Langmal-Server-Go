@@ -2,7 +2,7 @@ package utils
 
 import "testing"
 
-func TestReturnsNonEmptyToken(t *testing.T) {
+func TestJwtUtil_GenerateTokenReturnNotEmptyToken(t *testing.T) {
 	sut := NewJWTUtil()
 	accountName := "someAccount"
 
@@ -13,7 +13,7 @@ func TestReturnsNonEmptyToken(t *testing.T) {
 	}
 }
 
-func TestValidatesValidToken(t *testing.T) {
+func TestJwtUtil_ValidateTokenIfValidToken(t *testing.T) {
 	sut := NewJWTUtil()
 	token := sut.GenerateToken("someAccount")
 
@@ -24,7 +24,7 @@ func TestValidatesValidToken(t *testing.T) {
 	}
 }
 
-func TestNotValidatesWrongToken(t *testing.T) {
+func TestJwtUtil_ValidateTokenIfInvalidToken(t *testing.T) {
 	sut := NewJWTUtil()
 	token := "Token"
 

@@ -10,15 +10,15 @@ import (
 )
 
 var (
-	testRepo       repositories.TestRepo      = repositories.NewTestRepo()
-	testService    services.TestService       = services.NewTestService(testRepo)
-	testController controllers.TestController = controllers.NewTestController(testService)
+	testRepo       repositories.TestRepoInterface = repositories.NewTestRepo()
+	testService    services.TestService           = services.NewTestService(testRepo)
+	testController controllers.TestController     = controllers.NewTestController(testService)
 
-	accountRepo       repositories.AccountRepoInterface      = repositories.NewAccountRepo()
+	accountRepo       repositories.AccountRepoInterface      = repositories.NewAccountRepo("accounts")
 	accountService    services.AccountServiceInterface       = services.NewAccountService(accountRepo)
 	accountController controllers.AccountControllerInterface = controllers.NewAccountController(accountService)
 
-	resultRepo        repositories.ResultRepoInterface       = repositories.NewResultRepo()
+	resultRepo        repositories.ResultRepoInterface       = repositories.NewResultRepo("results")
 	resultService     services.ResultServiceInterface        = services.NewResultService(resultRepo)
 	resultsController controllers.ResultsControllerInterface = controllers.NewResultsController(resultService)
 )

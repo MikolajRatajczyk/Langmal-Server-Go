@@ -2,7 +2,6 @@ package services
 
 import (
 	"errors"
-	"log"
 
 	"github.com/MikolajRatajczyk/Langmal-Server/entities"
 	"github.com/MikolajRatajczyk/Langmal-Server/repositories"
@@ -51,7 +50,10 @@ func (as *accountService) Register(accountDto entities.AccountDto) bool {
 
 func (as *accountService) Login(accountDto entities.AccountDto) (string, error) {
 	email := accountDto.Email
-	account := as.accountRepo.Find(email)
+	account, ok := as.accountRepo.Find(email)
+	if !ok {
+		return "", errors.New("account does not exist")
+	}
 
 	cryptoUtil := utils.NewCryptoUtil()
 	isAuthenticated := cryptoUtil.Compare(accountDto.Password, account.PasswordHash)
@@ -61,7 +63,6 @@ func (as *accountService) Login(accountDto entities.AccountDto) (string, error) 
 		jwtToken := jwtUtil.GenerateToken(id)
 		return jwtToken, nil
 	} else {
-		log.Println("Account does not exists!")
-		return "", errors.New("account does not exist")
+		return "", errors.New("passwords don't match")
 	}
 }

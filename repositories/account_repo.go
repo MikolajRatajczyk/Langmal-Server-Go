@@ -9,13 +9,13 @@ import (
 
 type AccountRepoInterface interface {
 	Create(account entities.Account) bool
-	Find(email string) entities.Account
+	Find(email string) (entities.Account, bool)
 	CloseDB()
 }
 
-func NewAccountRepo() AccountRepoInterface {
+func NewAccountRepo(dbName string) AccountRepoInterface {
 	return &accountRepo{
-		db: getDb("accounts", entities.Account{}),
+		db: getDb(dbName, entities.Account{}),
 	}
 }
 
@@ -32,10 +32,11 @@ func (ar *accountRepo) Create(account entities.Account) bool {
 	}
 }
 
-func (ar *accountRepo) Find(email string) entities.Account {
+func (ar *accountRepo) Find(email string) (entities.Account, bool) {
 	var account entities.Account
-	ar.db.Where("email = ?", email).First(&account)
-	return account
+	result := ar.db.Where("email = ?", email).First(&account)
+	success := result.Error == nil
+	return account, success
 }
 
 func (ar *accountRepo) CloseDB() {
