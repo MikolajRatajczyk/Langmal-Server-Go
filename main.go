@@ -35,7 +35,7 @@ func main() {
 	accountRoutes.POST("/register", accountController.Register)
 	accountRoutes.POST("/login", accountController.Login)
 
-	contentRoutes := server.Group("/content", middlewares.AuthorizeJWT())
+	contentRoutes := server.Group("/content", middlewares.AuthorizeWithJWT())
 	contentRoutes.GET("/tests", testController.GetTests)
 	contentRoutes.POST("/results", resultsController.SaveResults)
 	contentRoutes.GET("/results", resultsController.GetResults)

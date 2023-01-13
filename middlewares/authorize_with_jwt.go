@@ -7,8 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Validates the token from the http request, returning 401 if it's not valid
-func AuthorizeJWT() gin.HandlerFunc {
+func AuthorizeWithJWT() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		tokenString, err := utils.ExtractToken(ctx.Request.Header)
 		if err != nil {
