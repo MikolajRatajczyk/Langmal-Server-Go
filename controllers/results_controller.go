@@ -34,7 +34,7 @@ func (rc *resultsController) SaveResults(ctx *gin.Context) {
 		return
 	}
 
-	tokenString, err := utils.ExtractToken(ctx)
+	tokenString, err := utils.ExtractToken(ctx.Request.Header)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),
@@ -55,7 +55,7 @@ func (rc *resultsController) SaveResults(ctx *gin.Context) {
 }
 
 func (rc *resultsController) GetResults(ctx *gin.Context) {
-	tokenString, err := utils.ExtractToken(ctx)
+	tokenString, err := utils.ExtractToken(ctx.Request.Header)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),

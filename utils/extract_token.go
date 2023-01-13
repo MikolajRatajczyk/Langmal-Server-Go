@@ -2,14 +2,17 @@ package utils
 
 import (
 	"errors"
-
-	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
-func ExtractToken(ctx *gin.Context) (string, error) {
-	const bearerSchemaLen = len("Bearer ")
-	authHeader := ctx.GetHeader("Authorization")
+type HeaderGetter interface {
+	GetHeader(key string) string
+}
 
+func ExtractToken(header http.Header) (string, error) {
+	authHeader := header.Get("Authorization")
+
+	const bearerSchemaLen = len("Bearer ")
 	if len(authHeader) <= bearerSchemaLen {
 		return "", errors.New("no token")
 	}
