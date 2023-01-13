@@ -1,13 +1,12 @@
 package services
 
 import (
-	"github.com/MikolajRatajczyk/Langmal-Server/entities"
+	"github.com/MikolajRatajczyk/Langmal-Server/models"
 	"github.com/MikolajRatajczyk/Langmal-Server/repositories"
 )
 
 type TestService interface {
-	//	TODO: Implement finding using param
-	Find() ([]entities.TestDto, bool)
+	All() ([]models.TestDto, bool)
 }
 
 func NewTestService(repo repositories.TestRepoInterface) TestService {
@@ -20,21 +19,21 @@ type testService struct {
 	repo repositories.TestRepoInterface
 }
 
-func (qs *testService) Find() ([]entities.TestDto, bool) {
+func (qs *testService) All() ([]models.TestDto, bool) {
 	tests := qs.repo.FindAll()
 
 	if !(len(tests) > 0) {
-		return []entities.TestDto{}, false
+		return []models.TestDto{}, false
 	}
 
 	testDto := mapTestsToDtos(tests)
 	return testDto, true
 }
 
-func mapTestsToDtos(tests []entities.Test) []entities.TestDto {
-	dtos := []entities.TestDto{}
+func mapTestsToDtos(tests []models.Test) []models.TestDto {
+	dtos := []models.TestDto{}
 	for _, test := range tests {
-		dto := entities.TestDto{
+		dto := models.TestDto{
 			Name:      test.Name,
 			Id:        test.Id,
 			Questions: mapQuestionsToDtos(test.Questions),
@@ -45,11 +44,11 @@ func mapTestsToDtos(tests []entities.Test) []entities.TestDto {
 	return dtos
 }
 
-func mapQuestionsToDtos(questions []entities.Question) []entities.QuestionDto {
-	dtos := []entities.QuestionDto{}
+func mapQuestionsToDtos(questions []models.Question) []models.QuestionDto {
+	dtos := []models.QuestionDto{}
 
 	for _, question := range questions {
-		dto := entities.QuestionDto(question)
+		dto := models.QuestionDto(question)
 		dtos = append(dtos, dto)
 	}
 

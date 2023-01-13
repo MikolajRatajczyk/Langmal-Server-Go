@@ -3,15 +3,15 @@ package services
 import (
 	"testing"
 
-	"github.com/MikolajRatajczyk/Langmal-Server/entities"
+	"github.com/MikolajRatajczyk/Langmal-Server/models"
 )
 
-var accountDto = entities.AccountDto{
+var accountDto = models.AccountDto{
 	Email:    "foo@foo.com",
 	Password: "foo",
 }
 
-var account = entities.Account{
+var account = models.Account{
 	Id:           "123",
 	Email:        "foo@foo.com",
 	PasswordHash: []byte{1},
@@ -101,20 +101,20 @@ func TestAccountService_LoginIfPasswordsDontMatch(t *testing.T) {
 type AccountRepoFake struct {
 	isCreateAlwaysSuccess bool
 	// Enables spying on what was passed when calling Create
-	usedAccountInCreate *entities.Account
-	accountToFind       *entities.Account
+	usedAccountInCreate *models.Account
+	accountToFind       *models.Account
 }
 
-func (arf *AccountRepoFake) Create(account entities.Account) bool {
+func (arf *AccountRepoFake) Create(account models.Account) bool {
 	arf.usedAccountInCreate = &account
 	return arf.isCreateAlwaysSuccess
 }
 
-func (arf *AccountRepoFake) Find(email string) (entities.Account, bool) {
+func (arf *AccountRepoFake) Find(email string) (models.Account, bool) {
 	if arf.accountToFind != nil {
 		return *arf.accountToFind, true
 	} else {
-		return entities.Account{}, false
+		return models.Account{}, false
 	}
 }
 

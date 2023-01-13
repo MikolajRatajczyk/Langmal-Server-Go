@@ -4,13 +4,13 @@ import (
 	"os"
 	"testing"
 
-	"github.com/MikolajRatajczyk/Langmal-Server/entities"
+	"github.com/MikolajRatajczyk/Langmal-Server/models"
 	"github.com/google/go-cmp/cmp"
 )
 
 const resultsDbName = "results_test"
 
-var result = entities.Result{
+var result = models.Result{
 	Correct:   1,
 	Wrong:     2,
 	TestId:    "123",
@@ -40,7 +40,7 @@ func TestResultRepo_FindExistingResult(t *testing.T) {
 		t.Error("Reported failure despite a result has been created")
 	}
 
-	if !cmp.Equal(foundResults, []entities.Result{result}) {
+	if !cmp.Equal(foundResults, []models.Result{result}) {
 		t.Error("Found results are not the same as the created one")
 	}
 }

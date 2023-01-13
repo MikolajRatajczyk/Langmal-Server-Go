@@ -1,4 +1,4 @@
-package entities
+package models
 
 type AccountDto struct {
 	Email    string `json:"email"`

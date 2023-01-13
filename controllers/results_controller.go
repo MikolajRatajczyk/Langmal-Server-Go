@@ -3,9 +3,9 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/MikolajRatajczyk/Langmal-Server/entities"
-	"github.com/MikolajRatajczyk/Langmal-Server/middlewares"
+	"github.com/MikolajRatajczyk/Langmal-Server/models"
 	"github.com/MikolajRatajczyk/Langmal-Server/services"
+	"github.com/MikolajRatajczyk/Langmal-Server/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -25,7 +25,7 @@ type resultsController struct {
 }
 
 func (rc *resultsController) SaveResults(ctx *gin.Context) {
-	var resultDto entities.ResultDto
+	var resultDto models.ResultDto
 	err := ctx.ShouldBind(&resultDto)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
@@ -34,10 +34,10 @@ func (rc *resultsController) SaveResults(ctx *gin.Context) {
 		return
 	}
 
-	tokenString := middlewares.GetTokenString(ctx)
-	if tokenString == "" {
+	tokenString, err := utils.ExtractToken(ctx.Request.Header)
+	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"message": "No token.",
+			"message": err.Error(),
 		})
 		return
 	}
@@ -55,11 +55,18 @@ func (rc *resultsController) SaveResults(ctx *gin.Context) {
 }
 
 func (rc *resultsController) GetResults(ctx *gin.Context) {
-	tokenString := middlewares.GetTokenString(ctx)
+	tokenString, err := utils.ExtractToken(ctx.Request.Header)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+
 	resultDtos, success := rc.resultService.Find(tokenString)
 
 	if !success {
-		ctx.JSON(http.StatusOK, []entities.ResultDto{})
+		ctx.JSON(http.StatusOK, []models.ResultDto{})
 	}
 
 	ctx.JSON(http.StatusOK, resultDtos)

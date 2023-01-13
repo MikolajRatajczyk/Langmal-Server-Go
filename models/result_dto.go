@@ -1,4 +1,4 @@
-package entities
+package models
 
 type ResultDto struct {
 	Correct   int    `json:"correct" binding:"number"`

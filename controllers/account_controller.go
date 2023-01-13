@@ -3,7 +3,7 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/MikolajRatajczyk/Langmal-Server/entities"
+	"github.com/MikolajRatajczyk/Langmal-Server/models"
 	"github.com/MikolajRatajczyk/Langmal-Server/services"
 	"github.com/gin-gonic/gin"
 )
@@ -24,7 +24,7 @@ type accountController struct {
 }
 
 func (ac *accountController) Register(ctx *gin.Context) {
-	var accountDto entities.AccountDto
+	var accountDto models.AccountDto
 	err := ctx.ShouldBind(&accountDto)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
@@ -47,7 +47,7 @@ func (ac *accountController) Register(ctx *gin.Context) {
 }
 
 func (ac *accountController) Login(ctx *gin.Context) {
-	var accountDto entities.AccountDto
+	var accountDto models.AccountDto
 	err := ctx.ShouldBind(&accountDto)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{

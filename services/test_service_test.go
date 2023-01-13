@@ -3,17 +3,17 @@ package services
 import (
 	"testing"
 
-	"github.com/MikolajRatajczyk/Langmal-Server/entities"
+	"github.com/MikolajRatajczyk/Langmal-Server/models"
 )
 
-func TestTestService_FindIfRepoIsNotEmpty(t *testing.T) {
+func TestTestService_AllfRepoIsNotEmpty(t *testing.T) {
 	fakeTest := newFakeTest()
 	fakeTestRepo := &FakeTestRepo{
-		tests: []entities.Test{fakeTest},
+		tests: []models.Test{fakeTest},
 	}
 	sut := NewTestService(fakeTestRepo)
 
-	foundTests, success := sut.Find()
+	foundTests, success := sut.All()
 
 	if !success {
 		t.Error("Reported failure despite the repo being not empty")
@@ -24,39 +24,39 @@ func TestTestService_FindIfRepoIsNotEmpty(t *testing.T) {
 	}
 }
 
-func TestTestService_FindIfRepoIsEmpty(t *testing.T) {
+func TestTestService_AllIfRepoIsEmpty(t *testing.T) {
 	fakeTestRepo := &FakeTestRepo{
-		tests: []entities.Test{},
+		tests: []models.Test{},
 	}
 	sut := NewTestService(fakeTestRepo)
 
-	_, success := sut.Find()
+	_, success := sut.All()
 
 	if success {
 		t.Error("Reported success despite the repo being empty")
 	}
 }
 
-func newFakeTest() entities.Test {
-	question := entities.Question{
+func newFakeTest() models.Test {
+	question := models.Question{
 		Title:   "Foo",
 		Options: []string{"a", "b", "c"},
 		Answer:  "a",
 	}
 
-	test := entities.Test{
+	test := models.Test{
 		Name:      "Foo",
 		Id:        "123",
-		Questions: []entities.Question{question},
+		Questions: []models.Question{question},
 	}
 
 	return test
 }
 
 type FakeTestRepo struct {
-	tests []entities.Test
+	tests []models.Test
 }
 
-func (ftr *FakeTestRepo) FindAll() []entities.Test {
+func (ftr *FakeTestRepo) FindAll() []models.Test {
 	return ftr.tests
 }

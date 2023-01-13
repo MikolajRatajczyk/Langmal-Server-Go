@@ -1,4 +1,4 @@
-package entities
+package models
 
 type TestDto struct {
 	Name      string        `json:"name"`

@@ -3,16 +3,16 @@ package services
 import (
 	"errors"
 
-	"github.com/MikolajRatajczyk/Langmal-Server/entities"
+	"github.com/MikolajRatajczyk/Langmal-Server/models"
 	"github.com/MikolajRatajczyk/Langmal-Server/repositories"
 	"github.com/MikolajRatajczyk/Langmal-Server/utils"
 	"github.com/google/uuid"
 )
 
 type AccountServiceInterface interface {
-	Register(accountDto entities.AccountDto) bool
+	Register(accountDto models.AccountDto) bool
 	//	Returns JWT token
-	Login(accountDto entities.AccountDto) (string, error)
+	Login(accountDto models.AccountDto) (string, error)
 }
 
 func NewAccountService(accountRepo repositories.AccountRepoInterface) AccountServiceInterface {
@@ -25,7 +25,7 @@ type accountService struct {
 	accountRepo repositories.AccountRepoInterface
 }
 
-func (as *accountService) Register(accountDto entities.AccountDto) bool {
+func (as *accountService) Register(accountDto models.AccountDto) bool {
 	password := accountDto.Password
 	cryptoUtil := utils.NewCryptoUtil()
 	hashedPassword, err := cryptoUtil.Hash(password)
@@ -38,7 +38,7 @@ func (as *accountService) Register(accountDto entities.AccountDto) bool {
 		return false
 	}
 
-	account := entities.Account{
+	account := models.Account{
 		Id:           uuid.String(),
 		Email:        accountDto.Email,
 		PasswordHash: hashedPassword,
@@ -48,7 +48,7 @@ func (as *accountService) Register(accountDto entities.AccountDto) bool {
 	return success
 }
 
-func (as *accountService) Login(accountDto entities.AccountDto) (string, error) {
+func (as *accountService) Login(accountDto models.AccountDto) (string, error) {
 	email := accountDto.Email
 	account, ok := as.accountRepo.Find(email)
 	if !ok {
