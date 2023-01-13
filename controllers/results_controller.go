@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/MikolajRatajczyk/Langmal-Server/entities"
-	"github.com/MikolajRatajczyk/Langmal-Server/middlewares"
 	"github.com/MikolajRatajczyk/Langmal-Server/services"
+	"github.com/MikolajRatajczyk/Langmal-Server/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -34,10 +34,10 @@ func (rc *resultsController) SaveResults(ctx *gin.Context) {
 		return
 	}
 
-	tokenString := middlewares.GetTokenString(ctx)
-	if tokenString == "" {
+	tokenString, err := utils.ExtractToken(ctx)
+	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"message": "No token.",
+			"message": err.Error(),
 		})
 		return
 	}
@@ -55,7 +55,14 @@ func (rc *resultsController) SaveResults(ctx *gin.Context) {
 }
 
 func (rc *resultsController) GetResults(ctx *gin.Context) {
-	tokenString := middlewares.GetTokenString(ctx)
+	tokenString, err := utils.ExtractToken(ctx)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+
 	resultDtos, success := rc.resultService.Find(tokenString)
 
 	if !success {

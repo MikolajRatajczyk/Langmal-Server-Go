@@ -10,15 +10,15 @@ import (
 // Validates the token from the http request, returning 401 if it's not valid
 func AuthorizeJWT() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		tokenString := GetTokenString(ctx)
-		if tokenString == "" {
+		tokenString, err := utils.ExtractToken(ctx)
+		if err != nil {
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-				"message": "No token",
+				"message": err.Error(),
 			})
 			return
 		}
 
-		_, err := utils.NewJWTUtil().ValidateToken(tokenString)
+		_, err = utils.NewJWTUtil().ValidateToken(tokenString)
 
 		if err != nil {
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
@@ -27,16 +27,4 @@ func AuthorizeJWT() gin.HandlerFunc {
 			return
 		}
 	}
-}
-
-func GetTokenString(ctx *gin.Context) string {
-	const bearerSchemaLen = len("Bearer ")
-	authHeader := ctx.GetHeader("Authorization")
-
-	if len(authHeader) < bearerSchemaLen {
-		return ""
-	}
-
-	tokenString := authHeader[bearerSchemaLen:]
-	return tokenString
 }
