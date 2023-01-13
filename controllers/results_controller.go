@@ -3,7 +3,7 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/MikolajRatajczyk/Langmal-Server/entities"
+	"github.com/MikolajRatajczyk/Langmal-Server/models"
 	"github.com/MikolajRatajczyk/Langmal-Server/services"
 	"github.com/MikolajRatajczyk/Langmal-Server/utils"
 	"github.com/gin-gonic/gin"
@@ -25,7 +25,7 @@ type resultsController struct {
 }
 
 func (rc *resultsController) SaveResults(ctx *gin.Context) {
-	var resultDto entities.ResultDto
+	var resultDto models.ResultDto
 	err := ctx.ShouldBind(&resultDto)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
@@ -66,7 +66,7 @@ func (rc *resultsController) GetResults(ctx *gin.Context) {
 	resultDtos, success := rc.resultService.Find(tokenString)
 
 	if !success {
-		ctx.JSON(http.StatusOK, []entities.ResultDto{})
+		ctx.JSON(http.StatusOK, []models.ResultDto{})
 	}
 
 	ctx.JSON(http.StatusOK, resultDtos)

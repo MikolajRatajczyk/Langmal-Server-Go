@@ -3,13 +3,13 @@ package services
 import (
 	"testing"
 
-	"github.com/MikolajRatajczyk/Langmal-Server/entities"
+	"github.com/MikolajRatajczyk/Langmal-Server/models"
 )
 
 func TestTestService_AllfRepoIsNotEmpty(t *testing.T) {
 	fakeTest := newFakeTest()
 	fakeTestRepo := &FakeTestRepo{
-		tests: []entities.Test{fakeTest},
+		tests: []models.Test{fakeTest},
 	}
 	sut := NewTestService(fakeTestRepo)
 
@@ -26,7 +26,7 @@ func TestTestService_AllfRepoIsNotEmpty(t *testing.T) {
 
 func TestTestService_AllIfRepoIsEmpty(t *testing.T) {
 	fakeTestRepo := &FakeTestRepo{
-		tests: []entities.Test{},
+		tests: []models.Test{},
 	}
 	sut := NewTestService(fakeTestRepo)
 
@@ -37,26 +37,26 @@ func TestTestService_AllIfRepoIsEmpty(t *testing.T) {
 	}
 }
 
-func newFakeTest() entities.Test {
-	question := entities.Question{
+func newFakeTest() models.Test {
+	question := models.Question{
 		Title:   "Foo",
 		Options: []string{"a", "b", "c"},
 		Answer:  "a",
 	}
 
-	test := entities.Test{
+	test := models.Test{
 		Name:      "Foo",
 		Id:        "123",
-		Questions: []entities.Question{question},
+		Questions: []models.Question{question},
 	}
 
 	return test
 }
 
 type FakeTestRepo struct {
-	tests []entities.Test
+	tests []models.Test
 }
 
-func (ftr *FakeTestRepo) FindAll() []entities.Test {
+func (ftr *FakeTestRepo) FindAll() []models.Test {
 	return ftr.tests
 }

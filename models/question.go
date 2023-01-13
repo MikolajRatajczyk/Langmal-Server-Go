@@ -1,4 +1,4 @@
-package entities
+package models
 
 type Question struct {
 	Title   string

@@ -1,4 +1,4 @@
-package entities
+package models
 
 type QuestionDto struct {
 	Title   string   `json:"title"`

@@ -1,4 +1,4 @@
-package entities
+package models
 
 type Account struct {
 	Id           string `gorm:"primaryKey"`

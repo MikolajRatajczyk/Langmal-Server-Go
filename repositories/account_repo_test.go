@@ -4,13 +4,13 @@ import (
 	"os"
 	"testing"
 
-	"github.com/MikolajRatajczyk/Langmal-Server/entities"
+	"github.com/MikolajRatajczyk/Langmal-Server/models"
 	"github.com/google/go-cmp/cmp"
 )
 
 const accountsDbName = "accounts_test"
 
-var account = entities.Account{
+var account = models.Account{
 	Id:           "123",
 	Email:        "foo@foo.com",
 	PasswordHash: []byte{},
