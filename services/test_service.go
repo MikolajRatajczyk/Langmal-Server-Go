@@ -6,8 +6,7 @@ import (
 )
 
 type TestService interface {
-	//	TODO: Implement finding using param
-	Find() ([]entities.TestDto, bool)
+	All() ([]entities.TestDto, bool)
 }
 
 func NewTestService(repo repositories.TestRepoInterface) TestService {
@@ -20,7 +19,7 @@ type testService struct {
 	repo repositories.TestRepoInterface
 }
 
-func (qs *testService) Find() ([]entities.TestDto, bool) {
+func (qs *testService) All() ([]entities.TestDto, bool) {
 	tests := qs.repo.FindAll()
 
 	if !(len(tests) > 0) {

@@ -22,7 +22,7 @@ type testController struct {
 }
 
 func (tc *testController) GetTests(ctx *gin.Context) {
-	tests, ok := tc.service.Find()
+	tests, ok := tc.service.All()
 
 	if ok {
 		ctx.JSON(http.StatusOK, tests)

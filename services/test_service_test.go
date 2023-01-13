@@ -6,14 +6,14 @@ import (
 	"github.com/MikolajRatajczyk/Langmal-Server/entities"
 )
 
-func TestTestService_FindIfRepoIsNotEmpty(t *testing.T) {
+func TestTestService_AllfRepoIsNotEmpty(t *testing.T) {
 	fakeTest := newFakeTest()
 	fakeTestRepo := &FakeTestRepo{
 		tests: []entities.Test{fakeTest},
 	}
 	sut := NewTestService(fakeTestRepo)
 
-	foundTests, success := sut.Find()
+	foundTests, success := sut.All()
 
 	if !success {
 		t.Error("Reported failure despite the repo being not empty")
@@ -24,13 +24,13 @@ func TestTestService_FindIfRepoIsNotEmpty(t *testing.T) {
 	}
 }
 
-func TestTestService_FindIfRepoIsEmpty(t *testing.T) {
+func TestTestService_AllIfRepoIsEmpty(t *testing.T) {
 	fakeTestRepo := &FakeTestRepo{
 		tests: []entities.Test{},
 	}
 	sut := NewTestService(fakeTestRepo)
 
-	_, success := sut.Find()
+	_, success := sut.All()
 
 	if success {
 		t.Error("Reported success despite the repo being empty")
