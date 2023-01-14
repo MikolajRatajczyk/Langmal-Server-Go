@@ -76,10 +76,10 @@ func (frr *FakeResultRepo) Create(result models.Result) bool {
 	return frr.isCreateAlwaysSuccess
 }
 
-func (frr *FakeResultRepo) Find(accountId string) ([]models.Result, bool) {
+func (frr *FakeResultRepo) Find(accountId string) []models.Result {
 	if frr.resultToFind != nil {
-		return []models.Result{*frr.resultToFind}, true
+		return []models.Result{*frr.resultToFind}
 	} else {
-		return []models.Result{}, false
+		return []models.Result{}
 	}
 }

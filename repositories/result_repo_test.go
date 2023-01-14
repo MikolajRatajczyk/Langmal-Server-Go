@@ -34,24 +34,20 @@ func TestResultRepo_FindExistingResult(t *testing.T) {
 	sut := NewResultRepo(resultsDbName)
 	sut.Create(result)
 
-	foundResults, success := sut.Find(result.AccountId)
-
-	if !success {
-		t.Error("Reported failure despite a result has been created")
-	}
+	foundResults := sut.Find(result.AccountId)
 
 	if !cmp.Equal(foundResults, []models.Result{result}) {
 		t.Error("Found results are not the same as the created one")
 	}
 }
 
-func TestResultRepo_FindNonExistingResult(t *testing.T) {
+func TestResultRepo_FindIfEmpty(t *testing.T) {
 	defer removeResultsDbFile()
 	sut := NewResultRepo(resultsDbName)
 
-	_, success := sut.Find(result.AccountId)
+	foundResults := sut.Find(result.AccountId)
 
-	if success {
+	if !cmp.Equal(foundResults, []models.Result{}) {
 		t.Error("Reported success despite no results have been created")
 	}
 }
