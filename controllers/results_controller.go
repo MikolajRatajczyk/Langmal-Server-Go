@@ -66,7 +66,7 @@ func (rc *resultsController) GetResults(ctx *gin.Context) {
 	resultDtos, success := rc.resultService.Find(tokenString)
 
 	if !success {
-		ctx.JSON(http.StatusOK, []models.ResultDto{})
+		ctx.AbortWithStatus(http.StatusInternalServerError)
 	}
 
 	ctx.JSON(http.StatusOK, resultDtos)

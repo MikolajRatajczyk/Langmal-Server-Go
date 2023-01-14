@@ -41,8 +41,8 @@ func (rs *resultService) Find(token string) ([]models.ResultDto, bool) {
 		return []models.ResultDto{}, false
 	}
 
-	results, success := rs.repo.Find(accountId)
-	return mapResultsToDtos(results), success
+	results := rs.repo.Find(accountId)
+	return mapResultsToDtos(results), true
 }
 
 func mapResultDtoToResult(resultDto models.ResultDto, accountId string) models.Result {
