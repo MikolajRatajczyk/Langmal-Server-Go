@@ -34,10 +34,18 @@ func (ac *accountController) Register(ctx *gin.Context) {
 		return
 	}
 
-	success := ac.accountService.Register(accountDto)
-	if !success {
-		ctx.JSON(http.StatusInternalServerError, gin.H{
-			"message": "Failed to register an account.",
+	err = ac.accountService.Register(accountDto)
+	if err != nil {
+		var httpErrStatus int
+		switch {
+		case errors.Is(err, services.ErrAccountAlreadyExists):
+			httpErrStatus = http.StatusBadRequest
+		default:
+			httpErrStatus = http.StatusInternalServerError
+		}
+
+		ctx.JSON(httpErrStatus, gin.H{
+			"message": "Failed to register an account: " + err.Error(),
 		})
 		return
 	}

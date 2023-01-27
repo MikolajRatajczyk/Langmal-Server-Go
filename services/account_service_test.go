@@ -23,9 +23,9 @@ func TestAccountService_RegisterIfRepoSucceeds(t *testing.T) {
 	}
 	sut := NewAccountService(fakeRepo)
 
-	success := sut.Register(accountDto)
+	err := sut.Register(accountDto)
 
-	if !success {
+	if err != nil {
 		t.Error("Should not fail for successful repo")
 	}
 
@@ -53,10 +53,10 @@ func TestAccountService_RegisterIfRepoFails(t *testing.T) {
 	}
 	sut := NewAccountService(fakeRepo)
 
-	success := sut.Register(accountDto)
+	err := sut.Register(accountDto)
 
-	if success {
-		t.Error("Reported success despite the repo failing")
+	if err == nil {
+		t.Error("No error despite the repo failing")
 	}
 }
 
