@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/MikolajRatajczyk/Langmal-Server/models"
@@ -33,10 +34,18 @@ func (ac *accountController) Register(ctx *gin.Context) {
 		return
 	}
 
-	success := ac.accountService.Register(accountDto)
-	if !success {
-		ctx.JSON(http.StatusInternalServerError, gin.H{
-			"message": "Failed to register an account.",
+	err = ac.accountService.Register(accountDto)
+	if err != nil {
+		var httpErrStatus int
+		switch {
+		case errors.Is(err, services.ErrAccountAlreadyExists):
+			httpErrStatus = http.StatusBadRequest
+		default:
+			httpErrStatus = http.StatusInternalServerError
+		}
+
+		ctx.JSON(httpErrStatus, gin.H{
+			"message": "Failed to register an account: " + err.Error(),
 		})
 		return
 	}
@@ -58,7 +67,17 @@ func (ac *accountController) Login(ctx *gin.Context) {
 
 	token, err := ac.accountService.Login(accountDto)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{
+		var httpErrStatus int
+		switch {
+		case errors.Is(err, services.ErrNoAccount):
+			httpErrStatus = http.StatusUnauthorized
+		case errors.Is(err, services.ErrNotMatchingPasswords):
+			httpErrStatus = http.StatusForbidden
+		default:
+			httpErrStatus = http.StatusInternalServerError
+		}
+
+		ctx.JSON(httpErrStatus, gin.H{
 			"message": err.Error(),
 		})
 		return

@@ -5,6 +5,8 @@ import (
 	"net/http"
 )
 
+var ErrNoToken = errors.New("no token")
+
 type HeaderGetter interface {
 	GetHeader(key string) string
 }
@@ -14,7 +16,7 @@ func ExtractToken(header http.Header) (string, error) {
 
 	const bearerSchemaLen = len("Bearer ")
 	if len(authHeader) <= bearerSchemaLen {
-		return "", errors.New("no token")
+		return "", ErrNoToken
 	}
 
 	tokenString := authHeader[bearerSchemaLen:]
