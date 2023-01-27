@@ -9,6 +9,9 @@ import (
 	"github.com/google/uuid"
 )
 
+var ErrNoAccount = errors.New("account does not exist")
+var ErrNotMatchingPasswords = errors.New("passwords don't match")
+
 type AccountServiceInterface interface {
 	Register(accountDto models.AccountDto) bool
 	//	Returns JWT token
@@ -52,7 +55,7 @@ func (as *accountService) Login(accountDto models.AccountDto) (string, error) {
 	email := accountDto.Email
 	account, ok := as.accountRepo.Find(email)
 	if !ok {
-		return "", errors.New("account does not exist")
+		return "", ErrNoAccount
 	}
 
 	cryptoUtil := utils.NewCryptoUtil()
@@ -63,6 +66,6 @@ func (as *accountService) Login(accountDto models.AccountDto) (string, error) {
 		jwtToken := jwtUtil.GenerateToken(id)
 		return jwtToken, nil
 	} else {
-		return "", errors.New("passwords don't match")
+		return "", ErrNotMatchingPasswords
 	}
 }
