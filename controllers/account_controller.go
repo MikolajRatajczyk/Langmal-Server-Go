@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/MikolajRatajczyk/Langmal-Server/models"
@@ -58,7 +59,17 @@ func (ac *accountController) Login(ctx *gin.Context) {
 
 	token, err := ac.accountService.Login(accountDto)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{
+		var httpErrStatus int
+		switch {
+		case errors.Is(err, services.ErrNoAccount):
+			httpErrStatus = http.StatusUnauthorized
+		case errors.Is(err, services.ErrNotMatchingPasswords):
+			httpErrStatus = http.StatusForbidden
+		default:
+			httpErrStatus = http.StatusInternalServerError
+		}
+
+		ctx.JSON(httpErrStatus, gin.H{
 			"message": err.Error(),
 		})
 		return
