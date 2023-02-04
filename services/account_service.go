@@ -16,8 +16,7 @@ var ErrNotMatchingPasswords = errors.New("passwords don't match")
 
 type AccountServiceInterface interface {
 	Register(accountDto models.AccountDto) error
-	//	Returns JWT token
-	Login(accountDto models.AccountDto) (string, error)
+	Login(accountDto models.AccountDto) (jwtToken string, err error)
 }
 
 func NewAccountService(accountRepo repositories.AccountRepoInterface) AccountServiceInterface {
