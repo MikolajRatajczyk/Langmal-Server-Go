@@ -3,46 +3,33 @@ package services
 import (
 	"github.com/MikolajRatajczyk/Langmal-Server/models"
 	"github.com/MikolajRatajczyk/Langmal-Server/repositories"
-	"github.com/MikolajRatajczyk/Langmal-Server/utils"
 )
 
 type ResultServiceInterface interface {
-	Save(result models.ResultDto, token string) bool
-	Find(token string) ([]models.ResultDto, bool)
+	Save(result models.ResultDto, accountId string) bool
+	Find(accountId string) []models.ResultDto
 }
 
 func NewResultService(repo repositories.ResultRepoInterface) ResultServiceInterface {
 	return &resultService{
-		jwtUtil: utils.NewJWTUtil(),
-		repo:    repo,
+		repo: repo,
 	}
 }
 
 type resultService struct {
-	jwtUtil utils.JWTUtilInterface
-	repo    repositories.ResultRepoInterface
+	repo repositories.ResultRepoInterface
 }
 
-func (rs *resultService) Save(resultDto models.ResultDto, token string) bool {
-	accountId, err := rs.jwtUtil.GetAccountId(token)
-	if err != nil {
-		return false
-	}
-
+func (rs *resultService) Save(resultDto models.ResultDto, accountId string) bool {
 	result := mapResultDtoToResult(resultDto, accountId)
 
 	success := rs.repo.Create(result)
 	return success
 }
 
-func (rs *resultService) Find(token string) ([]models.ResultDto, bool) {
-	accountId, err := rs.jwtUtil.GetAccountId(token)
-	if err != nil {
-		return []models.ResultDto{}, false
-	}
-
+func (rs *resultService) Find(accountId string) []models.ResultDto {
 	results := rs.repo.Find(accountId)
-	return mapResultsToDtos(results), true
+	return mapResultsToDtos(results)
 }
 
 func mapResultDtoToResult(resultDto models.ResultDto, accountId string) models.Result {

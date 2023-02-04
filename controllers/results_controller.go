@@ -17,11 +17,13 @@ type ResultsControllerInterface interface {
 func NewResultsController(resultService services.ResultServiceInterface) ResultsControllerInterface {
 	return &resultsController{
 		resultService: resultService,
+		jwtUtil:       utils.NewJWTUtil(),
 	}
 }
 
 type resultsController struct {
 	resultService services.ResultServiceInterface
+	jwtUtil       utils.JWTUtilInterface
 }
 
 func (rc *resultsController) SaveResults(ctx *gin.Context) {
@@ -42,7 +44,14 @@ func (rc *resultsController) SaveResults(ctx *gin.Context) {
 		return
 	}
 
-	saved := rc.resultService.Save(resultDto, tokenString)
+	accountId, err := rc.jwtUtil.GetAccountId(tokenString)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+			"message": "Failed to extract account ID from the token.",
+		})
+	}
+
+	saved := rc.resultService.Save(resultDto, accountId)
 	if saved {
 		ctx.JSON(http.StatusCreated, gin.H{
 			"message": "Result saved.",
@@ -63,11 +72,13 @@ func (rc *resultsController) GetResults(ctx *gin.Context) {
 		return
 	}
 
-	resultDtos, success := rc.resultService.Find(tokenString)
-
-	if !success {
-		ctx.AbortWithStatus(http.StatusInternalServerError)
+	accountId, err := rc.jwtUtil.GetAccountId(tokenString)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+			"message": "Failed to extract account ID from the token.",
+		})
 	}
 
+	resultDtos := rc.resultService.Find(accountId)
 	ctx.JSON(http.StatusOK, resultDtos)
 }

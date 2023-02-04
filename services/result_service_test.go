@@ -4,12 +4,8 @@ import (
 	"testing"
 
 	"github.com/MikolajRatajczyk/Langmal-Server/models"
-	"github.com/MikolajRatajczyk/Langmal-Server/utils"
 )
 
-const invalidToken = "foo"
-
-var validToken = utils.NewJWTUtil().GenerateToken("123")
 var result = models.Result{
 	Correct:   1,
 	Wrong:     2,
@@ -18,52 +14,51 @@ var result = models.Result{
 	AccountId: "111",
 }
 
-func TestResultService_FindIfTokenIsInvalid(t *testing.T) {
-	sut := NewResultService(&FakeResultRepo{})
-
-	_, success := sut.Find(invalidToken)
-
-	if success {
-		t.Error("Should fail for invalid token")
-	}
-}
-
-func TestResultService_FindIfTokenIsValid(t *testing.T) {
+func TestResultService_FindIfRepoIsEmpty(t *testing.T) {
 	sut := NewResultService(&FakeResultRepo{
-		isCreateAlwaysSuccess: false,
-		resultToFind:          &result,
+		resultToFind: nil,
 	})
 
-	foundResults, success := sut.Find(validToken)
+	results := sut.Find("123")
 
-	if !success {
-		t.Error("Should not fail for valid token")
+	if len(results) != 0 {
+		t.Error("There should be no results for an empty repo")
 	}
+}
+
+func TestResultService_FindIfRepoIsNotEmpty(t *testing.T) {
+	sut := NewResultService(&FakeResultRepo{
+		resultToFind: &result,
+	})
+
+	foundResults := sut.Find("123")
 
 	if len(foundResults) == 0 {
-		t.Error("Found results should not be empty for valid token and not empty repo")
+		t.Error("Found results should not be empty for not empty repo")
 	}
 }
 
-func TestResultService_SaveIfTokenIsInvalid(t *testing.T) {
-	sut := NewResultService(&FakeResultRepo{})
+func TestResultService_SaveIfRepoFails(t *testing.T) {
+	sut := NewResultService(&FakeResultRepo{
+		isCreateAlwaysSuccess: false,
+	})
 
-	success := sut.Save(models.ResultDto{}, invalidToken)
+	success := sut.Save(models.ResultDto{}, "123")
 
 	if success {
-		t.Error("Should fail for invalid token")
+		t.Error("Should fail if repo fails")
 	}
 }
 
-func TestResultService_SaveIfTokenIsValid(t *testing.T) {
+func TestResultService_SaveIfRepoSucceeds(t *testing.T) {
 	sut := NewResultService(&FakeResultRepo{
 		isCreateAlwaysSuccess: true,
 	})
 
-	success := sut.Save(models.ResultDto{}, validToken)
+	success := sut.Save(models.ResultDto{}, "123")
 
 	if !success {
-		t.Error("Should not fail for valid token")
+		t.Error("Should not fail if repo succeeds")
 	}
 }
 
