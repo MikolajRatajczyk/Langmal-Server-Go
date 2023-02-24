@@ -44,8 +44,8 @@ func (rc *resultsController) SaveResults(ctx *gin.Context) {
 		return
 	}
 
-	accountId, err := rc.jwtUtil.GetAccountId(tokenString)
-	if err != nil {
+	accountId, ok := rc.jwtUtil.GetAccountId(tokenString)
+	if !ok {
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 			"message": "Failed to extract account ID from the token.",
 		})
@@ -72,8 +72,8 @@ func (rc *resultsController) GetResults(ctx *gin.Context) {
 		return
 	}
 
-	accountId, err := rc.jwtUtil.GetAccountId(tokenString)
-	if err != nil {
+	accountId, ok := rc.jwtUtil.GetAccountId(tokenString)
+	if !ok {
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 			"message": "Failed to extract account ID from the token.",
 		})

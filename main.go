@@ -15,7 +15,8 @@ var (
 	testController controllers.TestController     = controllers.NewTestController(testService)
 
 	accountRepo       repositories.AccountRepoInterface      = repositories.NewAccountRepo("accounts")
-	accountService    services.AccountServiceInterface       = services.NewAccountService(accountRepo)
+	refreshTokenRepo  repositories.RefreshTokenRepoInterface = repositories.NewRefreshTokenRepo("refresh_tokens")
+	accountService    services.AccountServiceInterface       = services.NewAccountService(accountRepo, refreshTokenRepo)
 	accountController controllers.AccountControllerInterface = controllers.NewAccountController(accountService)
 
 	resultRepo        repositories.ResultRepoInterface       = repositories.NewResultRepo("results")
@@ -34,6 +35,7 @@ func main() {
 	accountRoutes := server.Group("/account")
 	accountRoutes.POST("/register", accountController.Register)
 	accountRoutes.POST("/login", accountController.Login)
+	accountRoutes.POST("/new-access-token", accountController.NewAccessToken)
 
 	contentRoutes := server.Group("/content", middlewares.AuthorizeWithJWT())
 	contentRoutes.GET("/tests", testController.GetTests)

@@ -1,90 +1,134 @@
 package utils
 
 import (
+	"errors"
 	"fmt"
+	"log"
 	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt"
 )
 
+var ErrAccountIdEmpty = errors.New("account ID is empty")
+
 type JWTUtilInterface interface {
-	GenerateToken(id string) string
-	ValidateToken(tokenString string) (*jwt.Token, error)
-	GetAccountId(tokenString string) (string, error)
+	GenerateRefreshToken(accountId string) (string, error)
+	GenerateAccessToken(accountId string) (string, error)
+
+	// Checks if a token is valid and not expired.
+	IsRefreshTokenOk(tokenString string) bool
+	// Checks if a token is valid and not expired.
+	IsAccessTokenOk(tokenString string) bool
+
+	GetAccountId(tokenString string) (string, bool)
 }
 
 func NewJWTUtil() JWTUtilInterface {
 	return &jwtUtil{
-		secret: getSecret(),
-		issuer: "ratajczyk.dev",
+		refreshSecret: getEnv("REFRESH_JWT_SECRET", "refresh_secret_fallback"),
+		accessSecret:  getEnv("ACCESS_JWT_SECRET", "access_secret_fallback"),
+		issuer:        "langmal.ratajczyk.dev",
 	}
 }
 
-func getSecret() string {
-	secret := os.Getenv("JWT_SECRET")
-	if secret == "" {
-		secret = "jwt1234./"
+func getEnv(key string, fallback string) string {
+	env := os.Getenv(key)
+	if env == "" {
+		log.Println("Environment variable " + key + " not set, using fallback!")
+		env = fallback
 	}
-	return secret
+	return env
 }
 
 type jwtUtil struct {
-	secret string
-	issuer string
+	refreshSecret string
+	accessSecret  string
+	issuer        string
 }
 
-func (ju *jwtUtil) GenerateToken(id string) string {
-	claims := &jwtCustomClaims{
-		StandardClaims: jwt.StandardClaims{
-			Issuer:   ju.issuer,
-			IssuedAt: time.Now().Unix(),
-			Subject:  id,
-		},
+func (ju *jwtUtil) GenerateRefreshToken(accountId string) (string, error) {
+	const sixMonths = time.Hour * 24 * 30 * 6
+	return ju.generateToken(accountId, sixMonths, ju.refreshSecret)
+}
+
+func (ju *jwtUtil) GenerateAccessToken(accountId string) (string, error) {
+	const fifteenMinutes = time.Minute * 15
+	return ju.generateToken(accountId, fifteenMinutes, ju.accessSecret)
+}
+
+func (ju *jwtUtil) IsRefreshTokenOk(tokenString string) bool {
+	return ju.isTokenOk(tokenString, ju.refreshSecret)
+}
+
+func (ju *jwtUtil) IsAccessTokenOk(tokenString string) bool {
+	return ju.isTokenOk(tokenString, ju.accessSecret)
+}
+
+func (ju *jwtUtil) GetAccountId(tokenString string) (string, bool) {
+	claims, ok := ju.getClaimsIfValid(tokenString, ju.refreshSecret)
+	if ok {
+		return claims.Subject, true
+	}
+
+	claims, ok = ju.getClaimsIfValid(tokenString, ju.accessSecret)
+	if ok {
+		return claims.Subject, true
+	}
+
+	return "", false
+}
+
+func (ju *jwtUtil) generateToken(accountId string, lifespan time.Duration, secret string) (string, error) {
+	if accountId == "" {
+		return "", ErrAccountIdEmpty
+	}
+
+	claims := jwt.StandardClaims{
+		ExpiresAt: time.Now().Add(lifespan).Unix(),
+		IssuedAt:  time.Now().Unix(),
+		Issuer:    ju.issuer,
+		Subject:   accountId,
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	//	generate encoded token using the secret
-	t, err := token.SignedString([]byte(ju.secret))
-	if err != nil {
-		panic(err)
-	}
-	return t
+	signedString, err := token.SignedString([]byte(secret))
+	return signedString, err
 }
 
-func (ju *jwtUtil) ValidateToken(tokenString string) (*jwt.Token, error) {
-	return jwt.Parse(tokenString, func(token *jwt.Token) (any, error) {
-		//	signing method validation
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+func (ju *jwtUtil) isTokenOk(tokenString string, secret string) bool {
+	//	validation
+	claims, isValid := ju.getClaimsIfValid(tokenString, secret)
+	if !isValid {
+		return false
+	}
+
+	//	expiration check
+	if time.Now().Unix() > claims.ExpiresAt {
+		return false
+	}
+
+	return true
+}
+
+// Returns claims even if a token has expired.
+func (*jwtUtil) getClaimsIfValid(tokenString string, secret string) (*jwt.StandardClaims, bool) {
+	claims := &jwt.StandardClaims{}
+	token, err := jwt.ParseWithClaims(tokenString, claims, func(parsedToken *jwt.Token) (any, error) {
+		_, ok := parsedToken.Method.(*jwt.SigningMethodHMAC)
+		if !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", parsedToken.Header["alg"])
 		}
-		return []byte(ju.secret), nil
+		return []byte(secret), nil
 	})
-}
-
-func (ju *jwtUtil) GetAccountId(tokenString string) (string, error) {
-	//	important: use &
-	token, err := jwt.ParseWithClaims(tokenString, &jwtCustomClaims{}, func(t *jwt.Token) (interface{}, error) {
-		return []byte(ju.secret), nil
-	})
-
 	if err != nil {
-		return "", err
+		return nil, false
 	}
 
-	//	important: use *
-	customClaims, ok := token.Claims.(*jwtCustomClaims)
-
-	if !ok {
-		return "", fmt.Errorf("can't cast claims to custom claims")
+	if !token.Valid {
+		return nil, false
 	}
 
-	return customClaims.Subject, nil
-}
-
-// Custom claims extending standard ones
-// TODO: Extending is not needed (only standard properties are used)
-type jwtCustomClaims struct {
-	jwt.StandardClaims
+	return claims, true
 }
