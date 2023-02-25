@@ -26,7 +26,7 @@ type accountController struct {
 
 func (ac *accountController) Register(ctx *gin.Context) {
 	var accountDto models.AccountDto
-	err := ctx.ShouldBind(&accountDto)
+	err := ctx.BindJSON(&accountDto)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"message": "Wrong account structure - failed to register an account.",
