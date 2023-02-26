@@ -2,11 +2,11 @@ package utils
 
 import "testing"
 
-func TestCryptoUtil_HashReturnNotEmptyHash(t *testing.T) {
+func TestCryptoUtil_HashPasswordReturnNotEmptyHash(t *testing.T) {
 	sut := NewCryptoUtil()
 	password := "somePassword123"
 
-	hash, err := sut.Hash(password)
+	hash, err := sut.HashPassword(password)
 
 	if err != nil {
 		t.Error("Received error")
@@ -17,25 +17,25 @@ func TestCryptoUtil_HashReturnNotEmptyHash(t *testing.T) {
 	}
 }
 
-func TestCryptoUtil_CompareReturnTrueWhenMatch(t *testing.T) {
+func TestCryptoUtil_ComparePasswordReturnTrueWhenMatch(t *testing.T) {
 	sut := NewCryptoUtil()
 	password := "somePassword123"
-	passwordHash, _ := sut.Hash(password)
+	passwordHash, _ := sut.HashPassword(password)
 
-	result := sut.Compare(password, passwordHash)
+	result := sut.ComparePassword(password, passwordHash)
 
 	if result == false {
 		t.Fail()
 	}
 }
 
-func TestCryptoUtil_CompareReturnFalseWhenNotMatch(t *testing.T) {
+func TestCryptoUtil_ComparePasswordReturnFalseWhenNotMatch(t *testing.T) {
 	sut := NewCryptoUtil()
 	passwordA := "somePassword123"
 	passwordB := "different"
-	passwordAHash, _ := sut.Hash(passwordA)
+	passwordAHash, _ := sut.HashPassword(passwordA)
 
-	result := sut.Compare(passwordB, passwordAHash)
+	result := sut.ComparePassword(passwordB, passwordAHash)
 
 	if result == true {
 		t.Fail()
