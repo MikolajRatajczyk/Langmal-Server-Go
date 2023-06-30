@@ -10,9 +10,9 @@ import (
 )
 
 var (
-	testRepo       repositories.TestRepoInterface = repositories.NewTestRepo()
-	testService    services.TestService           = services.NewTestService(testRepo)
-	testController controllers.TestController     = controllers.NewTestController(testService)
+	quizRepo       repositories.QuizRepoInterface = repositories.NewQuizRepo()
+	quizService    services.QuizService           = services.NewQuizService(quizRepo)
+	quizController controllers.QuizController     = controllers.NewQuizController(quizService)
 
 	accountRepo       repositories.AccountRepoInterface      = repositories.NewAccountRepo("accounts")
 	refreshTokenRepo  repositories.RefreshTokenRepoInterface = repositories.NewRefreshTokenRepo("refresh_tokens")
@@ -38,7 +38,7 @@ func main() {
 	accountRoutes.POST("/new-access-token", accountController.NewAccessToken)
 
 	contentRoutes := server.Group("/content", middlewares.AuthorizeWithJWT())
-	contentRoutes.GET("/tests", testController.GetTests)
+	contentRoutes.GET("/quizzes", quizController.GetQuizzes)
 	contentRoutes.POST("/results", resultsController.SaveResults)
 	contentRoutes.GET("/results", resultsController.GetResults)
 

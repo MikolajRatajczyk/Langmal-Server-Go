@@ -1,6 +1,6 @@
 package models
 
-type Test struct {
+type Quiz struct {
 	Name      string
 	Id        string
 	Questions []Question

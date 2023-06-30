@@ -3,7 +3,7 @@ package models
 type Result struct {
 	Correct   int
 	Wrong     int
-	TestId    string
+	QuizId    string
 	CreatedAt int64
 	AccountId string
 }
