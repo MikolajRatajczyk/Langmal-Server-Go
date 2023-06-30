@@ -9,7 +9,7 @@ import (
 var result = models.Result{
 	Correct:   1,
 	Wrong:     2,
-	TestId:    "123",
+	QuizId:    "123",
 	CreatedAt: 1673122069,
 	AccountId: "111",
 }

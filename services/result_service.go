@@ -36,7 +36,7 @@ func mapResultDtoToResult(resultDto models.ResultDto, accountId string) models.R
 	result := models.Result{
 		Correct:   resultDto.Correct,
 		Wrong:     resultDto.Wrong,
-		TestId:    resultDto.TestId,
+		QuizId:    resultDto.QuizId,
 		AccountId: accountId,
 		CreatedAt: resultDto.CreatedAt,
 	}
@@ -50,7 +50,7 @@ func mapResultsToDtos(results []models.Result) []models.ResultDto {
 		resultDto := models.ResultDto{
 			Correct:   result.Correct,
 			Wrong:     result.Wrong,
-			TestId:    result.TestId,
+			QuizId:    result.QuizId,
 			CreatedAt: result.CreatedAt,
 		}
 		resultDtos = append(resultDtos, resultDto)
