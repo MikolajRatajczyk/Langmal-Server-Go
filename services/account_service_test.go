@@ -1,6 +1,7 @@
 package services
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/MikolajRatajczyk/Langmal-Server/models"
@@ -11,102 +12,97 @@ var accountDto = models.AccountDto{
 	Password: "foo",
 }
 
-var account = models.Account{
-	Id:           "123",
-	Email:        "foo@foo.com",
-	PasswordHash: []byte{1},
+var loginRequestDto = models.LoginRequestDto{
+	Email:    "foo@foo.com",
+	Password: "foo",
+	DeviceId: "123",
 }
 
 func TestAccountService_RegisterIfRepoSucceeds(t *testing.T) {
-	fakeRepo := &AccountRepoFake{
+	accountRepoFake := AccountRepoFake{
 		isCreateAlwaysSuccess: true,
 	}
-	sut := NewAccountService(fakeRepo)
+	refreshRepoFake := RefreshRepoFake{
+		isCreateAlwaysSuccess: true,
+	}
+	sut := NewAccountService(&accountRepoFake, &refreshRepoFake)
 
 	err := sut.Register(accountDto)
 
 	if err != nil {
-		t.Error("Should not fail for successful repo")
-	}
-
-	usedAccount := fakeRepo.usedAccountInCreate
-
-	emailsMatch := usedAccount.Email == accountDto.Email
-	if !emailsMatch {
-		t.Error("Emails should match")
-	}
-
-	isIdEmpty := len(usedAccount.Id) == 0
-	if isIdEmpty {
-		t.Error("Should not try to register an account with empty id")
-	}
-
-	isPasswordHashEmpty := len(usedAccount.PasswordHash) == 0
-	if isPasswordHashEmpty {
-		t.Error("Should not try to register an account with empty password hash")
+		t.Error("Should not fail for successful repos")
 	}
 }
 
 func TestAccountService_RegisterIfRepoFails(t *testing.T) {
-	fakeRepo := &AccountRepoFake{
+	accountRepoFake := AccountRepoFake{
 		isCreateAlwaysSuccess: false,
 	}
-	sut := NewAccountService(fakeRepo)
+	refreshRepoFake := RefreshRepoFake{
+		isCreateAlwaysSuccess: false,
+	}
+	sut := NewAccountService(&accountRepoFake, &refreshRepoFake)
 
 	err := sut.Register(accountDto)
 
 	if err == nil {
-		t.Error("No error despite the repo failing")
+		t.Error("Should fail for failing repos")
 	}
 }
 
 func TestAccountService_LoginIfRepoFails(t *testing.T) {
-	fakeRepo := AccountRepoFake{
+	accountRepoFake := AccountRepoFake{
 		isCreateAlwaysSuccess: false,
-		usedAccountInCreate:   nil,
 		accountToFind:         nil,
 	}
-	sut := NewAccountService(&fakeRepo)
+	refreshRepoFake := RefreshRepoFake{
+		isCreateAlwaysSuccess: false,
+	}
+	sut := NewAccountService(&accountRepoFake, &refreshRepoFake)
 
-	jwt, err := sut.Login(accountDto)
+	jwt, err := sut.Login(loginRequestDto)
 
 	if err == nil {
-		t.Error("Error should be filled for failing repo")
+		t.Error("Should fail for failing repos")
 	}
 
-	if len(jwt) > 0 {
-		t.Error("JWT should be empty for failing repo")
+	if len(jwt.Refresh) > 0 && len(jwt.Access) > 0 {
+		t.Error("JWTs should be empty for failing repos")
 	}
 }
 
 func TestAccountService_LoginIfPasswordsDontMatch(t *testing.T) {
-	fakeRepo := AccountRepoFake{
+	account := models.Account{
+		Id:           "123",
+		Email:        "foo@foo.com",
+		PasswordHash: []byte{1},
+	}
+	accountRepoFake := AccountRepoFake{
 		isCreateAlwaysSuccess: false,
-		usedAccountInCreate:   nil,
 		accountToFind:         &account,
 	}
-	sut := NewAccountService(&fakeRepo)
+	refreshRepoFake := RefreshRepoFake{
+		isCreateAlwaysSuccess: false,
+	}
+	sut := NewAccountService(&accountRepoFake, &refreshRepoFake)
 
-	jwt, err := sut.Login(accountDto)
+	jwt, err := sut.Login(loginRequestDto)
 
-	if err == nil {
-		t.Error("Error should be filled for not matching passwords")
+	if !errors.Is(err, ErrNotMatchingPasswords) {
+		t.Error("Expected not matching passwords error")
 	}
 
-	if len(jwt) > 0 {
-		t.Error("JWT should be empty for not matching passwords")
+	if len(jwt.Refresh) > 0 && len(jwt.Access) > 0 {
+		t.Error("JWTs should be empty for not matching passwords")
 	}
 }
 
 type AccountRepoFake struct {
 	isCreateAlwaysSuccess bool
-	// Enables spying on what was passed when calling Create
-	usedAccountInCreate *models.Account
-	accountToFind       *models.Account
+	accountToFind         *models.Account
 }
 
 func (arf *AccountRepoFake) Create(account models.Account) bool {
-	arf.usedAccountInCreate = &account
 	return arf.isCreateAlwaysSuccess
 }
 
@@ -119,3 +115,15 @@ func (arf *AccountRepoFake) Find(email string) (models.Account, bool) {
 }
 
 func (*AccountRepoFake) CloseDB() {}
+
+type RefreshRepoFake struct {
+	isCreateAlwaysSuccess bool
+}
+
+func (rrf *RefreshRepoFake) Create(tokenHash []byte, accountId string, deviceId string) bool {
+	return rrf.isCreateAlwaysSuccess
+}
+
+func (rrf *RefreshRepoFake) Find(accountId string) ([]models.AssociatedToken, bool) {
+	panic("unimplemented")
+}
