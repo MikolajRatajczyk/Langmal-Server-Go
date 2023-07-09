@@ -5,6 +5,7 @@ import (
 	"github.com/MikolajRatajczyk/Langmal-Server/middlewares"
 	"github.com/MikolajRatajczyk/Langmal-Server/repositories"
 	"github.com/MikolajRatajczyk/Langmal-Server/services"
+	"github.com/MikolajRatajczyk/Langmal-Server/utils"
 	"github.com/gin-gonic/gin"
 	gindump "github.com/tpkeeper/gin-dump"
 )
@@ -12,16 +13,19 @@ import (
 var (
 	quizRepo       repositories.QuizRepoInterface = repositories.NewQuizRepo()
 	quizService    services.QuizService           = services.NewQuizService(quizRepo)
-	quizController controllers.QuizController     = controllers.NewQuizController(quizService)
+	quizController controllers.QuizController     = controllers.QuizController{Service: quizService}
 
 	accountRepo       repositories.AccountRepoInterface      = repositories.NewAccountRepo("accounts")
 	refreshTokenRepo  repositories.RefreshTokenRepoInterface = repositories.NewRefreshTokenRepo("refresh_tokens")
 	accountService    services.AccountServiceInterface       = services.NewAccountService(accountRepo, refreshTokenRepo)
-	accountController controllers.AccountControllerInterface = controllers.NewAccountController(accountService)
+	accountController controllers.AccountController          = controllers.AccountController{Service: accountService}
 
-	resultRepo        repositories.ResultRepoInterface       = repositories.NewResultRepo("results")
-	resultService     services.ResultServiceInterface        = services.NewResultService(resultRepo)
-	resultsController controllers.ResultsControllerInterface = controllers.NewResultsController(resultService)
+	resultRepo        repositories.ResultRepoInterface = repositories.NewResultRepo("results")
+	resultService     services.ResultServiceInterface  = services.NewResultService(resultRepo)
+	resultsController controllers.ResultsController    = controllers.ResultsController{
+		ResultService: resultService,
+		JwtUtil:       utils.NewJWTUtil(),
+	}
 )
 
 // TODO: HTTPS

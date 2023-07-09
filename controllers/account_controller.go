@@ -9,23 +9,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type AccountControllerInterface interface {
-	Register(ctx *gin.Context)
-	Login(ctx *gin.Context)
-	NewAccessToken(ctx *gin.Context)
+type AccountController struct {
+	Service services.AccountServiceInterface
 }
 
-func NewAccountController(accountService services.AccountServiceInterface) AccountControllerInterface {
-	return &accountController{
-		accountService: accountService,
-	}
-}
-
-type accountController struct {
-	accountService services.AccountServiceInterface
-}
-
-func (ac *accountController) Register(ctx *gin.Context) {
+func (ac *AccountController) Register(ctx *gin.Context) {
 	var accountDto models.AccountDto
 	err := ctx.BindJSON(&accountDto)
 	if err != nil {
@@ -35,7 +23,7 @@ func (ac *accountController) Register(ctx *gin.Context) {
 		return
 	}
 
-	err = ac.accountService.Register(accountDto)
+	err = ac.Service.Register(accountDto)
 	if err != nil {
 		var httpErrStatus int
 		switch {
@@ -56,7 +44,7 @@ func (ac *accountController) Register(ctx *gin.Context) {
 	})
 }
 
-func (ac *accountController) Login(ctx *gin.Context) {
+func (ac *AccountController) Login(ctx *gin.Context) {
 	var loginRequestDto models.LoginRequestDto
 	err := ctx.BindJSON(&loginRequestDto)
 	if err != nil {
@@ -66,7 +54,7 @@ func (ac *accountController) Login(ctx *gin.Context) {
 		return
 	}
 
-	tokenPair, err := ac.accountService.Login(loginRequestDto)
+	tokenPair, err := ac.Service.Login(loginRequestDto)
 	if err != nil {
 		var httpErrStatus int
 		switch {
@@ -89,7 +77,7 @@ func (ac *accountController) Login(ctx *gin.Context) {
 	})
 }
 
-func (ac *accountController) NewAccessToken(ctx *gin.Context) {
+func (ac *AccountController) NewAccessToken(ctx *gin.Context) {
 	var request models.NewAccessTokenRequestDto
 	err := ctx.BindJSON(&request)
 	if err != nil {
@@ -99,7 +87,7 @@ func (ac *accountController) NewAccessToken(ctx *gin.Context) {
 		return
 	}
 
-	accessToken, err := ac.accountService.NewAccessToken(request.RefreshJwt)
+	accessToken, err := ac.Service.NewAccessToken(request.RefreshJwt)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"message": "Failed to create a new access token, please login again.",

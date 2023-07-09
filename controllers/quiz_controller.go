@@ -7,22 +7,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type QuizController interface {
-	GetQuizzes(ctx *gin.Context)
+type QuizController struct {
+	Service services.QuizService
 }
 
-func NewQuizController(service services.QuizService) QuizController {
-	return &quizController{
-		service: service,
-	}
-}
-
-type quizController struct {
-	service services.QuizService
-}
-
-func (qc *quizController) GetQuizzes(ctx *gin.Context) {
-	quizzes, ok := qc.service.All()
+func (qc *QuizController) GetQuizzes(ctx *gin.Context) {
+	quizzes, ok := qc.Service.All()
 
 	if ok {
 		ctx.JSON(http.StatusOK, quizzes)

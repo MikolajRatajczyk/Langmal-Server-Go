@@ -9,24 +9,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type ResultsControllerInterface interface {
-	SaveResults(ctx *gin.Context)
-	GetResults(ctx *gin.Context)
+type ResultsController struct {
+	ResultService services.ResultServiceInterface
+	JwtUtil       utils.JWTUtilInterface
 }
 
-func NewResultsController(resultService services.ResultServiceInterface) ResultsControllerInterface {
-	return &resultsController{
-		resultService: resultService,
-		jwtUtil:       utils.NewJWTUtil(),
-	}
-}
-
-type resultsController struct {
-	resultService services.ResultServiceInterface
-	jwtUtil       utils.JWTUtilInterface
-}
-
-func (rc *resultsController) SaveResults(ctx *gin.Context) {
+func (rc *ResultsController) SaveResults(ctx *gin.Context) {
 	var resultDto models.ResultDto
 	err := ctx.BindJSON(&resultDto)
 	if err != nil {
@@ -44,14 +32,14 @@ func (rc *resultsController) SaveResults(ctx *gin.Context) {
 		return
 	}
 
-	accountId, ok := rc.jwtUtil.GetAccountId(tokenString)
+	accountId, ok := rc.JwtUtil.GetAccountId(tokenString)
 	if !ok {
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 			"message": "Failed to extract account ID from the token.",
 		})
 	}
 
-	saved := rc.resultService.Save(resultDto, accountId)
+	saved := rc.ResultService.Save(resultDto, accountId)
 	if saved {
 		ctx.JSON(http.StatusCreated, gin.H{
 			"message": "Result saved.",
@@ -63,7 +51,7 @@ func (rc *resultsController) SaveResults(ctx *gin.Context) {
 	}
 }
 
-func (rc *resultsController) GetResults(ctx *gin.Context) {
+func (rc *ResultsController) GetResults(ctx *gin.Context) {
 	tokenString, err := utils.ExtractToken(ctx.Request.Header)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
@@ -72,13 +60,13 @@ func (rc *resultsController) GetResults(ctx *gin.Context) {
 		return
 	}
 
-	accountId, ok := rc.jwtUtil.GetAccountId(tokenString)
+	accountId, ok := rc.JwtUtil.GetAccountId(tokenString)
 	if !ok {
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 			"message": "Failed to extract account ID from the token.",
 		})
 	}
 
-	resultDtos := rc.resultService.Find(accountId)
+	resultDtos := rc.ResultService.Find(accountId)
 	ctx.JSON(http.StatusOK, resultDtos)
 }
