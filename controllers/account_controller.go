@@ -9,33 +9,21 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type AccountControllerInterface interface {
-	Register(ctx *gin.Context)
-	Login(ctx *gin.Context)
-	NewAccessToken(ctx *gin.Context)
+type AccountController struct {
+	Service services.AccountServiceInterface
 }
 
-func NewAccountController(accountService services.AccountServiceInterface) AccountControllerInterface {
-	return &accountController{
-		accountService: accountService,
-	}
-}
-
-type accountController struct {
-	accountService services.AccountServiceInterface
-}
-
-func (ac *accountController) Register(ctx *gin.Context) {
-	var accountDto models.AccountDto
-	err := ctx.BindJSON(&accountDto)
+func (ac *AccountController) Register(ctx *gin.Context) {
+	var credentialsDto models.CredentialsDto
+	err := ctx.BindJSON(&credentialsDto)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"message": "Wrong account structure - failed to register an account.",
+			"message": "Wrong credentials structure - failed to register the account.",
 		})
 		return
 	}
 
-	err = ac.accountService.Register(accountDto)
+	err = ac.Service.Register(credentialsDto)
 	if err != nil {
 		var httpErrStatus int
 		switch {
@@ -56,17 +44,17 @@ func (ac *accountController) Register(ctx *gin.Context) {
 	})
 }
 
-func (ac *accountController) Login(ctx *gin.Context) {
-	var loginRequestDto models.LoginRequestDto
-	err := ctx.BindJSON(&loginRequestDto)
+func (ac *AccountController) Login(ctx *gin.Context) {
+	var credentialsDto models.CredentialsDto
+	err := ctx.BindJSON(&credentialsDto)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"message": "Wrong login request structure - failed to login the account.",
+			"message": "Wrong credentials structure - failed to login the account.",
 		})
 		return
 	}
 
-	tokenPair, err := ac.accountService.Login(loginRequestDto)
+	token, err := ac.Service.Login(credentialsDto)
 	if err != nil {
 		var httpErrStatus int
 		switch {
@@ -84,30 +72,5 @@ func (ac *accountController) Login(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{
-		"jwtPair": tokenPair,
-	})
-}
-
-func (ac *accountController) NewAccessToken(ctx *gin.Context) {
-	var request models.NewAccessTokenRequestDto
-	err := ctx.BindJSON(&request)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"message": "Wrong new access token request structure - failed to deliver the new access token.",
-		})
-		return
-	}
-
-	accessToken, err := ac.accountService.NewAccessToken(request.RefreshJwt)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"message": "Failed to create a new access token, please login again.",
-		})
-		return
-	}
-
-	ctx.JSON(http.StatusOK, gin.H{
-		"access_token": accessToken,
-	})
+	ctx.JSON(http.StatusOK, token)
 }
