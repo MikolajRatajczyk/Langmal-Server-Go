@@ -8,18 +8,15 @@ import (
 	"github.com/MikolajRatajczyk/Langmal-Server/utils"
 )
 
-var accountDto = models.AccountDto{
-	Email:    "foo@foo.com",
-	Password: "foo",
-}
+var (
+	cryptoUtil = utils.NewCryptoUtil()
+	jwtUtil    = utils.NewJWTUtil()
 
-var loginRequestDto = models.LoginRequestDto{
-	Email:    "foo@foo.com",
-	Password: "foo",
-}
-
-var cryptoUtil = utils.NewCryptoUtil()
-var jwtUtil = utils.NewJWTUtil()
+	credentialsDto = models.CredentialsDto{
+		Email:    "foo@foo.com",
+		Password: "foo",
+	}
+)
 
 func TestAccountService_RegisterIfRepoSucceeds(t *testing.T) {
 	accountRepoFake := AccountRepoFake{
@@ -30,7 +27,7 @@ func TestAccountService_RegisterIfRepoSucceeds(t *testing.T) {
 		cryptoUtil,
 		jwtUtil)
 
-	err := sut.Register(accountDto)
+	err := sut.Register(credentialsDto)
 
 	if err != nil {
 		t.Error("Should not fail for successful repo")
@@ -46,7 +43,7 @@ func TestAccountService_RegisterIfRepoFails(t *testing.T) {
 		cryptoUtil,
 		jwtUtil)
 
-	err := sut.Register(accountDto)
+	err := sut.Register(credentialsDto)
 
 	if err == nil {
 		t.Error("Should fail for failing repo")
@@ -63,7 +60,7 @@ func TestAccountService_LoginIfRepoFails(t *testing.T) {
 		cryptoUtil,
 		jwtUtil)
 
-	jwt, err := sut.Login(loginRequestDto)
+	jwt, err := sut.Login(credentialsDto)
 
 	if err == nil {
 		t.Error("Should fail for failing repo")
@@ -89,7 +86,7 @@ func TestAccountService_LoginIfPasswordsDontMatch(t *testing.T) {
 		cryptoUtil,
 		jwtUtil)
 
-	jwt, err := sut.Login(loginRequestDto)
+	jwt, err := sut.Login(credentialsDto)
 
 	if !errors.Is(err, ErrNotMatchingPasswords) {
 		t.Error("Expected not matching passwords error")

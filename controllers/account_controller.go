@@ -14,16 +14,16 @@ type AccountController struct {
 }
 
 func (ac *AccountController) Register(ctx *gin.Context) {
-	var accountDto models.AccountDto
-	err := ctx.BindJSON(&accountDto)
+	var credentialsDto models.CredentialsDto
+	err := ctx.BindJSON(&credentialsDto)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"message": "Wrong account structure - failed to register an account.",
+			"message": "Wrong credentials structure - failed to register the account.",
 		})
 		return
 	}
 
-	err = ac.Service.Register(accountDto)
+	err = ac.Service.Register(credentialsDto)
 	if err != nil {
 		var httpErrStatus int
 		switch {
@@ -45,16 +45,16 @@ func (ac *AccountController) Register(ctx *gin.Context) {
 }
 
 func (ac *AccountController) Login(ctx *gin.Context) {
-	var loginRequestDto models.LoginRequestDto
-	err := ctx.BindJSON(&loginRequestDto)
+	var credentialsDto models.CredentialsDto
+	err := ctx.BindJSON(&credentialsDto)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"message": "Wrong login request structure - failed to login the account.",
+			"message": "Wrong credentials structure - failed to login the account.",
 		})
 		return
 	}
 
-	token, err := ac.Service.Login(loginRequestDto)
+	token, err := ac.Service.Login(credentialsDto)
 	if err != nil {
 		var httpErrStatus int
 		switch {
