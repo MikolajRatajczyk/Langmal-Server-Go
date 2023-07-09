@@ -47,7 +47,7 @@ func main() {
 	accountRoutes.POST("/login", accountController.Login)
 	accountRoutes.POST("/new-access-token", accountController.NewAccessToken)
 
-	contentRoutes := server.Group("/content", middlewares.AuthorizeWithJWT())
+	contentRoutes := server.Group("/content", middlewares.AuthorizeWithJWT(jwtUtil))
 	contentRoutes.GET("/quizzes", quizController.GetQuizzes)
 	contentRoutes.POST("/results", resultsController.SaveResults)
 	contentRoutes.GET("/results", resultsController.GetResults)

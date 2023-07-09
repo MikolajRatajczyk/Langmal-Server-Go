@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func AuthorizeWithJWT() gin.HandlerFunc {
+func AuthorizeWithJWT(util utils.JWTUtilInterface) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		tokenString, err := utils.ExtractToken(ctx.Request.Header)
 		if err != nil {
@@ -17,7 +17,7 @@ func AuthorizeWithJWT() gin.HandlerFunc {
 			return
 		}
 
-		ok := utils.NewJWTUtil().IsAccessTokenOk(tokenString)
+		ok := util.IsAccessTokenOk(tokenString)
 		if !ok {
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 				"message": "Wrong access token",
