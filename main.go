@@ -11,20 +11,26 @@ import (
 )
 
 var (
+	jwtUtil utils.JWTUtilInterface = utils.NewJWTUtil()
+
 	quizRepo       repositories.QuizRepoInterface = repositories.NewQuizRepo()
 	quizService    services.QuizService           = services.NewQuizService(quizRepo)
 	quizController controllers.QuizController     = controllers.QuizController{Service: quizService}
 
-	accountRepo       repositories.AccountRepoInterface      = repositories.NewAccountRepo("accounts")
-	refreshTokenRepo  repositories.RefreshTokenRepoInterface = repositories.NewRefreshTokenRepo("refresh_tokens")
-	accountService    services.AccountServiceInterface       = services.NewAccountService(accountRepo, refreshTokenRepo)
-	accountController controllers.AccountController          = controllers.AccountController{Service: accountService}
+	accountRepo      repositories.AccountRepoInterface      = repositories.NewAccountRepo("accounts")
+	refreshTokenRepo repositories.RefreshTokenRepoInterface = repositories.NewRefreshTokenRepo("refresh_tokens")
+	accountService   services.AccountServiceInterface       = services.NewAccountService(
+		accountRepo,
+		refreshTokenRepo,
+		utils.NewCryptoUtil(),
+		jwtUtil)
+	accountController controllers.AccountController = controllers.AccountController{Service: accountService}
 
 	resultRepo        repositories.ResultRepoInterface = repositories.NewResultRepo("results")
 	resultService     services.ResultServiceInterface  = services.NewResultService(resultRepo)
 	resultsController controllers.ResultsController    = controllers.ResultsController{
 		ResultService: resultService,
-		JwtUtil:       utils.NewJWTUtil(),
+		JwtUtil:       jwtUtil,
 	}
 )
 

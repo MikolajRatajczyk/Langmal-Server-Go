@@ -26,12 +26,14 @@ type AccountServiceInterface interface {
 
 func NewAccountService(
 	accountRepo repositories.AccountRepoInterface,
-	refreshTokenRepo repositories.RefreshTokenRepoInterface) AccountServiceInterface {
+	refreshTokenRepo repositories.RefreshTokenRepoInterface,
+	cryptoUtil utils.CryptoUtilInterface,
+	jwtUtil utils.JWTUtilInterface) AccountServiceInterface {
 	return &accountService{
 		accountRepo:      accountRepo,
 		refreshTokenRepo: refreshTokenRepo,
-		cryptoUtil:       utils.NewCryptoUtil(),
-		jwtUtil:          utils.NewJWTUtil(),
+		cryptoUtil:       cryptoUtil,
+		jwtUtil:          jwtUtil,
 	}
 }
 

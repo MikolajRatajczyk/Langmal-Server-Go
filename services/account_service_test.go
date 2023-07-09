@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/MikolajRatajczyk/Langmal-Server/models"
+	"github.com/MikolajRatajczyk/Langmal-Server/utils"
 )
 
 var accountDto = models.AccountDto{
@@ -18,6 +19,9 @@ var loginRequestDto = models.LoginRequestDto{
 	DeviceId: "123",
 }
 
+var cryptoUtil = utils.NewCryptoUtil()
+var jwtUtil = utils.NewJWTUtil()
+
 func TestAccountService_RegisterIfRepoSucceeds(t *testing.T) {
 	accountRepoFake := AccountRepoFake{
 		isCreateAlwaysSuccess: true,
@@ -25,7 +29,11 @@ func TestAccountService_RegisterIfRepoSucceeds(t *testing.T) {
 	refreshRepoFake := RefreshRepoFake{
 		isCreateAlwaysSuccess: true,
 	}
-	sut := NewAccountService(&accountRepoFake, &refreshRepoFake)
+	sut := NewAccountService(
+		&accountRepoFake,
+		&refreshRepoFake,
+		cryptoUtil,
+		jwtUtil)
 
 	err := sut.Register(accountDto)
 
@@ -41,7 +49,11 @@ func TestAccountService_RegisterIfRepoFails(t *testing.T) {
 	refreshRepoFake := RefreshRepoFake{
 		isCreateAlwaysSuccess: false,
 	}
-	sut := NewAccountService(&accountRepoFake, &refreshRepoFake)
+	sut := NewAccountService(
+		&accountRepoFake,
+		&refreshRepoFake,
+		cryptoUtil,
+		jwtUtil)
 
 	err := sut.Register(accountDto)
 
@@ -58,7 +70,11 @@ func TestAccountService_LoginIfRepoFails(t *testing.T) {
 	refreshRepoFake := RefreshRepoFake{
 		isCreateAlwaysSuccess: false,
 	}
-	sut := NewAccountService(&accountRepoFake, &refreshRepoFake)
+	sut := NewAccountService(
+		&accountRepoFake,
+		&refreshRepoFake,
+		cryptoUtil,
+		jwtUtil)
 
 	jwt, err := sut.Login(loginRequestDto)
 
@@ -84,7 +100,11 @@ func TestAccountService_LoginIfPasswordsDontMatch(t *testing.T) {
 	refreshRepoFake := RefreshRepoFake{
 		isCreateAlwaysSuccess: false,
 	}
-	sut := NewAccountService(&accountRepoFake, &refreshRepoFake)
+	sut := NewAccountService(
+		&accountRepoFake,
+		&refreshRepoFake,
+		cryptoUtil,
+		jwtUtil)
 
 	jwt, err := sut.Login(loginRequestDto)
 
