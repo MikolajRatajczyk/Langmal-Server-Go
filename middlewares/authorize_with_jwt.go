@@ -17,10 +17,10 @@ func AuthorizeWithJWT(util utils.JWTUtilInterface) gin.HandlerFunc {
 			return
 		}
 
-		ok := util.IsAccessTokenOk(tokenString)
+		ok := util.IsOk(tokenString)
 		if !ok {
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-				"message": "Wrong access token",
+				"message": "Wrong token",
 			})
 			return
 		}

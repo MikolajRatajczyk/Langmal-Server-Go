@@ -16,7 +16,6 @@ var accountDto = models.AccountDto{
 var loginRequestDto = models.LoginRequestDto{
 	Email:    "foo@foo.com",
 	Password: "foo",
-	DeviceId: "123",
 }
 
 var cryptoUtil = utils.NewCryptoUtil()
@@ -26,19 +25,15 @@ func TestAccountService_RegisterIfRepoSucceeds(t *testing.T) {
 	accountRepoFake := AccountRepoFake{
 		isCreateAlwaysSuccess: true,
 	}
-	refreshRepoFake := RefreshRepoFake{
-		isCreateAlwaysSuccess: true,
-	}
 	sut := NewAccountService(
 		&accountRepoFake,
-		&refreshRepoFake,
 		cryptoUtil,
 		jwtUtil)
 
 	err := sut.Register(accountDto)
 
 	if err != nil {
-		t.Error("Should not fail for successful repos")
+		t.Error("Should not fail for successful repo")
 	}
 }
 
@@ -46,19 +41,15 @@ func TestAccountService_RegisterIfRepoFails(t *testing.T) {
 	accountRepoFake := AccountRepoFake{
 		isCreateAlwaysSuccess: false,
 	}
-	refreshRepoFake := RefreshRepoFake{
-		isCreateAlwaysSuccess: false,
-	}
 	sut := NewAccountService(
 		&accountRepoFake,
-		&refreshRepoFake,
 		cryptoUtil,
 		jwtUtil)
 
 	err := sut.Register(accountDto)
 
 	if err == nil {
-		t.Error("Should fail for failing repos")
+		t.Error("Should fail for failing repo")
 	}
 }
 
@@ -67,23 +58,19 @@ func TestAccountService_LoginIfRepoFails(t *testing.T) {
 		isCreateAlwaysSuccess: false,
 		accountToFind:         nil,
 	}
-	refreshRepoFake := RefreshRepoFake{
-		isCreateAlwaysSuccess: false,
-	}
 	sut := NewAccountService(
 		&accountRepoFake,
-		&refreshRepoFake,
 		cryptoUtil,
 		jwtUtil)
 
 	jwt, err := sut.Login(loginRequestDto)
 
 	if err == nil {
-		t.Error("Should fail for failing repos")
+		t.Error("Should fail for failing repo")
 	}
 
-	if len(jwt.Refresh) > 0 && len(jwt.Access) > 0 {
-		t.Error("JWTs should be empty for failing repos")
+	if len(jwt.Token) > 0 {
+		t.Error("JWT should be empty for failing repo")
 	}
 }
 
@@ -97,12 +84,8 @@ func TestAccountService_LoginIfPasswordsDontMatch(t *testing.T) {
 		isCreateAlwaysSuccess: false,
 		accountToFind:         &account,
 	}
-	refreshRepoFake := RefreshRepoFake{
-		isCreateAlwaysSuccess: false,
-	}
 	sut := NewAccountService(
 		&accountRepoFake,
-		&refreshRepoFake,
 		cryptoUtil,
 		jwtUtil)
 
@@ -112,8 +95,8 @@ func TestAccountService_LoginIfPasswordsDontMatch(t *testing.T) {
 		t.Error("Expected not matching passwords error")
 	}
 
-	if len(jwt.Refresh) > 0 && len(jwt.Access) > 0 {
-		t.Error("JWTs should be empty for not matching passwords")
+	if len(jwt.Token) > 0 {
+		t.Error("JWT should be empty for not matching passwords")
 	}
 }
 
@@ -135,15 +118,3 @@ func (arf *AccountRepoFake) Find(email string) (models.Account, bool) {
 }
 
 func (*AccountRepoFake) CloseDB() {}
-
-type RefreshRepoFake struct {
-	isCreateAlwaysSuccess bool
-}
-
-func (rrf *RefreshRepoFake) Create(tokenHash []byte, accountId string, deviceId string) bool {
-	return rrf.isCreateAlwaysSuccess
-}
-
-func (rrf *RefreshRepoFake) Find(accountId string) ([]models.AssociatedToken, bool) {
-	panic("unimplemented")
-}

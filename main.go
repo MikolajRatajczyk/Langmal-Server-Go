@@ -17,14 +17,9 @@ var (
 	quizService    services.QuizService           = services.NewQuizService(quizRepo)
 	quizController controllers.QuizController     = controllers.QuizController{Service: quizService}
 
-	accountRepo      repositories.AccountRepoInterface      = repositories.NewAccountRepo("accounts")
-	refreshTokenRepo repositories.RefreshTokenRepoInterface = repositories.NewRefreshTokenRepo("refresh_tokens")
-	accountService   services.AccountServiceInterface       = services.NewAccountService(
-		accountRepo,
-		refreshTokenRepo,
-		utils.NewCryptoUtil(),
-		jwtUtil)
-	accountController controllers.AccountController = controllers.AccountController{Service: accountService}
+	accountRepo       repositories.AccountRepoInterface = repositories.NewAccountRepo("accounts")
+	accountService    services.AccountServiceInterface  = services.NewAccountService(accountRepo, utils.NewCryptoUtil(), jwtUtil)
+	accountController controllers.AccountController     = controllers.AccountController{Service: accountService}
 
 	resultRepo        repositories.ResultRepoInterface = repositories.NewResultRepo("results")
 	resultService     services.ResultServiceInterface  = services.NewResultService(resultRepo)
@@ -45,7 +40,6 @@ func main() {
 	accountRoutes := server.Group("/account")
 	accountRoutes.POST("/register", accountController.Register)
 	accountRoutes.POST("/login", accountController.Login)
-	accountRoutes.POST("/new-access-token", accountController.NewAccessToken)
 
 	contentRoutes := server.Group("/content", middlewares.AuthorizeWithJWT(jwtUtil))
 	contentRoutes.GET("/quizzes", quizController.GetQuizzes)

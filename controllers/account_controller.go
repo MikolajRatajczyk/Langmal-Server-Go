@@ -54,7 +54,7 @@ func (ac *AccountController) Login(ctx *gin.Context) {
 		return
 	}
 
-	tokenPair, err := ac.Service.Login(loginRequestDto)
+	token, err := ac.Service.Login(loginRequestDto)
 	if err != nil {
 		var httpErrStatus int
 		switch {
@@ -72,30 +72,5 @@ func (ac *AccountController) Login(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{
-		"jwtPair": tokenPair,
-	})
-}
-
-func (ac *AccountController) NewAccessToken(ctx *gin.Context) {
-	var request models.NewAccessTokenRequestDto
-	err := ctx.BindJSON(&request)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"message": "Wrong new access token request structure - failed to deliver the new access token.",
-		})
-		return
-	}
-
-	accessToken, err := ac.Service.NewAccessToken(request.RefreshJwt)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"message": "Failed to create a new access token, please login again.",
-		})
-		return
-	}
-
-	ctx.JSON(http.StatusOK, gin.H{
-		"access_token": accessToken,
-	})
+	ctx.JSON(http.StatusOK, token)
 }
