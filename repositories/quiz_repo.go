@@ -7,17 +7,18 @@ type QuizRepoInterface interface {
 }
 
 func NewQuizRepo() QuizRepoInterface {
-	//	TODO: open DB session and pass it to quizRepo
-	return &quizRepo{}
+	quizzes := []models.Quiz{createQuiz1(), createQuiz2()}
+	return &quizRepo{
+		quizzes: quizzes,
+	}
 }
 
 type quizRepo struct {
-	//	TODO: add `connection *gorm.DB` or similar and use it
+	quizzes []models.Quiz
 }
 
 func (qr *quizRepo) FindAll() []models.Quiz {
-	quizzes := []models.Quiz{createQuiz1(), createQuiz2()}
-	return quizzes
+	return qr.quizzes
 }
 
 // TODO: remove and use DB instead
@@ -47,6 +48,7 @@ func createQuiz1() models.Quiz {
 	return quiz
 }
 
+// TODO: remove and use DB instead
 func createQuiz2() models.Quiz {
 	question1 := models.Question{
 		Title:   "First question from the server",
