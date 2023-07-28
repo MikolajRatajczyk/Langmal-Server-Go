@@ -29,7 +29,6 @@ var (
 	}
 )
 
-// TODO: HTTPS
 func main() {
 	server := gin.New()
 	server.Use(gin.Recovery(),
