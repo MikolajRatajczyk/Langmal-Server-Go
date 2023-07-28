@@ -4,6 +4,7 @@ import "github.com/MikolajRatajczyk/Langmal-Server/models"
 
 type QuizRepoInterface interface {
 	FindAll() []models.Quiz
+	Find(id string) (models.Quiz, bool)
 }
 
 func NewQuizRepo() QuizRepoInterface {
@@ -19,6 +20,15 @@ type quizRepo struct {
 
 func (qr *quizRepo) FindAll() []models.Quiz {
 	return qr.quizzes
+}
+
+func (qr *quizRepo) Find(id string) (models.Quiz, bool) {
+	for _, quiz := range qr.quizzes {
+		if quiz.Id == id {
+			return quiz, true
+		}
+	}
+	return models.Quiz{}, false
 }
 
 // TODO: remove and use DB instead

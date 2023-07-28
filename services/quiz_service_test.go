@@ -60,3 +60,12 @@ type FakeQuizRepo struct {
 func (fqr *FakeQuizRepo) FindAll() []models.Quiz {
 	return fqr.quizzes
 }
+
+func (fqr *FakeQuizRepo) Find(id string) (models.Quiz, bool) {
+	for _, quiz := range fqr.quizzes {
+		if quiz.Id == id {
+			return quiz, true
+		}
+	}
+	return models.Quiz{}, false
+}

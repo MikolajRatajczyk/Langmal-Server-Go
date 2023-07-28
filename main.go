@@ -22,7 +22,7 @@ var (
 	accountController controllers.AccountController     = controllers.AccountController{Service: accountService}
 
 	resultRepo        repositories.ResultRepoInterface = repositories.NewResultRepo("results")
-	resultService     services.ResultServiceInterface  = services.NewResultService(resultRepo)
+	resultService     services.ResultServiceInterface  = services.NewResultService(resultRepo, quizRepo)
 	resultsController controllers.ResultsController    = controllers.ResultsController{
 		ResultService: resultService,
 		JwtUtil:       jwtUtil,
