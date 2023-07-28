@@ -1,7 +1,7 @@
 package models
 
 type Quiz struct {
-	Name      string
+	Title     string
 	Id        string
 	Questions []Question
 }

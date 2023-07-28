@@ -39,7 +39,7 @@ func createQuiz1() models.Quiz {
 	}
 
 	quiz := models.Quiz{
-		Name:      "First quiz",
+		Title:     "First quiz",
 		Id:        "4e2778d3-57df-4fe9-83ec-af5ffec1ec5c",
 		Questions: []models.Question{question1, question2, question3},
 	}
@@ -60,7 +60,7 @@ func createQuiz2() models.Quiz {
 	}
 
 	quiz := models.Quiz{
-		Name:      "Second quiz",
+		Title:     "Second quiz",
 		Id:        "5e8ef788-f305-4ee3-ad69-ba8924ca3806",
 		Questions: []models.Question{question1, question2},
 	}

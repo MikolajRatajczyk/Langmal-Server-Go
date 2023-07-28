@@ -34,7 +34,7 @@ func mapQuizzesToDtos(quizzes []models.Quiz) []models.QuizDto {
 	dtos := []models.QuizDto{}
 	for _, quiz := range quizzes {
 		dto := models.QuizDto{
-			Name:      quiz.Name,
+			Title:     quiz.Title,
 			Id:        quiz.Id,
 			Questions: mapQuestionsToDtos(quiz.Questions),
 		}

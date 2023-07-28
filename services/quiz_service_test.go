@@ -45,7 +45,7 @@ func newFakeQuiz() models.Quiz {
 	}
 
 	quiz := models.Quiz{
-		Name:      "Foo",
+		Title:     "Foo",
 		Id:        "123",
 		Questions: []models.Question{question},
 	}
