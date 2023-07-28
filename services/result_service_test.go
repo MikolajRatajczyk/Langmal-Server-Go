@@ -14,10 +14,15 @@ var result = models.Result{
 	AccountId: "111",
 }
 
+var fakeQuizRepo = FakeQuizRepo{
+	quizzes: []models.Quiz{newFakeQuiz()},
+}
+
 func TestResultService_FindIfRepoIsEmpty(t *testing.T) {
-	sut := NewResultService(&FakeResultRepo{
+	fakeResultRepo := FakeResultRepo{
 		resultToFind: nil,
-	})
+	}
+	sut := NewResultService(&fakeResultRepo, &fakeQuizRepo)
 
 	results := sut.Find("123")
 
@@ -27,9 +32,10 @@ func TestResultService_FindIfRepoIsEmpty(t *testing.T) {
 }
 
 func TestResultService_FindIfRepoIsNotEmpty(t *testing.T) {
-	sut := NewResultService(&FakeResultRepo{
+	fakeResultRepo := FakeResultRepo{
 		resultToFind: &result,
-	})
+	}
+	sut := NewResultService(&fakeResultRepo, &fakeQuizRepo)
 
 	foundResults := sut.Find("123")
 
@@ -39,11 +45,12 @@ func TestResultService_FindIfRepoIsNotEmpty(t *testing.T) {
 }
 
 func TestResultService_SaveIfRepoFails(t *testing.T) {
-	sut := NewResultService(&FakeResultRepo{
+	fakeResultRepo := FakeResultRepo{
 		isCreateAlwaysSuccess: false,
-	})
+	}
+	sut := NewResultService(&fakeResultRepo, &fakeQuizRepo)
 
-	success := sut.Save(models.ResultDto{}, "123")
+	success := sut.Save(models.ResultDtoSave{}, "123")
 
 	if success {
 		t.Error("Should fail if repo fails")
@@ -51,11 +58,12 @@ func TestResultService_SaveIfRepoFails(t *testing.T) {
 }
 
 func TestResultService_SaveIfRepoSucceeds(t *testing.T) {
-	sut := NewResultService(&FakeResultRepo{
+	fakeResultRepo := FakeResultRepo{
 		isCreateAlwaysSuccess: true,
-	})
+	}
+	sut := NewResultService(&fakeResultRepo, &fakeQuizRepo)
 
-	success := sut.Save(models.ResultDto{}, "123")
+	success := sut.Save(models.ResultDtoSave{}, "123")
 
 	if !success {
 		t.Error("Should not fail if repo succeeds")

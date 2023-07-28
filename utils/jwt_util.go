@@ -8,15 +8,18 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt"
+	"github.com/google/uuid"
 )
 
 var ErrAccountIdEmpty = errors.New("account ID is empty")
+var ErrTokenCreationFailed = errors.New("token creation failed")
 
 type JWTUtilInterface interface {
 	Generate(accountId string) (string, error)
 	// Checks if a token is valid and not expired.
 	IsOk(token string) bool
 	ExtractAccountId(tokenString string) (string, bool)
+	ExtractId(token string) (string, bool)
 }
 
 func NewJWTUtil() JWTUtilInterface {
@@ -43,12 +46,18 @@ func (ju *jwtUtil) Generate(accountId string) (string, error) {
 		return "", ErrAccountIdEmpty
 	}
 
+	uuid, err := uuid.NewRandom()
+	if err != nil {
+		return "", ErrTokenCreationFailed
+	}
+
 	const sixMonths = time.Hour * 24 * 30 * 6
 	claims := jwt.StandardClaims{
 		ExpiresAt: time.Now().Add(sixMonths).Unix(),
 		IssuedAt:  time.Now().Unix(),
 		Issuer:    ju.issuer,
 		Subject:   accountId,
+		Id:        uuid.String(),
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -72,6 +81,7 @@ func (ju *jwtUtil) IsOk(token string) bool {
 	return true
 }
 
+// TODO: It should be one func with ExtractId
 func (ju *jwtUtil) ExtractAccountId(token string) (string, bool) {
 	claims, ok := ju.getClaimsIfValid(token)
 	if ok {
@@ -79,6 +89,21 @@ func (ju *jwtUtil) ExtractAccountId(token string) (string, bool) {
 	}
 
 	return "", false
+}
+
+// TODO: It should be one func with ExtractAccountId
+func (ju *jwtUtil) ExtractId(token string) (string, bool) {
+	claims, ok := ju.getClaimsIfValid(token)
+	if !ok {
+		return "", false
+	}
+
+	id := claims.Id
+	if len(id) == 0 {
+		return "", false
+	}
+
+	return id, true
 }
 
 // Returns claims even if a token has expired.

@@ -1,7 +1,7 @@
 package models
 
 type QuizDto struct {
-	Name      string        `json:"name"`
+	Title     string        `json:"title"`
 	Id        string        `json:"id"`
 	Questions []QuestionDto `json:"questions"`
 }

@@ -6,33 +6,35 @@ import (
 )
 
 type ResultServiceInterface interface {
-	Save(result models.ResultDto, accountId string) bool
-	Find(accountId string) []models.ResultDto
+	Save(result models.ResultDtoSave, accountId string) bool
+	Find(accountId string) []models.ResultDtoRead
 }
 
-func NewResultService(repo repositories.ResultRepoInterface) ResultServiceInterface {
+func NewResultService(resultRepo repositories.ResultRepoInterface, quizRepo repositories.QuizRepoInterface) ResultServiceInterface {
 	return &resultService{
-		repo: repo,
+		resultRepo: resultRepo,
+		quizRepo:   quizRepo,
 	}
 }
 
 type resultService struct {
-	repo repositories.ResultRepoInterface
+	resultRepo repositories.ResultRepoInterface
+	quizRepo   repositories.QuizRepoInterface
 }
 
-func (rs *resultService) Save(resultDto models.ResultDto, accountId string) bool {
+func (rs *resultService) Save(resultDto models.ResultDtoSave, accountId string) bool {
 	result := mapResultDtoToResult(resultDto, accountId)
 
-	success := rs.repo.Create(result)
+	success := rs.resultRepo.Create(result)
 	return success
 }
 
-func (rs *resultService) Find(accountId string) []models.ResultDto {
-	results := rs.repo.Find(accountId)
-	return mapResultsToDtos(results)
+func (rs *resultService) Find(accountId string) []models.ResultDtoRead {
+	results := rs.resultRepo.Find(accountId)
+	return rs.addQuizTitleToResults(results)
 }
 
-func mapResultDtoToResult(resultDto models.ResultDto, accountId string) models.Result {
+func mapResultDtoToResult(resultDto models.ResultDtoSave, accountId string) models.Result {
 	result := models.Result{
 		Correct:   resultDto.Correct,
 		Wrong:     resultDto.Wrong,
@@ -43,15 +45,19 @@ func mapResultDtoToResult(resultDto models.ResultDto, accountId string) models.R
 	return result
 }
 
-func mapResultsToDtos(results []models.Result) []models.ResultDto {
-	resultDtos := []models.ResultDto{}
+func (rs *resultService) addQuizTitleToResults(results []models.Result) []models.ResultDtoRead {
+	resultDtos := []models.ResultDtoRead{}
 
 	for _, result := range results {
-		resultDto := models.ResultDto{
-			Correct:   result.Correct,
-			Wrong:     result.Wrong,
-			QuizId:    result.QuizId,
-			CreatedAt: result.CreatedAt,
+		quiz, _ := rs.quizRepo.Find(result.QuizId)
+		resultDto := models.ResultDtoRead{
+			ResultDtoSave: models.ResultDtoSave{
+				Correct:   result.Correct,
+				Wrong:     result.Wrong,
+				QuizId:    result.QuizId,
+				CreatedAt: result.CreatedAt,
+			},
+			QuizTitle: quiz.Title,
 		}
 		resultDtos = append(resultDtos, resultDto)
 	}
