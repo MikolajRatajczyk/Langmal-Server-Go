@@ -21,7 +21,7 @@ func AuthorizeWithJWT(util utils.JWTUtilInterface, blockedTokensRepo repositorie
 		ok := util.IsOk(tokenString)
 		if !ok {
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-				"message": "Wrong token",
+				"message": "Token is invalid or expired",
 			})
 			return
 		}
