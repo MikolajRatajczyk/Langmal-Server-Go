@@ -18,9 +18,6 @@ func (rc *ResultsController) SaveResults(ctx *gin.Context) {
 	var resultDto models.ResultDtoSave
 	err := ctx.BindJSON(&resultDto)
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"message": "Wrong result structure.",
-		})
 		return
 	}
 

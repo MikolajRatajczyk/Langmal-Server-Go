@@ -21,9 +21,6 @@ func (ac *AccountController) Register(ctx *gin.Context) {
 	var credentialsDto models.CredentialsDto
 	err := ctx.BindJSON(&credentialsDto)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"message": "Wrong credentials structure - failed to register the account.",
-		})
 		return
 	}
 
@@ -52,9 +49,6 @@ func (ac *AccountController) Login(ctx *gin.Context) {
 	var credentialsDto models.CredentialsDto
 	err := ctx.BindJSON(&credentialsDto)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"message": "Wrong credentials structure - failed to login the account.",
-		})
 		return
 	}
 
