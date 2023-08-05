@@ -34,7 +34,7 @@ func (ac *AccountController) Register(ctx *gin.Context) {
 			httpErrStatus = http.StatusInternalServerError
 		}
 
-		ctx.JSON(httpErrStatus, gin.H{
+		ctx.AbortWithStatusJSON(httpErrStatus, gin.H{
 			"message": "Failed to register an account: " + err.Error(),
 		})
 		return
@@ -64,7 +64,7 @@ func (ac *AccountController) Login(ctx *gin.Context) {
 			httpErrStatus = http.StatusInternalServerError
 		}
 
-		ctx.JSON(httpErrStatus, gin.H{
+		ctx.AbortWithStatusJSON(httpErrStatus, gin.H{
 			"message": err.Error(),
 		})
 		return

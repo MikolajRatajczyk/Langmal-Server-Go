@@ -42,7 +42,7 @@ func (rc *ResultsController) SaveResults(ctx *gin.Context) {
 			"message": "Result saved.",
 		})
 	} else {
-		ctx.JSON(http.StatusInternalServerError, gin.H{
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"message": "Failed to save the result.",
 		})
 	}
