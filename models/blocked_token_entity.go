@@ -1,5 +1,5 @@
 package models
 
-type BlockedToken struct {
+type BlockedTokenEntity struct {
 	Id string `gorm:"primaryKey"`
 }

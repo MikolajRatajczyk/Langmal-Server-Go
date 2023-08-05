@@ -30,7 +30,7 @@ func (qs *quizService) All() ([]models.QuizDto, bool) {
 	return quizDto, true
 }
 
-func mapQuizzesToDtos(quizzes []models.Quiz) []models.QuizDto {
+func mapQuizzesToDtos(quizzes []models.QuizEntity) []models.QuizDto {
 	dtos := []models.QuizDto{}
 	for _, quiz := range quizzes {
 		dto := models.QuizDto{
@@ -44,7 +44,7 @@ func mapQuizzesToDtos(quizzes []models.Quiz) []models.QuizDto {
 	return dtos
 }
 
-func mapQuestionsToDtos(questions []models.Question) []models.QuestionDto {
+func mapQuestionsToDtos(questions []models.QuestionEntity) []models.QuestionDto {
 	dtos := []models.QuestionDto{}
 
 	for _, question := range questions {

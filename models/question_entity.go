@@ -1,6 +1,6 @@
 package models
 
-type Question struct {
+type QuestionEntity struct {
 	Title   string
 	Options []string
 	Answer  string

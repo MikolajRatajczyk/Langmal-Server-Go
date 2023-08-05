@@ -70,7 +70,7 @@ func TestAccountService_LoginIfRepoFails(t *testing.T) {
 }
 
 func TestAccountService_LoginIfPasswordsDontMatch(t *testing.T) {
-	account := models.Account{
+	account := models.AccountEntity{
 		Id:           "123",
 		Email:        "foo@foo.com",
 		PasswordHash: []byte{1},
@@ -97,18 +97,18 @@ func TestAccountService_LoginIfPasswordsDontMatch(t *testing.T) {
 
 type AccountRepoFake struct {
 	isCreateAlwaysSuccess bool
-	accountToFind         *models.Account
+	accountToFind         *models.AccountEntity
 }
 
-func (arf *AccountRepoFake) Create(account models.Account) bool {
+func (arf *AccountRepoFake) Create(account models.AccountEntity) bool {
 	return arf.isCreateAlwaysSuccess
 }
 
-func (arf *AccountRepoFake) Find(email string) (models.Account, bool) {
+func (arf *AccountRepoFake) Find(email string) (models.AccountEntity, bool) {
 	if arf.accountToFind != nil {
 		return *arf.accountToFind, true
 	} else {
-		return models.Account{}, false
+		return models.AccountEntity{}, false
 	}
 }
 

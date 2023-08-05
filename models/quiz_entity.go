@@ -1,7 +1,7 @@
 package models
 
-type Quiz struct {
+type QuizEntity struct {
 	Title     string
 	Id        string
-	Questions []Question
+	Questions []QuestionEntity
 }

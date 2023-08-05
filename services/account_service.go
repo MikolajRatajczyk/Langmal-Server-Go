@@ -53,7 +53,7 @@ func (as *accountService) Register(email string, password string) error {
 		return err
 	}
 
-	account := models.Account{
+	account := models.AccountEntity{
 		Id:           uuid.String(),
 		Email:        email,
 		PasswordHash: hashedPassword,

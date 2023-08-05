@@ -10,7 +10,7 @@ import (
 
 const accountsDbName = "accounts_test"
 
-var account = models.Account{
+var account = models.AccountEntity{
 	Id:           "123",
 	Email:        "foo@foo.com",
 	PasswordHash: []byte{},

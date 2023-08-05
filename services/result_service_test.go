@@ -7,7 +7,7 @@ import (
 )
 
 var fakeQuizRepo = FakeQuizRepo{
-	quizzes: []models.Quiz{newFakeQuiz()},
+	quizzes: []models.QuizEntity{newFakeQuiz()},
 }
 
 func TestResultService_FindIfRepoIsEmpty(t *testing.T) {

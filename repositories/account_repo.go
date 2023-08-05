@@ -8,14 +8,14 @@ import (
 )
 
 type AccountRepoInterface interface {
-	Create(account models.Account) bool
-	Find(email string) (models.Account, bool)
+	Create(account models.AccountEntity) bool
+	Find(email string) (models.AccountEntity, bool)
 	CloseDB()
 }
 
 func NewAccountRepo(dbName string) AccountRepoInterface {
 	return &accountRepo{
-		db: getDb(dbName, models.Account{}),
+		db: getDb(dbName, models.AccountEntity{}),
 	}
 }
 
@@ -23,7 +23,7 @@ type accountRepo struct {
 	db *gorm.DB
 }
 
-func (ar *accountRepo) Create(account models.Account) bool {
+func (ar *accountRepo) Create(account models.AccountEntity) bool {
 	if err := ar.db.Create(account).Error; err != nil {
 		log.Println("Failed to create a new account in DB!")
 		return false
@@ -32,8 +32,8 @@ func (ar *accountRepo) Create(account models.Account) bool {
 	}
 }
 
-func (ar *accountRepo) Find(email string) (models.Account, bool) {
-	var account models.Account
+func (ar *accountRepo) Find(email string) (models.AccountEntity, bool) {
+	var account models.AccountEntity
 	result := ar.db.Where("email = ?", email).First(&account)
 	success := result.Error == nil
 	return account, success
