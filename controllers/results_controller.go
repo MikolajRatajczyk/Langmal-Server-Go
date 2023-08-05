@@ -15,7 +15,7 @@ type ResultsController struct {
 }
 
 func (rc *ResultsController) SaveResult(ctx *gin.Context) {
-	var request models.SaveResultRequest
+	var request saveRequest
 	err := ctx.BindJSON(&request)
 	if err != nil {
 		return
@@ -73,4 +73,11 @@ func (rc *ResultsController) GetResults(ctx *gin.Context) {
 
 	resultDtos := rc.ResultService.Find(accountId)
 	ctx.JSON(http.StatusOK, resultDtos)
+}
+
+type saveRequest struct {
+	Correct   int    `json:"correct" binding:"number"`
+	Wrong     int    `json:"wrong" binding:"number"`
+	QuizId    string `json:"quiz_id" binding:"required"`
+	CreatedAt int64  `json:"created_at" binding:"required"`
 }

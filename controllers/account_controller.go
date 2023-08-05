@@ -4,7 +4,6 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/MikolajRatajczyk/Langmal-Server/models"
 	"github.com/MikolajRatajczyk/Langmal-Server/repositories"
 	"github.com/MikolajRatajczyk/Langmal-Server/services"
 	"github.com/MikolajRatajczyk/Langmal-Server/utils"
@@ -18,7 +17,7 @@ type AccountController struct {
 }
 
 func (ac *AccountController) Register(ctx *gin.Context) {
-	var request models.RegisterRequest
+	var request registerRequest
 	err := ctx.BindJSON(&request)
 	if err != nil {
 		return
@@ -46,7 +45,7 @@ func (ac *AccountController) Register(ctx *gin.Context) {
 }
 
 func (ac *AccountController) Login(ctx *gin.Context) {
-	var request models.LoginRequest
+	var request loginRequest
 	err := ctx.BindJSON(&request)
 	if err != nil {
 		return
@@ -102,3 +101,10 @@ func (ac *AccountController) Logout(ctx *gin.Context) {
 		"message": "Logged-out (token has been blocked)",
 	})
 }
+
+type loginRequest struct {
+	Email    string `json:"email" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
+
+type registerRequest loginRequest
