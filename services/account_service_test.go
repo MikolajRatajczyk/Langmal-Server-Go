@@ -12,10 +12,8 @@ var (
 	cryptoUtil = utils.NewCryptoUtil()
 	jwtUtil    = utils.NewJWTUtil()
 
-	credentialsDto = models.CredentialsDto{
-		Email:    "foo@foo.com",
-		Password: "foo",
-	}
+	email    = "foo@foo.com"
+	password = "foo"
 )
 
 func TestAccountService_RegisterIfRepoSucceeds(t *testing.T) {
@@ -27,7 +25,7 @@ func TestAccountService_RegisterIfRepoSucceeds(t *testing.T) {
 		cryptoUtil,
 		jwtUtil)
 
-	err := sut.Register(credentialsDto)
+	err := sut.Register(email, password)
 
 	if err != nil {
 		t.Error("Should not fail for successful repo")
@@ -43,7 +41,7 @@ func TestAccountService_RegisterIfRepoFails(t *testing.T) {
 		cryptoUtil,
 		jwtUtil)
 
-	err := sut.Register(credentialsDto)
+	err := sut.Register(email, password)
 
 	if err == nil {
 		t.Error("Should fail for failing repo")
@@ -60,7 +58,7 @@ func TestAccountService_LoginIfRepoFails(t *testing.T) {
 		cryptoUtil,
 		jwtUtil)
 
-	jwt, err := sut.Login(credentialsDto)
+	jwt, err := sut.Login(email, password)
 
 	if err == nil {
 		t.Error("Should fail for failing repo")
@@ -86,7 +84,7 @@ func TestAccountService_LoginIfPasswordsDontMatch(t *testing.T) {
 		cryptoUtil,
 		jwtUtil)
 
-	jwt, err := sut.Login(credentialsDto)
+	jwt, err := sut.Login(email, password)
 
 	if !errors.Is(err, ErrNotMatchingPasswords) {
 		t.Error("Expected not matching passwords error")

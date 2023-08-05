@@ -18,13 +18,13 @@ type AccountController struct {
 }
 
 func (ac *AccountController) Register(ctx *gin.Context) {
-	var credentialsDto models.CredentialsDto
-	err := ctx.BindJSON(&credentialsDto)
+	var request models.RegisterRequest
+	err := ctx.BindJSON(&request)
 	if err != nil {
 		return
 	}
 
-	err = ac.Service.Register(credentialsDto)
+	err = ac.Service.Register(request.Email, request.Password)
 	if err != nil {
 		var httpErrStatus int
 		switch {
@@ -46,13 +46,13 @@ func (ac *AccountController) Register(ctx *gin.Context) {
 }
 
 func (ac *AccountController) Login(ctx *gin.Context) {
-	var credentialsDto models.CredentialsDto
-	err := ctx.BindJSON(&credentialsDto)
+	var request models.LoginRequest
+	err := ctx.BindJSON(&request)
 	if err != nil {
 		return
 	}
 
-	token, err := ac.Service.Login(credentialsDto)
+	token, err := ac.Service.Login(request.Email, request.Password)
 	if err != nil {
 		var httpErrStatus int
 		switch {

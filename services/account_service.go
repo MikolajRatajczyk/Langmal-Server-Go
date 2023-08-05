@@ -16,8 +16,8 @@ var ErrNotMatchingPasswords = errors.New("passwords don't match")
 var ErrFailedToGenerateJwt = errors.New("failed to generate a JWT")
 
 type AccountServiceInterface interface {
-	Register(credentialsDto models.CredentialsDto) error
-	Login(credentialsDto models.CredentialsDto) (models.JwtDto, error)
+	Register(email string, password string) error
+	Login(email string, password string) (models.JwtDto, error)
 }
 
 func NewAccountService(
@@ -37,14 +37,13 @@ type accountService struct {
 	jwtUtil     utils.JWTUtilInterface
 }
 
-func (as *accountService) Register(credentialsDto models.CredentialsDto) error {
-	email := credentialsDto.Email
+func (as *accountService) Register(email string, password string) error {
 	_, accountExist := as.accountRepo.Find(email)
 	if accountExist {
 		return ErrAccountAlreadyExists
 	}
 
-	hashedPassword, err := as.cryptoUtil.HashPassword(credentialsDto.Password)
+	hashedPassword, err := as.cryptoUtil.HashPassword(password)
 	if err != nil {
 		return err
 	}
@@ -68,13 +67,13 @@ func (as *accountService) Register(credentialsDto models.CredentialsDto) error {
 	return nil
 }
 
-func (as *accountService) Login(credentialsDto models.CredentialsDto) (models.JwtDto, error) {
-	account, found := as.accountRepo.Find(credentialsDto.Email)
+func (as *accountService) Login(email string, password string) (models.JwtDto, error) {
+	account, found := as.accountRepo.Find(email)
 	if !found {
 		return models.JwtDto{}, ErrNoAccount
 	}
 
-	isAuthenticated := as.cryptoUtil.ComparePassword(credentialsDto.Password, account.PasswordHash)
+	isAuthenticated := as.cryptoUtil.ComparePassword(password, account.PasswordHash)
 	if !isAuthenticated {
 		return models.JwtDto{}, ErrNotMatchingPasswords
 	}
