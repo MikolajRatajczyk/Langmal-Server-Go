@@ -73,15 +73,13 @@ func (ac *AccountController) Login(ctx *gin.Context) {
 }
 
 func (ac *AccountController) Logout(ctx *gin.Context) {
-	tokenString, err := utils.ExtractToken(ctx.Request.Header)
+	var request logoutRequest
+	err := ctx.BindJSON(&request)
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"message": err.Error(),
-		})
 		return
 	}
 
-	tokenId, ok := ac.JwtUtil.ExtractId(tokenString)
+	tokenId, ok := ac.JwtUtil.ExtractId(request.Token)
 	if !ok {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"message": "Token doesn't contain an ID",
@@ -108,3 +106,7 @@ type loginRequest struct {
 }
 
 type registerRequest loginRequest
+
+type logoutRequest struct {
+	Token string `json:"token" binding:"required"`
+}
