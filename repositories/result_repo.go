@@ -8,13 +8,13 @@ import (
 )
 
 type ResultRepoInterface interface {
-	Create(result models.Result) bool
-	Find(accountId string) []models.Result
+	Create(result models.ResultEntity) bool
+	Find(accountId string) []models.ResultEntity
 }
 
 func NewResultRepo(dbName string) ResultRepoInterface {
 	return &resultRepo{
-		db: getDb(dbName, models.Result{}),
+		db: getDb(dbName, models.ResultEntity{}),
 	}
 }
 
@@ -22,13 +22,13 @@ type resultRepo struct {
 	db *gorm.DB
 }
 
-func (rr *resultRepo) Find(accountId string) []models.Result {
-	var results []models.Result
+func (rr *resultRepo) Find(accountId string) []models.ResultEntity {
+	var results []models.ResultEntity
 	rr.db.Where("account_id = ?", accountId).Find(&results)
 	return results
 }
 
-func (rr *resultRepo) Create(result models.Result) bool {
+func (rr *resultRepo) Create(result models.ResultEntity) bool {
 	err := rr.db.Create(&result).Error
 	if err != nil {
 		log.Println("Failed to create a new result in DB!")

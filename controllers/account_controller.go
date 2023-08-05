@@ -4,7 +4,6 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/MikolajRatajczyk/Langmal-Server/models"
 	"github.com/MikolajRatajczyk/Langmal-Server/repositories"
 	"github.com/MikolajRatajczyk/Langmal-Server/services"
 	"github.com/MikolajRatajczyk/Langmal-Server/utils"
@@ -18,16 +17,13 @@ type AccountController struct {
 }
 
 func (ac *AccountController) Register(ctx *gin.Context) {
-	var credentialsDto models.CredentialsDto
-	err := ctx.BindJSON(&credentialsDto)
+	var request registerRequest
+	err := ctx.BindJSON(&request)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"message": "Wrong credentials structure - failed to register the account.",
-		})
 		return
 	}
 
-	err = ac.Service.Register(credentialsDto)
+	err = ac.Service.Register(request.Email, request.Password)
 	if err != nil {
 		var httpErrStatus int
 		switch {
@@ -37,7 +33,7 @@ func (ac *AccountController) Register(ctx *gin.Context) {
 			httpErrStatus = http.StatusInternalServerError
 		}
 
-		ctx.JSON(httpErrStatus, gin.H{
+		ctx.AbortWithStatusJSON(httpErrStatus, gin.H{
 			"message": "Failed to register an account: " + err.Error(),
 		})
 		return
@@ -49,16 +45,13 @@ func (ac *AccountController) Register(ctx *gin.Context) {
 }
 
 func (ac *AccountController) Login(ctx *gin.Context) {
-	var credentialsDto models.CredentialsDto
-	err := ctx.BindJSON(&credentialsDto)
+	var request loginRequest
+	err := ctx.BindJSON(&request)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"message": "Wrong credentials structure - failed to login the account.",
-		})
 		return
 	}
 
-	token, err := ac.Service.Login(credentialsDto)
+	token, err := ac.Service.Login(request.Email, request.Password)
 	if err != nil {
 		var httpErrStatus int
 		switch {
@@ -70,7 +63,7 @@ func (ac *AccountController) Login(ctx *gin.Context) {
 			httpErrStatus = http.StatusInternalServerError
 		}
 
-		ctx.JSON(httpErrStatus, gin.H{
+		ctx.AbortWithStatusJSON(httpErrStatus, gin.H{
 			"message": err.Error(),
 		})
 		return
@@ -80,15 +73,13 @@ func (ac *AccountController) Login(ctx *gin.Context) {
 }
 
 func (ac *AccountController) Logout(ctx *gin.Context) {
-	tokenString, err := utils.ExtractToken(ctx.Request.Header)
+	var request logoutRequest
+	err := ctx.BindJSON(&request)
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"message": err.Error(),
-		})
 		return
 	}
 
-	tokenId, ok := ac.JwtUtil.ExtractId(tokenString)
+	tokenId, ok := ac.JwtUtil.ExtractId(request.Token)
 	if !ok {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"message": "Token doesn't contain an ID",
@@ -107,4 +98,15 @@ func (ac *AccountController) Logout(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"message": "Logged-out (token has been blocked)",
 	})
+}
+
+type loginRequest struct {
+	Email    string `json:"email" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
+
+type registerRequest loginRequest
+
+type logoutRequest struct {
+	Token string `json:"token" binding:"required"`
 }

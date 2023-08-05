@@ -12,7 +12,7 @@ type BlockedTokensRepoInterface interface {
 
 func NewBlockedTokenRepo(dbName string) BlockedTokensRepoInterface {
 	return &blockedTokenRepo{
-		db: getDb(dbName, models.BlockedToken{}),
+		db: getDb(dbName, models.BlockedTokenEntity{}),
 	}
 }
 
@@ -21,13 +21,13 @@ type blockedTokenRepo struct {
 }
 
 func (btr *blockedTokenRepo) Add(id string) bool {
-	blockedToken := models.BlockedToken{Id: id}
+	blockedToken := models.BlockedTokenEntity{Id: id}
 	err := btr.db.Create(blockedToken).Error
 	return err == nil
 }
 
 func (btr *blockedTokenRepo) IsBlocked(id string) bool {
-	var blockedToken models.BlockedToken
+	var blockedToken models.BlockedTokenEntity
 	result := btr.db.
 		Where("id = ?", id).
 		First(&blockedToken)

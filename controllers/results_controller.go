@@ -14,13 +14,10 @@ type ResultsController struct {
 	JwtUtil       utils.JWTUtilInterface
 }
 
-func (rc *ResultsController) SaveResults(ctx *gin.Context) {
-	var resultDto models.ResultDtoSave
-	err := ctx.BindJSON(&resultDto)
+func (rc *ResultsController) SaveResult(ctx *gin.Context) {
+	var request saveRequest
+	err := ctx.BindJSON(&request)
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"message": "Wrong result structure.",
-		})
 		return
 	}
 
@@ -39,13 +36,20 @@ func (rc *ResultsController) SaveResults(ctx *gin.Context) {
 		})
 	}
 
-	saved := rc.ResultService.Save(resultDto, accountId)
+	result := models.ResultEntity{
+		Correct:   request.Correct,
+		Wrong:     request.Wrong,
+		QuizId:    request.QuizId,
+		CreatedAt: request.CreatedAt,
+		AccountId: accountId,
+	}
+	saved := rc.ResultService.Save(result, accountId)
 	if saved {
 		ctx.JSON(http.StatusCreated, gin.H{
 			"message": "Result saved.",
 		})
 	} else {
-		ctx.JSON(http.StatusInternalServerError, gin.H{
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"message": "Failed to save the result.",
 		})
 	}
@@ -69,4 +73,11 @@ func (rc *ResultsController) GetResults(ctx *gin.Context) {
 
 	resultDtos := rc.ResultService.Find(accountId)
 	ctx.JSON(http.StatusOK, resultDtos)
+}
+
+type saveRequest struct {
+	Correct   int    `json:"correct" binding:"number"`
+	Wrong     int    `json:"wrong" binding:"number"`
+	QuizId    string `json:"quiz_id" binding:"required"`
+	CreatedAt int64  `json:"created_at" binding:"required"`
 }

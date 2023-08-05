@@ -1,6 +1,6 @@
 package models
 
-type Result struct {
+type ResultEntity struct {
 	Correct   int
 	Wrong     int
 	QuizId    string

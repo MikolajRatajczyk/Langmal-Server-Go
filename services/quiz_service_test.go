@@ -9,7 +9,7 @@ import (
 func TestQuizService_AllfRepoIsNotEmpty(t *testing.T) {
 	fakeQuiz := newFakeQuiz()
 	fakeQuizRepo := &FakeQuizRepo{
-		quizzes: []models.Quiz{fakeQuiz},
+		quizzes: []models.QuizEntity{fakeQuiz},
 	}
 	sut := NewQuizService(fakeQuizRepo)
 
@@ -26,7 +26,7 @@ func TestQuizService_AllfRepoIsNotEmpty(t *testing.T) {
 
 func TestQuizService_AllIfRepoIsEmpty(t *testing.T) {
 	fakeQuizRepo := &FakeQuizRepo{
-		quizzes: []models.Quiz{},
+		quizzes: []models.QuizEntity{},
 	}
 	sut := NewQuizService(fakeQuizRepo)
 
@@ -37,35 +37,35 @@ func TestQuizService_AllIfRepoIsEmpty(t *testing.T) {
 	}
 }
 
-func newFakeQuiz() models.Quiz {
-	question := models.Question{
+func newFakeQuiz() models.QuizEntity {
+	question := models.QuestionEntity{
 		Title:   "Foo",
 		Options: []string{"a", "b", "c"},
 		Answer:  "a",
 	}
 
-	quiz := models.Quiz{
+	quiz := models.QuizEntity{
 		Title:     "Foo",
 		Id:        "123",
-		Questions: []models.Question{question},
+		Questions: []models.QuestionEntity{question},
 	}
 
 	return quiz
 }
 
 type FakeQuizRepo struct {
-	quizzes []models.Quiz
+	quizzes []models.QuizEntity
 }
 
-func (fqr *FakeQuizRepo) FindAll() []models.Quiz {
+func (fqr *FakeQuizRepo) FindAll() []models.QuizEntity {
 	return fqr.quizzes
 }
 
-func (fqr *FakeQuizRepo) Find(id string) (models.Quiz, bool) {
+func (fqr *FakeQuizRepo) Find(id string) (models.QuizEntity, bool) {
 	for _, quiz := range fqr.quizzes {
 		if quiz.Id == id {
 			return quiz, true
 		}
 	}
-	return models.Quiz{}, false
+	return models.QuizEntity{}, false
 }

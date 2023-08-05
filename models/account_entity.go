@@ -1,6 +1,6 @@
 package models
 
-type Account struct {
+type AccountEntity struct {
 	Id           string `gorm:"primaryKey"`
 	Email        string `gorm:"unique"`
 	PasswordHash []byte

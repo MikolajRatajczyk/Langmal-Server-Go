@@ -48,7 +48,7 @@ func main() {
 
 	contentRoutes := server.Group("/content", middlewares.AuthorizeWithJWT(jwtUtil, blockedTokensRepo))
 	contentRoutes.GET("/quizzes", quizController.GetQuizzes)
-	contentRoutes.POST("/results", resultsController.SaveResults)
+	contentRoutes.POST("/results", resultsController.SaveResult)
 	contentRoutes.GET("/results", resultsController.GetResults)
 
 	server.Run(":5001")

@@ -17,7 +17,7 @@ func (qc *QuizController) GetQuizzes(ctx *gin.Context) {
 	if ok {
 		ctx.JSON(http.StatusOK, quizzes)
 	} else {
-		ctx.JSON(http.StatusNotFound, gin.H{
+		ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{
 			"message": "No quizzes found",
 		})
 	}
