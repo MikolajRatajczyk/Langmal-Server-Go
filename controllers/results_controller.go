@@ -14,7 +14,7 @@ type ResultsController struct {
 	JwtUtil       utils.JWTUtilInterface
 }
 
-func (rc *ResultsController) SaveResults(ctx *gin.Context) {
+func (rc *ResultsController) SaveResult(ctx *gin.Context) {
 	var request models.SaveResultRequest
 	err := ctx.BindJSON(&request)
 	if err != nil {
