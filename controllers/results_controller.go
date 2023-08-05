@@ -15,8 +15,8 @@ type ResultsController struct {
 }
 
 func (rc *ResultsController) SaveResults(ctx *gin.Context) {
-	var resultDto models.ResultDtoSave
-	err := ctx.BindJSON(&resultDto)
+	var request models.SaveResultRequest
+	err := ctx.BindJSON(&request)
 	if err != nil {
 		return
 	}
@@ -36,7 +36,14 @@ func (rc *ResultsController) SaveResults(ctx *gin.Context) {
 		})
 	}
 
-	saved := rc.ResultService.Save(resultDto, accountId)
+	result := models.ResultEntity{
+		Correct:   request.Correct,
+		Wrong:     request.Wrong,
+		QuizId:    request.QuizId,
+		CreatedAt: request.CreatedAt,
+		AccountId: accountId,
+	}
+	saved := rc.ResultService.Save(result, accountId)
 	if saved {
 		ctx.JSON(http.StatusCreated, gin.H{
 			"message": "Result saved.",

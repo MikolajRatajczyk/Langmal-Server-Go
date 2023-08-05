@@ -6,14 +6,6 @@ import (
 	"github.com/MikolajRatajczyk/Langmal-Server/models"
 )
 
-var result = models.Result{
-	Correct:   1,
-	Wrong:     2,
-	QuizId:    "123",
-	CreatedAt: 1673122069,
-	AccountId: "111",
-}
-
 var fakeQuizRepo = FakeQuizRepo{
 	quizzes: []models.Quiz{newFakeQuiz()},
 }
@@ -32,8 +24,15 @@ func TestResultService_FindIfRepoIsEmpty(t *testing.T) {
 }
 
 func TestResultService_FindIfRepoIsNotEmpty(t *testing.T) {
+	resultEntity := models.ResultEntity{
+		Correct:   1,
+		Wrong:     2,
+		QuizId:    "123",
+		CreatedAt: 1673122069,
+		AccountId: "111",
+	}
 	fakeResultRepo := FakeResultRepo{
-		resultToFind: &result,
+		resultToFind: &resultEntity,
 	}
 	sut := NewResultService(&fakeResultRepo, &fakeQuizRepo)
 
@@ -50,7 +49,7 @@ func TestResultService_SaveIfRepoFails(t *testing.T) {
 	}
 	sut := NewResultService(&fakeResultRepo, &fakeQuizRepo)
 
-	success := sut.Save(models.ResultDtoSave{}, "123")
+	success := sut.Save(models.ResultEntity{}, "123")
 
 	if success {
 		t.Error("Should fail if repo fails")
@@ -63,7 +62,7 @@ func TestResultService_SaveIfRepoSucceeds(t *testing.T) {
 	}
 	sut := NewResultService(&fakeResultRepo, &fakeQuizRepo)
 
-	success := sut.Save(models.ResultDtoSave{}, "123")
+	success := sut.Save(models.ResultEntity{}, "123")
 
 	if !success {
 		t.Error("Should not fail if repo succeeds")
@@ -72,17 +71,17 @@ func TestResultService_SaveIfRepoSucceeds(t *testing.T) {
 
 type FakeResultRepo struct {
 	isCreateAlwaysSuccess bool
-	resultToFind          *models.Result
+	resultToFind          *models.ResultEntity
 }
 
-func (frr *FakeResultRepo) Create(result models.Result) bool {
+func (frr *FakeResultRepo) Create(result models.ResultEntity) bool {
 	return frr.isCreateAlwaysSuccess
 }
 
-func (frr *FakeResultRepo) Find(accountId string) []models.Result {
+func (frr *FakeResultRepo) Find(accountId string) []models.ResultEntity {
 	if frr.resultToFind != nil {
-		return []models.Result{*frr.resultToFind}
+		return []models.ResultEntity{*frr.resultToFind}
 	} else {
-		return []models.Result{}
+		return []models.ResultEntity{}
 	}
 }

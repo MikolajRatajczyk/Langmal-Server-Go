@@ -10,7 +10,7 @@ import (
 
 const resultsDbName = "results_test"
 
-var result = models.Result{
+var resultEntity = models.ResultEntity{
 	Correct:   1,
 	Wrong:     2,
 	QuizId:    "123",
@@ -22,7 +22,7 @@ func TestResultRepo_Create(t *testing.T) {
 	defer removeResultsDbFile()
 	sut := NewResultRepo(resultsDbName)
 
-	success := sut.Create(result)
+	success := sut.Create(resultEntity)
 
 	if !success {
 		t.Error("Failed to create the result")
@@ -32,11 +32,11 @@ func TestResultRepo_Create(t *testing.T) {
 func TestResultRepo_FindExistingResult(t *testing.T) {
 	defer removeResultsDbFile()
 	sut := NewResultRepo(resultsDbName)
-	sut.Create(result)
+	sut.Create(resultEntity)
 
-	foundResults := sut.Find(result.AccountId)
+	foundResults := sut.Find(resultEntity.AccountId)
 
-	if !cmp.Equal(foundResults, []models.Result{result}) {
+	if !cmp.Equal(foundResults, []models.ResultEntity{resultEntity}) {
 		t.Error("Found results are not the same as the created one")
 	}
 }
@@ -45,9 +45,9 @@ func TestResultRepo_FindIfEmpty(t *testing.T) {
 	defer removeResultsDbFile()
 	sut := NewResultRepo(resultsDbName)
 
-	foundResults := sut.Find(result.AccountId)
+	foundResults := sut.Find(resultEntity.AccountId)
 
-	if !cmp.Equal(foundResults, []models.Result{}) {
+	if !cmp.Equal(foundResults, []models.ResultEntity{}) {
 		t.Error("Reported success despite no results have been created")
 	}
 }
