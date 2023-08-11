@@ -69,7 +69,8 @@ func (ac *AccountController) Login(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, token)
+	response := loginResponse{Token: token}
+	ctx.JSON(http.StatusOK, response)
 }
 
 func (ac *AccountController) Logout(ctx *gin.Context) {
@@ -107,4 +108,8 @@ type registerRequest loginRequest
 
 type logoutRequest struct {
 	Token string `json:"token" binding:"required"`
+}
+
+type loginResponse struct {
+	Token string `json:"jwt"`
 }
