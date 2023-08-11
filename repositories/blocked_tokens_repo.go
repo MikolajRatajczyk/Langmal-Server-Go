@@ -5,12 +5,12 @@ import (
 	"gorm.io/gorm"
 )
 
-type BlockedTokensRepoInterface interface {
+type BlockedTokenRepoInterface interface {
 	Add(id string) bool
 	IsBlocked(id string) bool
 }
 
-func NewBlockedTokenRepo(dbName string) BlockedTokensRepoInterface {
+func NewBlockedTokenRepo(dbName string) BlockedTokenRepoInterface {
 	return &blockedTokenRepo{
 		db: getDb(dbName, models.BlockedTokenEntity{}),
 	}
@@ -22,14 +22,12 @@ type blockedTokenRepo struct {
 
 func (btr *blockedTokenRepo) Add(id string) bool {
 	blockedToken := models.BlockedTokenEntity{Id: id}
-	err := btr.db.Create(blockedToken).Error
+	err := btr.db.Create(&blockedToken).Error
 	return err == nil
 }
 
 func (btr *blockedTokenRepo) IsBlocked(id string) bool {
 	var blockedToken models.BlockedTokenEntity
-	result := btr.db.
-		Where("id = ?", id).
-		First(&blockedToken)
-	return result.Error == nil
+	err := btr.db.First(&blockedToken, "id = ?", id).Error
+	return err == nil
 }

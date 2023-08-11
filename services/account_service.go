@@ -17,13 +17,13 @@ var ErrFailedToGenerateJwt = errors.New("failed to generate a JWT")
 
 type AccountServiceInterface interface {
 	Register(email string, password string) error
-	Login(email string, password string) (models.JwtDto, error)
+	Login(email string, password string) (token string, err error)
 }
 
 func NewAccountService(
 	accountRepo repositories.AccountRepoInterface,
-	cryptoUtil utils.CryptoUtilInterface,
-	jwtUtil utils.JWTUtilInterface) AccountServiceInterface {
+	cryptoUtil utils.CryptoUtil,
+	jwtUtil utils.JwtUtil) AccountServiceInterface {
 	return &accountService{
 		accountRepo: accountRepo,
 		cryptoUtil:  cryptoUtil,
@@ -33,8 +33,8 @@ func NewAccountService(
 
 type accountService struct {
 	accountRepo repositories.AccountRepoInterface
-	cryptoUtil  utils.CryptoUtilInterface
-	jwtUtil     utils.JWTUtilInterface
+	cryptoUtil  utils.CryptoUtil
+	jwtUtil     utils.JwtUtil
 }
 
 func (as *accountService) Register(email string, password string) error {
@@ -67,25 +67,21 @@ func (as *accountService) Register(email string, password string) error {
 	return nil
 }
 
-func (as *accountService) Login(email string, password string) (models.JwtDto, error) {
+func (as *accountService) Login(email string, password string) (string, error) {
 	account, found := as.accountRepo.Find(email)
 	if !found {
-		return models.JwtDto{}, ErrNoAccount
+		return "", ErrNoAccount
 	}
 
 	isAuthenticated := as.cryptoUtil.ComparePassword(password, account.PasswordHash)
 	if !isAuthenticated {
-		return models.JwtDto{}, ErrNotMatchingPasswords
+		return "", ErrNotMatchingPasswords
 	}
 
 	token, err := as.jwtUtil.Generate(account.Id)
 	if err != nil {
-		return models.JwtDto{}, ErrFailedToGenerateJwt
+		return "", ErrFailedToGenerateJwt
 	}
 
-	tokenDto := models.JwtDto{
-		Token: token,
-	}
-
-	return tokenDto, nil
+	return token, nil
 }

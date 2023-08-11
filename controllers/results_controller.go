@@ -11,7 +11,7 @@ import (
 
 type ResultsController struct {
 	ResultService services.ResultServiceInterface
-	JwtUtil       utils.JWTUtilInterface
+	JwtUtil       utils.JwtUtil
 }
 
 func (rc *ResultsController) SaveResult(ctx *gin.Context) {
@@ -29,7 +29,7 @@ func (rc *ResultsController) SaveResult(ctx *gin.Context) {
 		return
 	}
 
-	accountId, ok := rc.JwtUtil.ExtractAccountId(tokenString)
+	accountId, ok := rc.extractAccountId(tokenString)
 	if !ok {
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 			"message": "Failed to extract account ID from the token.",
@@ -64,15 +64,18 @@ func (rc *ResultsController) GetResults(ctx *gin.Context) {
 		return
 	}
 
-	accountId, ok := rc.JwtUtil.ExtractAccountId(tokenString)
+	accountId, ok := rc.extractAccountId(tokenString)
 	if !ok {
-		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-			"message": "Failed to extract account ID from the token.",
-		})
+		ctx.AbortWithStatus(http.StatusUnauthorized)
 	}
 
 	resultDtos := rc.ResultService.Find(accountId)
 	ctx.JSON(http.StatusOK, resultDtos)
+}
+
+func (rc *ResultsController) extractAccountId(tokenString string) (string, bool) {
+	claims, ok := rc.JwtUtil.Claims(tokenString)
+	return claims.Subject, ok
 }
 
 type saveRequest struct {

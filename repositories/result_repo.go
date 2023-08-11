@@ -24,7 +24,7 @@ type resultRepo struct {
 
 func (rr *resultRepo) Find(accountId string) []models.ResultEntity {
 	var results []models.ResultEntity
-	rr.db.Where("account_id = ?", accountId).Find(&results)
+	rr.db.Find(&results, "account_id = ?", accountId)
 	return results
 }
 

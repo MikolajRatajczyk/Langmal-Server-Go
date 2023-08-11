@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	cryptoUtil = utils.NewCryptoUtil()
+	cryptoUtil = utils.CryptoUtil{}
 	jwtUtil    = utils.NewJWTUtil()
 
 	email    = "foo@foo.com"
@@ -58,13 +58,13 @@ func TestAccountService_LoginIfRepoFails(t *testing.T) {
 		cryptoUtil,
 		jwtUtil)
 
-	jwt, err := sut.Login(email, password)
+	token, err := sut.Login(email, password)
 
 	if err == nil {
 		t.Error("Should fail for failing repo")
 	}
 
-	if len(jwt.Token) > 0 {
+	if len(token) > 0 {
 		t.Error("JWT should be empty for failing repo")
 	}
 }
@@ -84,13 +84,13 @@ func TestAccountService_LoginIfPasswordsDontMatch(t *testing.T) {
 		cryptoUtil,
 		jwtUtil)
 
-	jwt, err := sut.Login(email, password)
+	token, err := sut.Login(email, password)
 
 	if !errors.Is(err, ErrNotMatchingPasswords) {
 		t.Error("Expected not matching passwords error")
 	}
 
-	if len(jwt.Token) > 0 {
+	if len(token) > 0 {
 		t.Error("JWT should be empty for not matching passwords")
 	}
 }

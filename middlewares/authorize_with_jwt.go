@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func AuthorizeWithJWT(util utils.JWTUtilInterface, blockedTokensRepo repositories.BlockedTokensRepoInterface) gin.HandlerFunc {
+func AuthorizeWithJWT(util utils.JwtUtil, blockedTokensRepo repositories.BlockedTokenRepoInterface) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		tokenString, err := utils.ExtractToken(ctx.Request.Header)
 		if err != nil {
@@ -26,15 +26,13 @@ func AuthorizeWithJWT(util utils.JWTUtilInterface, blockedTokensRepo repositorie
 			return
 		}
 
-		tokenId, ok := util.ExtractId(tokenString)
+		claims, ok := util.Claims(tokenString)
 		if !ok {
-			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-				"message": "Token doesn't contain an ID",
-			})
+			ctx.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}
 
-		isBlocked := blockedTokensRepo.IsBlocked(tokenId)
+		isBlocked := blockedTokensRepo.IsBlocked(claims.Id)
 		if isBlocked {
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 				"message": "Token is blocked",

@@ -60,7 +60,7 @@ func TestJwtUtil_IsOkForInvalidToken(t *testing.T) {
 	}
 }
 
-func TestJwtUtil_ExtractAccountIdFromValidToken(t *testing.T) {
+func TestJwtUtil_ClaimsFromValidToken(t *testing.T) {
 	expectedId := "abc"
 	sut := NewJWTUtil()
 	validToken, err := sut.Generate(expectedId)
@@ -68,28 +68,24 @@ func TestJwtUtil_ExtractAccountIdFromValidToken(t *testing.T) {
 		t.Error("Can't generate token")
 	}
 
-	id, ok := sut.ExtractAccountId(validToken)
+	claims, ok := sut.Claims(validToken)
 
 	if !ok {
 		t.Error("Should not fail")
 	}
 
-	if id != expectedId {
+	if claims.Subject != expectedId {
 		t.Error("IDs should match")
 	}
 }
 
-func TestJwtUtil_ExtractAccountIdFromInvalidToken(t *testing.T) {
+func TestJwtUtil_ClaimsFromInvalidToken(t *testing.T) {
 	sut := NewJWTUtil()
 	invalidToken := "foo"
 
-	id, ok := sut.ExtractAccountId(invalidToken)
+	_, ok := sut.Claims(invalidToken)
 
 	if ok {
 		t.Error("Should fail for invalid token")
-	}
-
-	if id != "" {
-		t.Error("ID should be empty for invalid token")
 	}
 }
