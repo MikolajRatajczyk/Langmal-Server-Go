@@ -28,8 +28,6 @@ func (btr *blockedTokenRepo) Add(id string) bool {
 
 func (btr *blockedTokenRepo) IsBlocked(id string) bool {
 	var blockedToken models.BlockedTokenEntity
-	result := btr.db.
-		Where("id = ?", id).
-		First(&blockedToken)
-	return result.Error == nil
+	err := btr.db.First(&blockedToken, "id = ?", id).Error
+	return err == nil
 }
