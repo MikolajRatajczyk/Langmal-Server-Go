@@ -34,8 +34,8 @@ func (ar *accountRepo) Create(account models.AccountEntity) bool {
 
 func (ar *accountRepo) Find(email string) (models.AccountEntity, bool) {
 	var account models.AccountEntity
-	result := ar.db.Where("email = ?", email).First(&account)
-	success := result.Error == nil
+	err := ar.db.First(&account, "email = ?", email).Error
+	success := err == nil
 	return account, success
 }
 
