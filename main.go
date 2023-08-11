@@ -7,7 +7,6 @@ import (
 	"github.com/MikolajRatajczyk/Langmal-Server/services"
 	"github.com/MikolajRatajczyk/Langmal-Server/utils"
 	"github.com/gin-gonic/gin"
-	gindump "github.com/tpkeeper/gin-dump"
 )
 
 var (
@@ -36,10 +35,7 @@ var (
 
 func main() {
 	server := gin.New()
-	server.Use(gin.Recovery(),
-		gin.Logger(),
-		gindump.Dump(),
-	)
+	server.Use(gin.Recovery(), gin.Logger())
 
 	accountRoutes := server.Group("/account")
 	accountRoutes.POST("/register", accountController.Register)
