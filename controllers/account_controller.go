@@ -79,15 +79,13 @@ func (ac *AccountController) Logout(ctx *gin.Context) {
 		return
 	}
 
-	tokenId, ok := ac.JwtUtil.ExtractId(request.Token)
+	claims, ok := ac.JwtUtil.Claims(request.Token)
 	if !ok {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"message": "Token doesn't contain an ID",
-		})
+		ctx.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 
-	success := ac.BlockedTokenRepo.Add(tokenId)
+	success := ac.BlockedTokenRepo.Add(claims.Id)
 	if !success {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"message": "Already logged-out",

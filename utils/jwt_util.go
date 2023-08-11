@@ -18,8 +18,7 @@ type JWTUtilInterface interface {
 	Generate(accountId string) (string, error)
 	// Checks if a token is valid and not expired.
 	IsOk(token string) bool
-	ExtractAccountId(tokenString string) (string, bool)
-	ExtractId(token string) (string, bool)
+	Claims(tokenString string) (*jwt.StandardClaims, bool)
 }
 
 func NewJWTUtil() JWTUtilInterface {
@@ -66,48 +65,36 @@ func (ju *jwtUtil) Generate(accountId string) (string, error) {
 	return signedString, err
 }
 
-func (ju *jwtUtil) IsOk(token string) bool {
-	//	validation
-	claims, isValid := ju.getClaimsIfValid(token)
-	if !isValid {
-		return false
-	}
-
-	//	expiration check
-	if time.Now().Unix() > claims.ExpiresAt {
-		return false
-	}
-
-	return true
-}
-
-// TODO: It should be one func with ExtractId
-func (ju *jwtUtil) ExtractAccountId(token string) (string, bool) {
-	claims, ok := ju.getClaimsIfValid(token)
-	if ok {
-		return claims.Subject, true
-	}
-
-	return "", false
-}
-
-// TODO: It should be one func with ExtractAccountId
-func (ju *jwtUtil) ExtractId(token string) (string, bool) {
-	claims, ok := ju.getClaimsIfValid(token)
+func (ju *jwtUtil) IsOk(tokenString string) bool {
+	token, ok := ju.parse(tokenString)
 	if !ok {
-		return "", false
+		return false
 	}
 
-	id := claims.Id
-	if len(id) == 0 {
-		return "", false
+	claims, ok := token.Claims.(*jwt.StandardClaims)
+	if !ok {
+		return false
 	}
 
-	return id, true
+	expired := claims.ExpiresAt < time.Now().Unix()
+	return token.Valid && !expired
 }
 
-// Returns claims even if a token has expired.
-func (ju *jwtUtil) getClaimsIfValid(tokenString string) (*jwt.StandardClaims, bool) {
+func (ju *jwtUtil) Claims(tokenString string) (*jwt.StandardClaims, bool) {
+	token, ok := ju.parse(tokenString)
+	if !ok {
+		return nil, false
+	}
+
+	claims, ok := token.Claims.(*jwt.StandardClaims)
+	if !ok {
+		return nil, false
+	}
+
+	return claims, true
+}
+
+func (ju *jwtUtil) parse(tokenString string) (*jwt.Token, bool) {
 	claims := &jwt.StandardClaims{}
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(parsedToken *jwt.Token) (any, error) {
 		_, ok := parsedToken.Method.(*jwt.SigningMethodHMAC)
@@ -116,13 +103,6 @@ func (ju *jwtUtil) getClaimsIfValid(tokenString string) (*jwt.StandardClaims, bo
 		}
 		return []byte(ju.secret), nil
 	})
-	if err != nil {
-		return nil, false
-	}
 
-	if !token.Valid {
-		return nil, false
-	}
-
-	return claims, true
+	return token, err == nil
 }
