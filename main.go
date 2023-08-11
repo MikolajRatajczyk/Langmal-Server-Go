@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	jwtUtil utils.JWTUtilInterface = utils.NewJWTUtil()
+	jwtUtil = utils.NewJWTUtil()
 
 	quizRepo       repositories.QuizRepoInterface = repositories.NewQuizRepo()
 	quizService    services.QuizService           = services.NewQuizService(quizRepo)

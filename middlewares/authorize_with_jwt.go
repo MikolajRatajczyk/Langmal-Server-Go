@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func AuthorizeWithJWT(util utils.JWTUtilInterface, blockedTokensRepo repositories.BlockedTokensRepoInterface) gin.HandlerFunc {
+func AuthorizeWithJWT(util utils.JwtUtil, blockedTokensRepo repositories.BlockedTokensRepoInterface) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		tokenString, err := utils.ExtractToken(ctx.Request.Header)
 		if err != nil {

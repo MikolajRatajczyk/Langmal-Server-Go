@@ -13,7 +13,7 @@ import (
 type AccountController struct {
 	Service          services.AccountServiceInterface
 	BlockedTokenRepo repositories.BlockedTokensRepoInterface
-	JwtUtil          utils.JWTUtilInterface
+	JwtUtil          utils.JwtUtil
 }
 
 func (ac *AccountController) Register(ctx *gin.Context) {

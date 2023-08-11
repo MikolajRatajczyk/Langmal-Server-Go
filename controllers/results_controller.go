@@ -11,7 +11,7 @@ import (
 
 type ResultsController struct {
 	ResultService services.ResultServiceInterface
-	JwtUtil       utils.JWTUtilInterface
+	JwtUtil       utils.JwtUtil
 }
 
 func (rc *ResultsController) SaveResult(ctx *gin.Context) {
