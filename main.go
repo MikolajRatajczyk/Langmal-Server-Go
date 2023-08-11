@@ -12,25 +12,22 @@ import (
 var (
 	jwtUtil = utils.NewJWTUtil()
 
-	quizRepo       repositories.QuizRepoInterface = repositories.NewQuizRepo()
-	quizService    services.QuizService           = services.NewQuizService(quizRepo)
-	quizController controllers.QuizController     = controllers.QuizController{Service: quizService}
+	quizRepo       = repositories.NewQuizRepo()
+	quizService    = services.NewQuizService(quizRepo)
+	quizController = controllers.QuizController{Service: quizService}
 
-	accountRepo       repositories.AccountRepoInterface       = repositories.NewAccountRepo("accounts")
-	blockedTokensRepo repositories.BlockedTokensRepoInterface = repositories.NewBlockedTokenRepo("blocked_tokens")
-	accountService    services.AccountServiceInterface        = services.NewAccountService(accountRepo, utils.CryptoUtil{}, jwtUtil)
-	accountController controllers.AccountController           = controllers.AccountController{
+	accountRepo       = repositories.NewAccountRepo("accounts")
+	blockedTokensRepo = repositories.NewBlockedTokenRepo("blocked_tokens")
+	accountService    = services.NewAccountService(accountRepo, utils.CryptoUtil{}, jwtUtil)
+	accountController = controllers.AccountController{
 		Service:          accountService,
 		BlockedTokenRepo: blockedTokensRepo,
 		JwtUtil:          jwtUtil,
 	}
 
-	resultRepo        repositories.ResultRepoInterface = repositories.NewResultRepo("results")
-	resultService     services.ResultServiceInterface  = services.NewResultService(resultRepo, quizRepo)
-	resultsController controllers.ResultsController    = controllers.ResultsController{
-		ResultService: resultService,
-		JwtUtil:       jwtUtil,
-	}
+	resultRepo        = repositories.NewResultRepo("results")
+	resultService     = services.NewResultService(resultRepo, quizRepo)
+	resultsController = controllers.ResultsController{ResultService: resultService, JwtUtil: jwtUtil}
 )
 
 func main() {
