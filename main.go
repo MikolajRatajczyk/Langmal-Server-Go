@@ -31,8 +31,7 @@ var (
 )
 
 func main() {
-	server := gin.New()
-	server.Use(gin.Recovery(), gin.Logger())
+	server := gin.Default()
 
 	accountRoutes := server.Group("/account")
 	accountRoutes.POST("/register", accountController.Register)
