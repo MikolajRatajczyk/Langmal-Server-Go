@@ -12,7 +12,7 @@ import (
 
 type AccountController struct {
 	Service          services.AccountServiceInterface
-	BlockedTokenRepo repositories.BlockedTokensRepoInterface
+	BlockedTokenRepo repositories.BlockedTokenRepoInterface
 	JwtUtil          utils.JwtUtil
 }
 

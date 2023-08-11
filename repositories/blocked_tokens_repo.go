@@ -5,12 +5,12 @@ import (
 	"gorm.io/gorm"
 )
 
-type BlockedTokensRepoInterface interface {
+type BlockedTokenRepoInterface interface {
 	Add(id string) bool
 	IsBlocked(id string) bool
 }
 
-func NewBlockedTokenRepo(dbName string) BlockedTokensRepoInterface {
+func NewBlockedTokenRepo(dbName string) BlockedTokenRepoInterface {
 	return &blockedTokenRepo{
 		db: getDb(dbName, models.BlockedTokenEntity{}),
 	}

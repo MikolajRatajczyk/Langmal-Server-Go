@@ -6,7 +6,7 @@ import (
 	"github.com/MikolajRatajczyk/Langmal-Server/models"
 )
 
-func TestQuizService_AllfRepoIsNotEmpty(t *testing.T) {
+func TestQuizService_AllIfRepoIsNotEmpty(t *testing.T) {
 	fakeQuiz := newFakeQuiz()
 	fakeQuizRepo := &FakeQuizRepo{
 		quizzes: []models.QuizEntity{fakeQuiz},
