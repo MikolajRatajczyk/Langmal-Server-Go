@@ -22,7 +22,7 @@ type blockedTokenRepo struct {
 
 func (btr *blockedTokenRepo) Add(id string) bool {
 	blockedToken := models.BlockedTokenEntity{Id: id}
-	err := btr.db.Create(blockedToken).Error
+	err := btr.db.Create(&blockedToken).Error
 	return err == nil
 }
 

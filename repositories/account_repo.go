@@ -24,7 +24,7 @@ type accountRepo struct {
 }
 
 func (ar *accountRepo) Create(account models.AccountEntity) bool {
-	if err := ar.db.Create(account).Error; err != nil {
+	if err := ar.db.Create(&account).Error; err != nil {
 		log.Println("Failed to create a new account in DB!")
 		return false
 	} else {
