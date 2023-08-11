@@ -22,7 +22,7 @@ type AccountServiceInterface interface {
 
 func NewAccountService(
 	accountRepo repositories.AccountRepoInterface,
-	cryptoUtil utils.CryptoUtilInterface,
+	cryptoUtil utils.CryptoUtil,
 	jwtUtil utils.JwtUtil) AccountServiceInterface {
 	return &accountService{
 		accountRepo: accountRepo,
@@ -33,7 +33,7 @@ func NewAccountService(
 
 type accountService struct {
 	accountRepo repositories.AccountRepoInterface
-	cryptoUtil  utils.CryptoUtilInterface
+	cryptoUtil  utils.CryptoUtil
 	jwtUtil     utils.JwtUtil
 }
 

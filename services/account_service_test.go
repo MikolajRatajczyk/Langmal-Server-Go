@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	cryptoUtil = utils.NewCryptoUtil()
+	cryptoUtil = utils.CryptoUtil{}
 	jwtUtil    = utils.NewJWTUtil()
 
 	email    = "foo@foo.com"

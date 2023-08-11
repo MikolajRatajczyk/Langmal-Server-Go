@@ -18,7 +18,7 @@ var (
 
 	accountRepo       repositories.AccountRepoInterface       = repositories.NewAccountRepo("accounts")
 	blockedTokensRepo repositories.BlockedTokensRepoInterface = repositories.NewBlockedTokenRepo("blocked_tokens")
-	accountService    services.AccountServiceInterface        = services.NewAccountService(accountRepo, utils.NewCryptoUtil(), jwtUtil)
+	accountService    services.AccountServiceInterface        = services.NewAccountService(accountRepo, utils.CryptoUtil{}, jwtUtil)
 	accountController controllers.AccountController           = controllers.AccountController{
 		Service:          accountService,
 		BlockedTokenRepo: blockedTokensRepo,

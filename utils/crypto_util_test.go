@@ -3,7 +3,7 @@ package utils
 import "testing"
 
 func TestCryptoUtil_HashPasswordReturnNotEmptyHash(t *testing.T) {
-	sut := NewCryptoUtil()
+	sut := CryptoUtil{}
 	password := "somePassword123"
 
 	hash, err := sut.HashPassword(password)
@@ -18,7 +18,7 @@ func TestCryptoUtil_HashPasswordReturnNotEmptyHash(t *testing.T) {
 }
 
 func TestCryptoUtil_ComparePasswordReturnTrueWhenMatch(t *testing.T) {
-	sut := NewCryptoUtil()
+	sut := CryptoUtil{}
 	password := "somePassword123"
 	passwordHash, _ := sut.HashPassword(password)
 
@@ -30,7 +30,7 @@ func TestCryptoUtil_ComparePasswordReturnTrueWhenMatch(t *testing.T) {
 }
 
 func TestCryptoUtil_ComparePasswordReturnFalseWhenNotMatch(t *testing.T) {
-	sut := NewCryptoUtil()
+	sut := CryptoUtil{}
 	passwordA := "somePassword123"
 	passwordB := "different"
 	passwordAHash, _ := sut.HashPassword(passwordA)
