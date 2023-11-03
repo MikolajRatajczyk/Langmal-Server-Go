@@ -48,7 +48,11 @@ func mapQuestionsToDtos(questions []models.QuestionEntity) []models.QuestionDto 
 	dtos := []models.QuestionDto{}
 
 	for _, question := range questions {
-		dto := models.QuestionDto(question)
+		dto := models.QuestionDto{
+			Title:   question.Title,
+			Options: question.Options,
+			Answer:  question.Answer,
+		}
 		dtos = append(dtos, dto)
 	}
 
