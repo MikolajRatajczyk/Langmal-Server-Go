@@ -14,7 +14,7 @@ type ResultRepoInterface interface {
 
 func NewResultRepo(dbName string) ResultRepoInterface {
 	return &resultRepo{
-		db: getDb(dbName, models.ResultEntity{}),
+		db: getDb(dbName, &models.ResultEntity{}),
 	}
 }
 

@@ -14,7 +14,7 @@ type AccountRepoInterface interface {
 
 func NewAccountRepo(dbName string) AccountRepoInterface {
 	return &accountRepo{
-		db: getDb(dbName, models.AccountEntity{}),
+		db: getDb(dbName, &models.AccountEntity{}),
 	}
 }
 

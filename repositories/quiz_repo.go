@@ -15,7 +15,7 @@ type QuizRepoInterface interface {
 
 func NewQuizRepo(dbName string) QuizRepoInterface {
 	quizRepo := &quizRepo{
-		db: getDb(dbName, models.QuizEntity{}, models.QuestionEntity{}),
+		db: getDb(dbName, &models.QuizEntity{}, &models.QuestionEntity{}),
 	}
 
 	noQuizzes := len(quizRepo.FindAll()) == 0

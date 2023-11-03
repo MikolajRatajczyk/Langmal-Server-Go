@@ -12,7 +12,7 @@ type BlockedTokenRepoInterface interface {
 
 func NewBlockedTokenRepo(dbName string) BlockedTokenRepoInterface {
 	return &blockedTokenRepo{
-		db: getDb(dbName, models.BlockedTokenEntity{}),
+		db: getDb(dbName, &models.BlockedTokenEntity{}),
 	}
 }
 
