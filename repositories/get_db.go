@@ -5,7 +5,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func getDb(name string, model any) *gorm.DB {
+func getDb(name string, models ...any) *gorm.DB {
 	if len(name) == 0 {
 		panic("DB name can't have 0 length!")
 	}
@@ -15,6 +15,6 @@ func getDb(name string, model any) *gorm.DB {
 		panic("Failed to connect to the database")
 	}
 
-	db.AutoMigrate(model)
+	db.AutoMigrate(models...)
 	return db
 }

@@ -1,81 +1,65 @@
 package repositories
 
-import "github.com/MikolajRatajczyk/Langmal-Server/models"
+import (
+	"log"
+
+	"github.com/MikolajRatajczyk/Langmal-Server/models"
+	"gorm.io/gorm"
+)
 
 type QuizRepoInterface interface {
+	Create(quiz models.QuizEntity) bool
 	FindAll() []models.QuizEntity
 	Find(id string) (models.QuizEntity, bool)
 }
 
-func NewQuizRepo() QuizRepoInterface {
-	quizzes := []models.QuizEntity{createQuiz1(), createQuiz2()}
-	return &quizRepo{
-		quizzes: quizzes,
+func NewQuizRepo(dbName string) QuizRepoInterface {
+	quizRepo := &quizRepo{
+		db: getDb(dbName, &models.QuizEntity{}, &models.QuestionEntity{}),
 	}
+
+	noQuizzes := len(quizRepo.FindAll()) == 0
+	if noQuizzes {
+		quizRepo.Create(models.DefaultQuiz1())
+		quizRepo.Create(models.DefaultQuiz2())
+	}
+
+	return quizRepo
 }
 
 type quizRepo struct {
-	quizzes []models.QuizEntity
+	db *gorm.DB
+}
+
+func (qr *quizRepo) Create(quiz models.QuizEntity) bool {
+	if err := qr.db.Create(&quiz).Error; err != nil {
+		log.Println("Failed to create a new quiz in DB!")
+		return false
+	} else {
+		return true
+	}
 }
 
 func (qr *quizRepo) FindAll() []models.QuizEntity {
-	return qr.quizzes
+	var quizzes []models.QuizEntity
+
+	err := qr.db.
+		Preload("Questions").
+		Find(&quizzes).
+		Error
+	if err != nil {
+		return []models.QuizEntity{}
+	}
+
+	return quizzes
 }
 
 func (qr *quizRepo) Find(id string) (models.QuizEntity, bool) {
-	for _, quiz := range qr.quizzes {
-		if quiz.Id == id {
-			return quiz, true
-		}
-	}
-	return models.QuizEntity{}, false
-}
-
-// TODO: remove and use DB instead
-func createQuiz1() models.QuizEntity {
-	question1 := models.QuestionEntity{
-		Title:   "First question from the server",
-		Options: []string{"Answer A", "Answer B", "Answer C"},
-		Answer:  "Answer A",
-	}
-	question2 := models.QuestionEntity{
-		Title:   "Second question from the server",
-		Options: []string{"Answer A", "Answer B", "Answer C"},
-		Answer:  "Answer B",
-	}
-	question3 := models.QuestionEntity{
-		Title:   "Third question from the server",
-		Options: []string{"Answer A", "Answer B", "Answer C"},
-		Answer:  "Answer C",
-	}
-
-	quiz := models.QuizEntity{
-		Title:     "First quiz",
-		Id:        "4e2778d3-57df-4fe9-83ec-af5ffec1ec5c",
-		Questions: []models.QuestionEntity{question1, question2, question3},
-	}
-
-	return quiz
-}
-
-// TODO: remove and use DB instead
-func createQuiz2() models.QuizEntity {
-	question1 := models.QuestionEntity{
-		Title:   "First question from the server",
-		Options: []string{"Answer A", "Answer B", "Answer C"},
-		Answer:  "Answer C",
-	}
-	question2 := models.QuestionEntity{
-		Title:   "Second question from the server",
-		Options: []string{"Answer A", "Answer B", "Answer C"},
-		Answer:  "Answer B",
-	}
-
-	quiz := models.QuizEntity{
-		Title:     "Second quiz",
-		Id:        "5e8ef788-f305-4ee3-ad69-ba8924ca3806",
-		Questions: []models.QuestionEntity{question1, question2},
-	}
-
-	return quiz
+	var quiz models.QuizEntity
+	err := qr.db.
+		Preload("Questions").
+		First(&quiz, "id = ?", id).
+		Error
+	success := err == nil
+	return quiz, success
 }

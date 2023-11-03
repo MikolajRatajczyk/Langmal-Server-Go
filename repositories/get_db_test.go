@@ -8,7 +8,7 @@ import (
 func TestGetDb_PanicIfNameIsEmpty(t *testing.T) {
 	defer func() { _ = recover() }()
 
-	getDb("", fakeModel{})
+	getDb("", &fakeModel{})
 
 	t.Error("Did not panic")
 }
@@ -17,7 +17,7 @@ func TestGetDb_ReturnDbIfNameIsNotEmpty(t *testing.T) {
 	const dbName = "notEmptyString"
 	defer func() { _ = os.Remove(dbName + ".db") }()
 
-	db := getDb(dbName, fakeModel{})
+	db := getDb(dbName, &fakeModel{})
 
 	if db == nil {
 		t.Error("DB is nil")

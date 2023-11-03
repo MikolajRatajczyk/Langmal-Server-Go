@@ -57,6 +57,11 @@ type FakeQuizRepo struct {
 	quizzes []models.QuizEntity
 }
 
+func (fqr *FakeQuizRepo) Create(quiz models.QuizEntity) bool {
+	fqr.quizzes = append(fqr.quizzes, quiz)
+	return true
+}
+
 func (fqr *FakeQuizRepo) FindAll() []models.QuizEntity {
 	return fqr.quizzes
 }

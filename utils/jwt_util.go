@@ -12,7 +12,6 @@ import (
 )
 
 var ErrAccountIdEmpty = errors.New("account ID is empty")
-var ErrTokenCreationFailed = errors.New("token creation failed")
 
 func NewJWTUtil() JwtUtil {
 	const secretKey = "LANGMAL_JWT_SECRET"
@@ -38,18 +37,13 @@ func (ju *JwtUtil) Generate(accountId string) (string, error) {
 		return "", ErrAccountIdEmpty
 	}
 
-	uuid, err := uuid.NewRandom()
-	if err != nil {
-		return "", ErrTokenCreationFailed
-	}
-
 	const sixMonths = time.Hour * 24 * 30 * 6
 	claims := jwt.StandardClaims{
 		ExpiresAt: time.Now().Add(sixMonths).Unix(),
 		IssuedAt:  time.Now().Unix(),
 		Issuer:    ju.issuer,
 		Subject:   accountId,
-		Id:        uuid.String(),
+		Id:        uuid.New().String(),
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
