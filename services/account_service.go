@@ -48,13 +48,8 @@ func (as *accountService) Register(email string, password string) error {
 		return err
 	}
 
-	uuid, err := uuid.NewRandom()
-	if err != nil {
-		return err
-	}
-
 	account := models.AccountEntity{
-		Id:           uuid.String(),
+		Id:           uuid.New().String(),
 		Email:        email,
 		PasswordHash: hashedPassword,
 	}
