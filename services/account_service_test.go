@@ -111,5 +111,3 @@ func (arf *AccountRepoFake) Find(email string) (models.AccountEntity, bool) {
 		return models.AccountEntity{}, false
 	}
 }
-
-func (*AccountRepoFake) CloseDB() {}

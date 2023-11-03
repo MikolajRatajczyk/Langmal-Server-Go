@@ -10,7 +10,6 @@ import (
 type AccountRepoInterface interface {
 	Create(account models.AccountEntity) bool
 	Find(email string) (models.AccountEntity, bool)
-	CloseDB()
 }
 
 func NewAccountRepo(dbName string) AccountRepoInterface {
@@ -37,12 +36,4 @@ func (ar *accountRepo) Find(email string) (models.AccountEntity, bool) {
 	err := ar.db.First(&account, "email = ?", email).Error
 	success := err == nil
 	return account, success
-}
-
-func (ar *accountRepo) CloseDB() {
-	sqlDB, err := ar.db.DB()
-	if err != nil {
-		panic("Failed to get SQL DB!")
-	}
-	sqlDB.Close()
 }
