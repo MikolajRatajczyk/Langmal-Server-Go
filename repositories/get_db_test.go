@@ -24,4 +24,6 @@ func TestGetDb_ReturnDbIfNameIsNotEmpty(t *testing.T) {
 	}
 }
 
-type fakeModel struct{}
+type fakeModel struct {
+	ID string
+}
