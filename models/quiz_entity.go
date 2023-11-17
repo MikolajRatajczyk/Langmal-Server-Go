@@ -14,21 +14,21 @@ func DefaultQuiz1() QuizEntity {
 		Title:        "First question from the server",
 		Id:           "1953be72-bd01-4a94-916e-e7d5afb673c2",
 		Options:      []string{"Answer A", "Answer B", "Answer C"},
-		Answer:       "Answer A",
+		Answer:       0,
 		QuizEntityId: quizId,
 	}
 	question2 := QuestionEntity{
 		Title:        "Second question from the server",
 		Id:           "3c472c83-c935-4b2a-8840-150c7f7e1162",
 		Options:      []string{"Answer A", "Answer B", "Answer C"},
-		Answer:       "Answer B",
+		Answer:       1,
 		QuizEntityId: quizId,
 	}
 	question3 := QuestionEntity{
 		Title:        "Third question from the server",
 		Id:           "f35504fa-0544-4976-be61-08b27df50a5a",
 		Options:      []string{"Answer A", "Answer B", "Answer C"},
-		Answer:       "Answer C",
+		Answer:       2,
 		QuizEntityId: quizId,
 	}
 
@@ -47,14 +47,14 @@ func DefaultQuiz2() QuizEntity {
 		Title:        "First question from the server",
 		Id:           "3ba01efa-e7e7-4d3e-9cb3-b3f21016e7b7",
 		Options:      []string{"Answer A", "Answer B", "Answer C"},
-		Answer:       "Answer C",
+		Answer:       2,
 		QuizEntityId: quizId,
 	}
 	question2 := QuestionEntity{
 		Title:        "Second question from the server",
 		Id:           "6a4d0e7f-ea00-49ef-8aea-9bb3a9041a7e",
 		Options:      []string{"Answer A", "Answer B", "Answer C"},
-		Answer:       "Answer B",
+		Answer:       1,
 		QuizEntityId: quizId,
 	}
 
