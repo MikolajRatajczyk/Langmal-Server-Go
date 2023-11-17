@@ -15,6 +15,9 @@ func getDb(name string, models ...any) *gorm.DB {
 		panic("Failed to connect to the database")
 	}
 
-	db.AutoMigrate(models...)
+	err = db.AutoMigrate(models...)
+	if err != nil {
+		panic("Database migration failed")
+	}
 	return db
 }

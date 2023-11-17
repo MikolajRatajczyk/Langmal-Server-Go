@@ -41,7 +41,7 @@ func newFakeQuiz() models.QuizEntity {
 	question := models.QuestionEntity{
 		Title:   "Foo",
 		Options: []string{"a", "b", "c"},
-		Answer:  "a",
+		Answer:  0,
 	}
 
 	quiz := models.QuizEntity{

@@ -23,7 +23,7 @@ var (
 		Title:        "Question title",
 		Id:           "456",
 		Options:      []string{"option1", "option2", "option3"},
-		Answer:       "option1",
+		Answer:       0,
 		QuizEntityId: quizId,
 	}
 )

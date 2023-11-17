@@ -28,6 +28,8 @@ var (
 	resultRepo        = repositories.NewResultRepo("results")
 	resultService     = services.NewResultService(resultRepo, quizRepo)
 	resultsController = controllers.ResultsController{ResultService: resultService, JwtUtil: jwtUtil}
+
+	healthController = controllers.HealthController{}
 )
 
 func main() {
@@ -42,6 +44,8 @@ func main() {
 	contentRoutes.GET("/quizzes", quizController.GetQuizzes)
 	contentRoutes.POST("/results", resultsController.SaveResult)
 	contentRoutes.GET("/results", resultsController.GetResults)
+
+	server.GET("/health", healthController.GetHealth)
 
 	server.Run(":5001")
 }
