@@ -1,7 +1,6 @@
 package repositories
 
 import (
-	"os"
 	"testing"
 )
 
@@ -10,7 +9,7 @@ const blockedTokensDbName = "blocked_tokens_test"
 var blockedTokenId = "123"
 
 func TestBlockedTokensRepo_Add(t *testing.T) {
-	defer removeBlockedTokensDbFile()
+	defer removeDbFile(blockedTokensDbName, t)
 	sut := NewBlockedTokenRepo(blockedTokensDbName)
 
 	ok := sut.Add(blockedTokenId)
@@ -21,9 +20,12 @@ func TestBlockedTokensRepo_Add(t *testing.T) {
 }
 
 func TestBlockedTokensRepo_IsBlockedForAdded(t *testing.T) {
-	defer removeBlockedTokensDbFile()
+	defer removeDbFile(blockedTokensDbName, t)
 	sut := NewBlockedTokenRepo(blockedTokensDbName)
-	sut.Add(blockedTokenId)
+	success := sut.Add(blockedTokenId)
+	if !success {
+		t.Error("Can't add a blocked token ID and continue the test")
+	}
 
 	isBlocked := sut.IsBlocked(blockedTokenId)
 
@@ -33,7 +35,7 @@ func TestBlockedTokensRepo_IsBlockedForAdded(t *testing.T) {
 }
 
 func TestBlockedTokensRepo_IsBlockedForNotAdded(t *testing.T) {
-	defer removeBlockedTokensDbFile()
+	defer removeDbFile(blockedTokensDbName, t)
 	sut := NewBlockedTokenRepo(blockedTokensDbName)
 
 	isBlocked := sut.IsBlocked("foo")
@@ -41,8 +43,4 @@ func TestBlockedTokensRepo_IsBlockedForNotAdded(t *testing.T) {
 	if isBlocked {
 		t.Error("Not added token should be reported as NOT blocked")
 	}
-}
-
-func removeBlockedTokensDbFile() {
-	os.Remove(blockedTokensDbName + ".db")
 }

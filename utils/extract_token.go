@@ -7,10 +7,6 @@ import (
 
 var ErrNoToken = errors.New("no token")
 
-type HeaderGetter interface {
-	GetHeader(key string) string
-}
-
 func ExtractToken(header http.Header) (string, error) {
 	authHeader := header.Get("Authorization")
 

@@ -5,11 +5,11 @@ import (
 	"github.com/MikolajRatajczyk/Langmal-Server/repositories"
 )
 
-type QuizService interface {
+type QuizServiceInterface interface {
 	All() ([]models.QuizDto, bool)
 }
 
-func NewQuizService(repo repositories.QuizRepoInterface) QuizService {
+func NewQuizService(repo repositories.QuizRepoInterface) QuizServiceInterface {
 	return &quizService{
 		repo: repo,
 	}

@@ -1,7 +1,6 @@
 package repositories
 
 import (
-	"os"
 	"testing"
 
 	"github.com/MikolajRatajczyk/Langmal-Server/models"
@@ -19,7 +18,7 @@ var resultEntity = models.ResultEntity{
 }
 
 func TestResultRepo_Create(t *testing.T) {
-	defer removeResultsDbFile()
+	defer removeDbFile(resultsDbName, t)
 	sut := NewResultRepo(resultsDbName)
 
 	success := sut.Create(resultEntity)
@@ -30,7 +29,7 @@ func TestResultRepo_Create(t *testing.T) {
 }
 
 func TestResultRepo_FindExistingResult(t *testing.T) {
-	defer removeResultsDbFile()
+	defer removeDbFile(resultsDbName, t)
 	sut := NewResultRepo(resultsDbName)
 	sut.Create(resultEntity)
 
@@ -42,7 +41,7 @@ func TestResultRepo_FindExistingResult(t *testing.T) {
 }
 
 func TestResultRepo_FindIfEmpty(t *testing.T) {
-	defer removeResultsDbFile()
+	defer removeDbFile(resultsDbName, t)
 	sut := NewResultRepo(resultsDbName)
 
 	foundResults := sut.Find(resultEntity.AccountId)
@@ -50,8 +49,4 @@ func TestResultRepo_FindIfEmpty(t *testing.T) {
 	if !cmp.Equal(foundResults, []models.ResultEntity{}) {
 		t.Error("Reported success despite no results have been created")
 	}
-}
-
-func removeResultsDbFile() {
-	os.Remove(resultsDbName + ".db")
 }

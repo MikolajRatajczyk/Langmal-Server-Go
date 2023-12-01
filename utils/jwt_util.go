@@ -13,7 +13,14 @@ import (
 
 var ErrAccountIdEmpty = errors.New("account ID is empty")
 
-func NewJWTUtil() JwtUtil {
+type JwtUtilInterface interface {
+	Generate(accountId string) (string, error)
+	// Checks if a token is valid and not expired.
+	IsOk(tokenString string) bool
+	Claims(tokenString string) (*jwt.StandardClaims, bool)
+}
+
+func NewJWTUtil() JwtUtilInterface {
 	const secretKey = "LANGMAL_JWT_SECRET"
 	secret := os.Getenv(secretKey)
 	if secret == "" {
@@ -21,18 +28,18 @@ func NewJWTUtil() JwtUtil {
 		secret = "secret_fallback_123"
 	}
 
-	return JwtUtil{
+	return &jwtUtil{
 		secret: secret,
 		issuer: "langmal.ratajczyk.dev",
 	}
 }
 
-type JwtUtil struct {
+type jwtUtil struct {
 	secret string
 	issuer string
 }
 
-func (ju *JwtUtil) Generate(accountId string) (string, error) {
+func (ju *jwtUtil) Generate(accountId string) (string, error) {
 	if accountId == "" {
 		return "", ErrAccountIdEmpty
 	}
@@ -52,8 +59,7 @@ func (ju *JwtUtil) Generate(accountId string) (string, error) {
 	return signedString, err
 }
 
-// Checks if a token is valid and not expired.
-func (ju *JwtUtil) IsOk(tokenString string) bool {
+func (ju *jwtUtil) IsOk(tokenString string) bool {
 	token, ok := ju.parse(tokenString)
 	if !ok {
 		return false
@@ -68,7 +74,7 @@ func (ju *JwtUtil) IsOk(tokenString string) bool {
 	return token.Valid && !expired
 }
 
-func (ju *JwtUtil) Claims(tokenString string) (*jwt.StandardClaims, bool) {
+func (ju *jwtUtil) Claims(tokenString string) (*jwt.StandardClaims, bool) {
 	token, ok := ju.parse(tokenString)
 	if !ok {
 		return nil, false
@@ -82,7 +88,7 @@ func (ju *JwtUtil) Claims(tokenString string) (*jwt.StandardClaims, bool) {
 	return claims, true
 }
 
-func (ju *JwtUtil) parse(tokenString string) (*jwt.Token, bool) {
+func (ju *jwtUtil) parse(tokenString string) (*jwt.Token, bool) {
 	claims := &jwt.StandardClaims{}
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(parsedToken *jwt.Token) (any, error) {
 		_, ok := parsedToken.Method.(*jwt.SigningMethodHMAC)

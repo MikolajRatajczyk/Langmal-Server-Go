@@ -23,7 +23,7 @@ type AccountServiceInterface interface {
 func NewAccountService(
 	accountRepo repositories.AccountRepoInterface,
 	cryptoUtil utils.CryptoUtil,
-	jwtUtil utils.JwtUtil) AccountServiceInterface {
+	jwtUtil utils.JwtUtilInterface) AccountServiceInterface {
 	return &accountService{
 		accountRepo: accountRepo,
 		cryptoUtil:  cryptoUtil,
@@ -34,7 +34,7 @@ func NewAccountService(
 type accountService struct {
 	accountRepo repositories.AccountRepoInterface
 	cryptoUtil  utils.CryptoUtil
-	jwtUtil     utils.JwtUtil
+	jwtUtil     utils.JwtUtilInterface
 }
 
 func (as *accountService) Register(email string, password string) error {

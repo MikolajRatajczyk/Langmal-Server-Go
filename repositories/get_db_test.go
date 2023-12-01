@@ -1,7 +1,6 @@
 package repositories
 
 import (
-	"os"
 	"testing"
 )
 
@@ -15,7 +14,7 @@ func TestGetDb_PanicIfNameIsEmpty(t *testing.T) {
 
 func TestGetDb_ReturnDbIfNameIsNotEmpty(t *testing.T) {
 	const dbName = "notEmptyString"
-	defer func() { _ = os.Remove(dbName + ".db") }()
+	defer removeDbFile(dbName, t)
 
 	db := getDb(dbName, &fakeModel{})
 

@@ -17,7 +17,7 @@ var account = models.AccountEntity{
 }
 
 func TestAccountRepo_Create(t *testing.T) {
-	defer removeAccountsDbFile()
+	defer removeDbFile(accountsDbName, t)
 	sut := NewAccountRepo(accountsDbName)
 
 	success := sut.Create(account)
@@ -28,9 +28,12 @@ func TestAccountRepo_Create(t *testing.T) {
 }
 
 func TestAccountRepo_FindExistingAccount(t *testing.T) {
-	defer removeAccountsDbFile()
+	defer removeDbFile(accountsDbName, t)
 	sut := NewAccountRepo(accountsDbName)
-	sut.Create(account)
+	success := sut.Create(account)
+	if !success {
+		t.Error("Can't create an account and continue the test")
+	}
 
 	foundAccount, success := sut.Find(account.Email)
 
@@ -44,7 +47,7 @@ func TestAccountRepo_FindExistingAccount(t *testing.T) {
 }
 
 func TestAccountRepo_FindNonExistingAccount(t *testing.T) {
-	defer removeAccountsDbFile()
+	defer removeDbFile(accountsDbName, t)
 	sut := NewAccountRepo(accountsDbName)
 
 	_, success := sut.Find(account.Email)
@@ -54,6 +57,10 @@ func TestAccountRepo_FindNonExistingAccount(t *testing.T) {
 	}
 }
 
-func removeAccountsDbFile() {
-	os.Remove(accountsDbName + ".db")
+func removeDbFile(name string, t *testing.T) {
+	filename := name + ".db"
+	err := os.Remove(filename)
+	if err != nil {
+		t.Error("Can't remove temporary DB file named " + filename)
+	}
 }
