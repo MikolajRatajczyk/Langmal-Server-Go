@@ -1,7 +1,6 @@
 package repositories
 
 import (
-	"os"
 	"testing"
 
 	"github.com/MikolajRatajczyk/Langmal-Server/models"
@@ -29,7 +28,7 @@ var (
 )
 
 func TestQuizRepo_Create(t *testing.T) {
-	defer removeQuizDbFile()
+	defer removeDbFile(quizzesDbName, t)
 	sut := NewQuizRepo(quizzesDbName)
 
 	success := sut.Create(quiz)
@@ -40,7 +39,7 @@ func TestQuizRepo_Create(t *testing.T) {
 }
 
 func TestQuizRepo_FindDefaultQuizzes(t *testing.T) {
-	defer removeQuizDbFile()
+	defer removeDbFile(quizzesDbName, t)
 	sut := NewQuizRepo(quizzesDbName)
 
 	all := sut.FindAll()
@@ -51,7 +50,7 @@ func TestQuizRepo_FindDefaultQuizzes(t *testing.T) {
 }
 
 func TestQuizRepo_FindExistingQuiz(t *testing.T) {
-	defer removeQuizDbFile()
+	defer removeDbFile(quizzesDbName, t)
 	sut := NewQuizRepo(quizzesDbName)
 	sut.Create(quiz)
 
@@ -67,7 +66,7 @@ func TestQuizRepo_FindExistingQuiz(t *testing.T) {
 }
 
 func TestQuizRepo_FindNonExistingQuiz(t *testing.T) {
-	defer removeQuizDbFile()
+	defer removeDbFile(quizzesDbName, t)
 	sut := NewQuizRepo(quizzesDbName)
 
 	_, success := sut.Find(quiz.Id)
@@ -75,8 +74,4 @@ func TestQuizRepo_FindNonExistingQuiz(t *testing.T) {
 	if success {
 		t.Error("Reported success even though no quizzes were created")
 	}
-}
-
-func removeQuizDbFile() {
-	os.Remove(quizzesDbName + ".db")
 }
