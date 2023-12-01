@@ -22,7 +22,10 @@ func TestBlockedTokensRepo_Add(t *testing.T) {
 func TestBlockedTokensRepo_IsBlockedForAdded(t *testing.T) {
 	defer removeDbFile(blockedTokensDbName, t)
 	sut := NewBlockedTokenRepo(blockedTokensDbName)
-	sut.Add(blockedTokenId)
+	success := sut.Add(blockedTokenId)
+	if !success {
+		t.Error("Can't add a blocked token ID and continue the test")
+	}
 
 	isBlocked := sut.IsBlocked(blockedTokenId)
 
