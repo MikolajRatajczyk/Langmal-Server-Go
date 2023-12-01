@@ -30,7 +30,10 @@ func TestAccountRepo_Create(t *testing.T) {
 func TestAccountRepo_FindExistingAccount(t *testing.T) {
 	defer removeAccountsDbFile()
 	sut := NewAccountRepo(accountsDbName)
-	sut.Create(account)
+	success := sut.Create(account)
+	if !success {
+		t.Error("Can't create an account and continue the test")
+	}
 
 	foundAccount, success := sut.Find(account.Email)
 
