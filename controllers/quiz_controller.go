@@ -8,7 +8,7 @@ import (
 )
 
 type QuizController struct {
-	Service services.QuizService
+	Service services.QuizServiceInterface
 }
 
 func (qc *QuizController) GetQuizzes(ctx *gin.Context) {
