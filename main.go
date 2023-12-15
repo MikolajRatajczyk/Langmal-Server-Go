@@ -30,6 +30,8 @@ var (
 	resultsController = controllers.ResultsController{ResultService: resultService, JwtUtil: jwtUtil}
 
 	healthController = controllers.HealthController{}
+
+	contentMiddleware = middlewares.AuthorizeWithJWT(jwtUtil, blockedTokensRepo)
 )
 
 func main() {
@@ -40,7 +42,7 @@ func main() {
 	accountRoutes.POST("/login", accountController.Login)
 	accountRoutes.POST("/logout", accountController.Logout)
 
-	contentRoutes := server.Group("/content", middlewares.AuthorizeWithJWT(jwtUtil, blockedTokensRepo))
+	contentRoutes := server.Group("/content", contentMiddleware)
 	contentRoutes.GET("/quizzes", quizController.GetQuizzes)
 	contentRoutes.POST("/results", resultsController.SaveResult)
 	contentRoutes.GET("/results", resultsController.GetResults)
