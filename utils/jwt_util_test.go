@@ -39,7 +39,7 @@ func TestJwtUtil_IsOkForValidToken(t *testing.T) {
 	sut := NewJWTUtil()
 	validToken, err := sut.Generate("abc")
 	if err != nil {
-		t.Error("Can't generate token")
+		t.Fatal("Can't generate token")
 	}
 
 	ok := sut.IsOk(validToken)
@@ -65,7 +65,7 @@ func TestJwtUtil_ClaimsFromValidToken(t *testing.T) {
 	sut := NewJWTUtil()
 	validToken, err := sut.Generate(expectedId)
 	if err != nil {
-		t.Error("Can't generate token")
+		t.Fatal("Can't generate token")
 	}
 
 	claims, ok := sut.Claims(validToken)

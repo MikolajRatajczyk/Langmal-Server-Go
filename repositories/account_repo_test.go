@@ -32,7 +32,7 @@ func TestAccountRepo_FindExistingAccount(t *testing.T) {
 	sut := NewAccountRepo(accountsDbName)
 	success := sut.Create(account)
 	if !success {
-		t.Error("Can't create an account and continue the test")
+		t.Fatal("Can't create an account and continue the test")
 	}
 
 	foundAccount, success := sut.Find(account.Email)
@@ -61,6 +61,6 @@ func removeDbFile(name string, t *testing.T) {
 	filename := name + ".db"
 	err := os.Remove(filename)
 	if err != nil {
-		t.Error("Can't remove temporary DB file named " + filename)
+		t.Fatal("Can't remove temporary DB file named " + filename)
 	}
 }
