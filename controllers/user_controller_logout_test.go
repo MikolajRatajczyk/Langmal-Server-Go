@@ -56,7 +56,7 @@ func testUserController_Logout(
 	sut := UserController{
 		Service:          nil,
 		BlockedTokenRepo: repo,
-		JwtUtil:          &util{},
+		ClaimsExtractor:  &claimsExtractorFake{},
 	}
 
 	sut.Logout(ctx)
@@ -80,16 +80,8 @@ func (*repoFake) IsBlocked(id string) bool {
 	return false
 }
 
-type util struct{}
+type claimsExtractorFake struct{}
 
-func (*util) Generate(userId string) (string, error) {
-	return "foo", nil
-}
-
-func (*util) IsOk(tokenString string) bool {
-	return true
-}
-
-func (*util) Claims(tokenString string) (*jwt.StandardClaims, bool) {
+func (*claimsExtractorFake) Claims(tokenString string) (*jwt.StandardClaims, bool) {
 	return &jwt.StandardClaims{}, true
 }

@@ -43,7 +43,7 @@ func testUserController_Login(
 	sut := UserController{
 		Service:          service,
 		BlockedTokenRepo: nil,
-		JwtUtil:          nil,
+		ClaimsExtractor:  nil,
 	}
 
 	sut.Login(ctx)

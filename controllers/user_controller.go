@@ -13,7 +13,7 @@ import (
 type UserController struct {
 	Service          services.UserServiceInterface
 	BlockedTokenRepo repositories.BlockedTokenRepoInterface
-	JwtUtil          utils.JwtUtilInterface
+	ClaimsExtractor  utils.ClaimsExtractorInterface
 }
 
 func (ac *UserController) Register(ctx *gin.Context) {
@@ -80,7 +80,7 @@ func (ac *UserController) Logout(ctx *gin.Context) {
 		return
 	}
 
-	claims, ok := ac.JwtUtil.Claims(request.Token)
+	claims, ok := ac.ClaimsExtractor.Claims(request.Token)
 	if !ok {
 		ctx.AbortWithStatus(http.StatusBadRequest)
 		return

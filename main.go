@@ -21,12 +21,12 @@ var (
 	userController    = controllers.UserController{
 		Service:          userService,
 		BlockedTokenRepo: blockedTokensRepo,
-		JwtUtil:          jwtUtil,
+		ClaimsExtractor:  jwtUtil,
 	}
 
 	resultRepo        = repositories.NewResultRepo("results")
 	resultService     = services.NewResultService(resultRepo, quizRepo)
-	resultsController = controllers.ResultsController{ResultService: resultService, JwtUtil: jwtUtil}
+	resultsController = controllers.ResultsController{ResultService: resultService, ClaimsExtractor: jwtUtil}
 
 	healthController = controllers.HealthController{}
 

@@ -41,7 +41,7 @@ func testUserController_Register(
 	sut := UserController{
 		Service:          service,
 		BlockedTokenRepo: nil,
-		JwtUtil:          nil,
+		ClaimsExtractor:  nil,
 	}
 
 	sut.Register(ctx)

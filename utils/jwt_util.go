@@ -13,11 +13,15 @@ import (
 
 var ErrUserIdEmpty = errors.New("user ID is empty")
 
+type ClaimsExtractorInterface interface {
+	Claims(tokenString string) (*jwt.StandardClaims, bool)
+}
+
 type JwtUtilInterface interface {
 	Generate(userId string) (string, error)
 	// Checks if a token is valid and not expired.
 	IsOk(tokenString string) bool
-	Claims(tokenString string) (*jwt.StandardClaims, bool)
+	ClaimsExtractorInterface
 }
 
 func NewJWTUtil() JwtUtilInterface {

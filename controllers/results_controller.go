@@ -10,8 +10,8 @@ import (
 )
 
 type ResultsController struct {
-	ResultService services.ResultServiceInterface
-	JwtUtil       utils.JwtUtilInterface
+	ResultService   services.ResultServiceInterface
+	ClaimsExtractor utils.ClaimsExtractorInterface
 }
 
 func (rc *ResultsController) SaveResult(ctx *gin.Context) {
@@ -74,7 +74,7 @@ func (rc *ResultsController) GetResults(ctx *gin.Context) {
 }
 
 func (rc *ResultsController) extractUserId(tokenString string) (string, bool) {
-	claims, ok := rc.JwtUtil.Claims(tokenString)
+	claims, ok := rc.ClaimsExtractor.Claims(tokenString)
 	return claims.Subject, ok
 }
 
