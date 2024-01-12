@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"bytes"
+	"encoding/json"
 	"net/http/httptest"
 	"testing"
 
@@ -13,23 +15,24 @@ var credentials = gin.H{"email": "foo@foo.com", "password": "123"}
 
 func TestUserController_LoginWhenRequestOk(t *testing.T) {
 	service := userServiceFake{registerError: nil, loginError: nil}
-	testUserController_Login(&service, credentials, 200, t)
+	testUserController_Login(&service, credentials, 200, true, t)
 }
 
 func TestUserController_LoginWhenNoUser(t *testing.T) {
 	service := userServiceFake{registerError: nil, loginError: services.ErrNoUser}
-	testUserController_Login(&service, credentials, 401, t)
+	testUserController_Login(&service, credentials, 401, false, t)
 }
 
 func TestUserController_LoginWhenRequestBodyEmpty(t *testing.T) {
 	service := userServiceFake{registerError: nil, loginError: nil}
-	testUserController_Login(&service, gin.H{}, 400, t)
+	testUserController_Login(&service, gin.H{}, 400, false, t)
 }
 
 func testUserController_Login(
 	service services.UserServiceInterface,
 	requestBody gin.H,
 	expectedCode int,
+	responseWithJwtFieldExpected bool,
 	t *testing.T,
 ) {
 	request := testutils.CreatePostJsonRequest(requestBody)
@@ -51,6 +54,21 @@ func testUserController_Login(
 	if recorder.Code != expectedCode {
 		t.Errorf("Expected %d status code, got %d", expectedCode, recorder.Code)
 	}
+
+	if responseWithJwtFieldExpected && !hasFilledJwtField(recorder.Body) {
+		t.Errorf("Expected filled jwt field in the response body")
+	}
+}
+
+func hasFilledJwtField(body *bytes.Buffer) bool {
+	var parsedJson map[string]string
+	err := json.Unmarshal(body.Bytes(), &parsedJson)
+	if err != nil {
+		return false
+	}
+
+	jwt := parsedJson["jwt"]
+	return len(jwt) != 0
 }
 
 type userServiceFake struct {
