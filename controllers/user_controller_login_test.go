@@ -12,17 +12,17 @@ import (
 var credentials = gin.H{"email": "foo@foo.com", "password": "123"}
 
 func TestUserController_LoginWhenRequestOk(t *testing.T) {
-	service := serviceFake{registerError: nil, loginError: nil}
+	service := userServiceFake{registerError: nil, loginError: nil}
 	testUserController_Login(&service, credentials, 200, t)
 }
 
 func TestUserController_LoginWhenNoUser(t *testing.T) {
-	service := serviceFake{registerError: nil, loginError: services.ErrNoUser}
+	service := userServiceFake{registerError: nil, loginError: services.ErrNoUser}
 	testUserController_Login(&service, credentials, 401, t)
 }
 
 func TestUserController_LoginWhenRequestBodyEmpty(t *testing.T) {
-	service := serviceFake{registerError: nil, loginError: nil}
+	service := userServiceFake{registerError: nil, loginError: nil}
 	testUserController_Login(&service, gin.H{}, 400, t)
 }
 
@@ -53,16 +53,16 @@ func testUserController_Login(
 	}
 }
 
-type serviceFake struct {
+type userServiceFake struct {
 	registerError error
 	loginError    error
 }
 
-func (sf *serviceFake) Register(email string, password string) error {
+func (sf *userServiceFake) Register(email string, password string) error {
 	return sf.registerError
 }
 
-func (sf *serviceFake) Login(email string, password string) (token string, err error) {
+func (sf *userServiceFake) Login(email string, password string) (token string, err error) {
 	if sf.loginError != nil {
 		return "", sf.loginError
 	} else {

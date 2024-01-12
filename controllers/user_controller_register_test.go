@@ -10,17 +10,17 @@ import (
 )
 
 func TestUserController_RegisterWhenRequestOk(t *testing.T) {
-	service := serviceFake{registerError: nil, loginError: nil}
+	service := userServiceFake{registerError: nil, loginError: nil}
 	testUserController_Register(&service, credentials, 200, t)
 }
 
 func TestUserController_RegisterWhenUserAlreadyExists(t *testing.T) {
-	service := serviceFake{registerError: services.ErrUserAlreadyExists, loginError: nil}
+	service := userServiceFake{registerError: services.ErrUserAlreadyExists, loginError: nil}
 	testUserController_Register(&service, credentials, 400, t)
 }
 
 func TestUserController_RegisterWhenRequestBodyEmpty(t *testing.T) {
-	service := serviceFake{registerError: nil, loginError: nil}
+	service := userServiceFake{registerError: nil, loginError: nil}
 	testUserController_Register(&service, gin.H{}, 400, t)
 }
 
