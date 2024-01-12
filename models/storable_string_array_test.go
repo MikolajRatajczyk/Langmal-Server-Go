@@ -11,7 +11,7 @@ func TestStorabeStringArray_ScanWhenValidData(t *testing.T) {
 	original := StorableStringArray{"d", "e", "f"}
 	validData, err := json.Marshal(original)
 	if err != nil {
-		t.Error("Can't convert to []byte and continue the test")
+		t.Fatal("Can't convert to []byte and continue the test")
 	}
 	sut := StorableStringArray{}
 

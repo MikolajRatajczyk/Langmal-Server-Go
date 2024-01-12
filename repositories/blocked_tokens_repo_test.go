@@ -24,7 +24,7 @@ func TestBlockedTokensRepo_IsBlockedForAdded(t *testing.T) {
 	sut := NewBlockedTokenRepo(blockedTokensDbName)
 	success := sut.Add(blockedTokenId)
 	if !success {
-		t.Error("Can't add a blocked token ID and continue the test")
+		t.Fatal("Can't add a blocked token ID and continue the test")
 	}
 
 	isBlocked := sut.IsBlocked(blockedTokenId)

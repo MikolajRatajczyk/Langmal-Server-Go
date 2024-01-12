@@ -27,6 +27,15 @@ func CreatePostJsonRequest(jsonMap gin.H) *http.Request {
 	return &request
 }
 
+func CreateEmptyGetRequest() *http.Request {
+	request, err := http.NewRequest(http.MethodGet, "/foo", nil)
+	if err != nil {
+		return nil
+	}
+
+	return request
+}
+
 func createReadCloser(jsonMap gin.H) io.ReadCloser {
 	jsonBytes, err := json.Marshal(jsonMap)
 	if err != nil {
