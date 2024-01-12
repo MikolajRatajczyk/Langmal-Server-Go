@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"slices"
 	"testing"
 
 	"github.com/MikolajRatajczyk/Langmal-Server/models"
@@ -35,7 +36,7 @@ func TestResultRepo_FindExistingResult(t *testing.T) {
 
 	foundResults := sut.Find(resultEntity.AccountId)
 
-	if !cmp.Equal(foundResults, []models.ResultEntity{resultEntity}) {
+	if !slices.Equal(foundResults, []models.ResultEntity{resultEntity}) {
 		t.Error("Found results are not the same as the created one")
 	}
 }
