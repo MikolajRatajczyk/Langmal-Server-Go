@@ -159,7 +159,7 @@ type jwtUtilsFake struct {
 	claimsSuccess bool
 }
 
-func (juf *jwtUtilsFake) Generate(accountId string) (string, error) {
+func (juf *jwtUtilsFake) Generate(userId string) (string, error) {
 	return juf.generateValue, juf.generateError
 }
 

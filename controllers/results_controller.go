@@ -29,10 +29,10 @@ func (rc *ResultsController) SaveResult(ctx *gin.Context) {
 		return
 	}
 
-	accountId, ok := rc.extractAccountId(tokenString)
+	userId, ok := rc.extractUserId(tokenString)
 	if !ok {
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-			"message": "Failed to extract account ID from the token.",
+			"message": "Failed to extract user ID from the token.",
 		})
 	}
 
@@ -41,9 +41,9 @@ func (rc *ResultsController) SaveResult(ctx *gin.Context) {
 		Wrong:     request.Wrong,
 		QuizId:    request.QuizId,
 		CreatedAt: request.CreatedAt,
-		AccountId: accountId,
+		UserId:    userId,
 	}
-	saved := rc.ResultService.Save(result, accountId)
+	saved := rc.ResultService.Save(result, userId)
 	if saved {
 		ctx.JSON(http.StatusCreated, gin.H{
 			"message": "Result saved.",
@@ -64,16 +64,16 @@ func (rc *ResultsController) GetResults(ctx *gin.Context) {
 		return
 	}
 
-	accountId, ok := rc.extractAccountId(tokenString)
+	userId, ok := rc.extractUserId(tokenString)
 	if !ok {
 		ctx.AbortWithStatus(http.StatusUnauthorized)
 	}
 
-	resultDtos := rc.ResultService.Find(accountId)
+	resultDtos := rc.ResultService.Find(userId)
 	ctx.JSON(http.StatusOK, resultDtos)
 }
 
-func (rc *ResultsController) extractAccountId(tokenString string) (string, bool) {
+func (rc *ResultsController) extractUserId(tokenString string) (string, bool) {
 	claims, ok := rc.JwtUtil.Claims(tokenString)
 	return claims.Subject, ok
 }

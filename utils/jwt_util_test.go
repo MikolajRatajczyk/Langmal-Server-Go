@@ -26,12 +26,12 @@ func TestJwtUtil_GenerateForInvalidId(t *testing.T) {
 
 	token, err := sut.Generate(invalidId)
 
-	if !errors.Is(err, ErrAccountIdEmpty) {
-		t.Error("Expected account ID empty error")
+	if !errors.Is(err, ErrUserIdEmpty) {
+		t.Error("Expected user ID empty error")
 	}
 
 	if token != "" {
-		t.Error("Token should be empty for empty account ID")
+		t.Error("Token should be empty for empty user ID")
 	}
 }
 

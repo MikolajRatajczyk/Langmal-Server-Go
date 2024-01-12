@@ -9,7 +9,7 @@ import (
 
 type ResultRepoInterface interface {
 	Create(result models.ResultEntity) bool
-	Find(accountId string) []models.ResultEntity
+	Find(userId string) []models.ResultEntity
 }
 
 func NewResultRepo(dbName string) ResultRepoInterface {
@@ -22,9 +22,9 @@ type resultRepo struct {
 	db *gorm.DB
 }
 
-func (rr *resultRepo) Find(accountId string) []models.ResultEntity {
+func (rr *resultRepo) Find(userId string) []models.ResultEntity {
 	var results []models.ResultEntity
-	rr.db.Find(&results, "account_id = ?", accountId)
+	rr.db.Find(&results, "user_id = ?", userId)
 	return results
 }
 

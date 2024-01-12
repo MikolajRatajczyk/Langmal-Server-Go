@@ -11,23 +11,23 @@ import (
 
 var credentials = gin.H{"email": "foo@foo.com", "password": "123"}
 
-func TestAccountController_LoginWhenRequestOk(t *testing.T) {
+func TestUserController_LoginWhenRequestOk(t *testing.T) {
 	service := serviceFake{registerError: nil, loginError: nil}
-	testAccountController_Login(&service, credentials, 200, t)
+	testUserController_Login(&service, credentials, 200, t)
 }
 
-func TestAccountController_LoginWhenNoAccount(t *testing.T) {
-	service := serviceFake{registerError: nil, loginError: services.ErrNoAccount}
-	testAccountController_Login(&service, credentials, 401, t)
+func TestUserController_LoginWhenNoUser(t *testing.T) {
+	service := serviceFake{registerError: nil, loginError: services.ErrNoUser}
+	testUserController_Login(&service, credentials, 401, t)
 }
 
-func TestAccountController_LoginWhenRequestBodyEmpty(t *testing.T) {
+func TestUserController_LoginWhenRequestBodyEmpty(t *testing.T) {
 	service := serviceFake{registerError: nil, loginError: nil}
-	testAccountController_Login(&service, gin.H{}, 400, t)
+	testUserController_Login(&service, gin.H{}, 400, t)
 }
 
-func testAccountController_Login(
-	service services.AccountServiceInterface,
+func testUserController_Login(
+	service services.UserServiceInterface,
 	requestBody gin.H,
 	expectedCode int,
 	t *testing.T,
@@ -40,7 +40,7 @@ func testAccountController_Login(
 	ctx, _ := gin.CreateTestContext(recorder)
 	ctx.Request = request
 
-	sut := AccountController{
+	sut := UserController{
 		Service:          service,
 		BlockedTokenRepo: nil,
 		JwtUtil:          nil,

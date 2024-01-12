@@ -12,8 +12,8 @@ import (
 
 var token = gin.H{"token": "foo"}
 
-func TestAccountController_LogoutWhenRequestOk(t *testing.T) {
-	testAccountController_Logout(
+func TestUserController_LogoutWhenRequestOk(t *testing.T) {
+	testUserController_Logout(
 		&repoFake{addSuccessful: true},
 		token,
 		200,
@@ -21,8 +21,8 @@ func TestAccountController_LogoutWhenRequestOk(t *testing.T) {
 	)
 }
 
-func TestAccountController_LogoutWhenEmptyRequest(t *testing.T) {
-	testAccountController_Logout(
+func TestUserController_LogoutWhenEmptyRequest(t *testing.T) {
+	testUserController_Logout(
 		&repoFake{addSuccessful: true},
 		gin.H{},
 		400,
@@ -30,8 +30,8 @@ func TestAccountController_LogoutWhenEmptyRequest(t *testing.T) {
 	)
 }
 
-func TestAccountController_LogoutWhenAlreadyLoggedOut(t *testing.T) {
-	testAccountController_Logout(
+func TestUserController_LogoutWhenAlreadyLoggedOut(t *testing.T) {
+	testUserController_Logout(
 		&repoFake{addSuccessful: false},
 		token,
 		400,
@@ -39,7 +39,7 @@ func TestAccountController_LogoutWhenAlreadyLoggedOut(t *testing.T) {
 	)
 }
 
-func testAccountController_Logout(
+func testUserController_Logout(
 	repo repositories.BlockedTokenRepoInterface,
 	requestBody gin.H,
 	expectedCode int,
@@ -53,7 +53,7 @@ func testAccountController_Logout(
 	ctx, _ := gin.CreateTestContext(recorder)
 	ctx.Request = request
 
-	sut := AccountController{
+	sut := UserController{
 		Service:          nil,
 		BlockedTokenRepo: repo,
 		JwtUtil:          &util{},
@@ -82,7 +82,7 @@ func (*repoFake) IsBlocked(id string) bool {
 
 type util struct{}
 
-func (*util) Generate(accountId string) (string, error) {
+func (*util) Generate(userId string) (string, error) {
 	return "foo", nil
 }
 

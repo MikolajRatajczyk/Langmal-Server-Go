@@ -9,23 +9,23 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func TestAccountController_RegisterWhenRequestOk(t *testing.T) {
+func TestUserController_RegisterWhenRequestOk(t *testing.T) {
 	service := serviceFake{registerError: nil, loginError: nil}
-	testAccountController_Register(&service, credentials, 200, t)
+	testUserController_Register(&service, credentials, 200, t)
 }
 
-func TestAccountController_RegisterWhenAccountAlreadyExists(t *testing.T) {
-	service := serviceFake{registerError: services.ErrAccountAlreadyExists, loginError: nil}
-	testAccountController_Register(&service, credentials, 400, t)
+func TestUserController_RegisterWhenUserAlreadyExists(t *testing.T) {
+	service := serviceFake{registerError: services.ErrUserAlreadyExists, loginError: nil}
+	testUserController_Register(&service, credentials, 400, t)
 }
 
-func TestAccountController_RegisterWhenRequestBodyEmpty(t *testing.T) {
+func TestUserController_RegisterWhenRequestBodyEmpty(t *testing.T) {
 	service := serviceFake{registerError: nil, loginError: nil}
-	testAccountController_Register(&service, gin.H{}, 400, t)
+	testUserController_Register(&service, gin.H{}, 400, t)
 }
 
-func testAccountController_Register(
-	service services.AccountServiceInterface,
+func testUserController_Register(
+	service services.UserServiceInterface,
 	requestBody gin.H,
 	expectedCode int,
 	t *testing.T,
@@ -38,7 +38,7 @@ func testAccountController_Register(
 	ctx, _ := gin.CreateTestContext(recorder)
 	ctx.Request = request
 
-	sut := AccountController{
+	sut := UserController{
 		Service:          service,
 		BlockedTokenRepo: nil,
 		JwtUtil:          nil,

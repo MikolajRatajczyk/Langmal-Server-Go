@@ -5,5 +5,5 @@ type ResultEntity struct {
 	Wrong     int
 	QuizId    string
 	CreatedAt int64
-	AccountId string
+	UserId    string
 }

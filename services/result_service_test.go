@@ -29,7 +29,7 @@ func TestResultService_FindIfRepoIsNotEmpty(t *testing.T) {
 		Wrong:     2,
 		QuizId:    "123",
 		CreatedAt: 1673122069,
-		AccountId: "111",
+		UserId:    "111",
 	}
 	fakeResultRepo := FakeResultRepo{
 		resultToFind: &resultEntity,
@@ -78,7 +78,7 @@ func (frr *FakeResultRepo) Create(result models.ResultEntity) bool {
 	return frr.isCreateAlwaysSuccess
 }
 
-func (frr *FakeResultRepo) Find(accountId string) []models.ResultEntity {
+func (frr *FakeResultRepo) Find(userId string) []models.ResultEntity {
 	if frr.resultToFind != nil {
 		return []models.ResultEntity{*frr.resultToFind}
 	} else {

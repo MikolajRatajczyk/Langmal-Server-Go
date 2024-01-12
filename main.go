@@ -16,11 +16,11 @@ var (
 	quizService    = services.NewQuizService(quizRepo)
 	quizController = controllers.QuizController{Service: quizService}
 
-	accountRepo       = repositories.NewAccountRepo("accounts")
+	userRepo          = repositories.NewUserRepo("users")
 	blockedTokensRepo = repositories.NewBlockedTokenRepo("blocked_tokens")
-	accountService    = services.NewAccountService(accountRepo, utils.CryptoUtil{}, jwtUtil)
-	accountController = controllers.AccountController{
-		Service:          accountService,
+	userService       = services.NewUserService(userRepo, utils.CryptoUtil{}, jwtUtil)
+	userController    = controllers.UserController{
+		Service:          userService,
 		BlockedTokenRepo: blockedTokensRepo,
 		JwtUtil:          jwtUtil,
 	}
@@ -37,10 +37,10 @@ var (
 func main() {
 	server := gin.Default()
 
-	accountRoutes := server.Group("/account")
-	accountRoutes.POST("/register", accountController.Register)
-	accountRoutes.POST("/login", accountController.Login)
-	accountRoutes.POST("/logout", accountController.Logout)
+	userRoutes := server.Group("/user")
+	userRoutes.POST("/register", userController.Register)
+	userRoutes.POST("/login", userController.Login)
+	userRoutes.POST("/logout", userController.Logout)
 
 	contentRoutes := server.Group("/content", contentMiddleware)
 	contentRoutes.GET("/quizzes", quizController.GetQuizzes)

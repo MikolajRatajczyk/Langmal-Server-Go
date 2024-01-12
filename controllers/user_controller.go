@@ -10,13 +10,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type AccountController struct {
-	Service          services.AccountServiceInterface
+type UserController struct {
+	Service          services.UserServiceInterface
 	BlockedTokenRepo repositories.BlockedTokenRepoInterface
 	JwtUtil          utils.JwtUtilInterface
 }
 
-func (ac *AccountController) Register(ctx *gin.Context) {
+func (ac *UserController) Register(ctx *gin.Context) {
 	var request registerRequest
 	err := ctx.BindJSON(&request)
 	if err != nil {
@@ -27,24 +27,24 @@ func (ac *AccountController) Register(ctx *gin.Context) {
 	if err != nil {
 		var httpErrStatus int
 		switch {
-		case errors.Is(err, services.ErrAccountAlreadyExists):
+		case errors.Is(err, services.ErrUserAlreadyExists):
 			httpErrStatus = http.StatusBadRequest
 		default:
 			httpErrStatus = http.StatusInternalServerError
 		}
 
 		ctx.AbortWithStatusJSON(httpErrStatus, gin.H{
-			"message": "Failed to register an account: " + err.Error(),
+			"message": "Failed to register a user: " + err.Error(),
 		})
 		return
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{
-		"message": "Account has been registered.",
+		"message": "User has been registered.",
 	})
 }
 
-func (ac *AccountController) Login(ctx *gin.Context) {
+func (ac *UserController) Login(ctx *gin.Context) {
 	var request loginRequest
 	err := ctx.BindJSON(&request)
 	if err != nil {
@@ -55,7 +55,7 @@ func (ac *AccountController) Login(ctx *gin.Context) {
 	if err != nil {
 		var httpErrStatus int
 		switch {
-		case errors.Is(err, services.ErrNoAccount):
+		case errors.Is(err, services.ErrNoUser):
 			httpErrStatus = http.StatusUnauthorized
 		case errors.Is(err, services.ErrNotMatchingPasswords):
 			httpErrStatus = http.StatusForbidden
@@ -73,7 +73,7 @@ func (ac *AccountController) Login(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response)
 }
 
-func (ac *AccountController) Logout(ctx *gin.Context) {
+func (ac *UserController) Logout(ctx *gin.Context) {
 	var request logoutRequest
 	err := ctx.BindJSON(&request)
 	if err != nil {

@@ -11,10 +11,10 @@ import (
 	"github.com/google/uuid"
 )
 
-var ErrAccountIdEmpty = errors.New("account ID is empty")
+var ErrUserIdEmpty = errors.New("user ID is empty")
 
 type JwtUtilInterface interface {
-	Generate(accountId string) (string, error)
+	Generate(userId string) (string, error)
 	// Checks if a token is valid and not expired.
 	IsOk(tokenString string) bool
 	Claims(tokenString string) (*jwt.StandardClaims, bool)
@@ -39,9 +39,9 @@ type jwtUtil struct {
 	issuer string
 }
 
-func (ju *jwtUtil) Generate(accountId string) (string, error) {
-	if accountId == "" {
-		return "", ErrAccountIdEmpty
+func (ju *jwtUtil) Generate(userId string) (string, error) {
+	if userId == "" {
+		return "", ErrUserIdEmpty
 	}
 
 	const sixMonths = time.Hour * 24 * 30 * 6
@@ -49,7 +49,7 @@ func (ju *jwtUtil) Generate(accountId string) (string, error) {
 		ExpiresAt: time.Now().Add(sixMonths).Unix(),
 		IssuedAt:  time.Now().Unix(),
 		Issuer:    ju.issuer,
-		Subject:   accountId,
+		Subject:   userId,
 		Id:        uuid.New().String(),
 	}
 

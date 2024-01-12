@@ -16,12 +16,12 @@ var (
 	password = "foo"
 )
 
-func TestAccountService_RegisterIfRepoSucceeds(t *testing.T) {
-	accountRepoFake := AccountRepoFake{
+func TestUserService_RegisterIfRepoSucceeds(t *testing.T) {
+	userRepoFake := UserRepoFake{
 		isCreateAlwaysSuccess: true,
 	}
-	sut := NewAccountService(
-		&accountRepoFake,
+	sut := NewUserService(
+		&userRepoFake,
 		cryptoUtil,
 		jwtUtil)
 
@@ -32,12 +32,12 @@ func TestAccountService_RegisterIfRepoSucceeds(t *testing.T) {
 	}
 }
 
-func TestAccountService_RegisterIfRepoFails(t *testing.T) {
-	accountRepoFake := AccountRepoFake{
+func TestUserService_RegisterIfRepoFails(t *testing.T) {
+	userRepoFake := UserRepoFake{
 		isCreateAlwaysSuccess: false,
 	}
-	sut := NewAccountService(
-		&accountRepoFake,
+	sut := NewUserService(
+		&userRepoFake,
 		cryptoUtil,
 		jwtUtil)
 
@@ -48,13 +48,13 @@ func TestAccountService_RegisterIfRepoFails(t *testing.T) {
 	}
 }
 
-func TestAccountService_LoginIfRepoFails(t *testing.T) {
-	accountRepoFake := AccountRepoFake{
+func TestUserService_LoginIfRepoFails(t *testing.T) {
+	userRepoFake := UserRepoFake{
 		isCreateAlwaysSuccess: false,
-		accountToFind:         nil,
+		userToFind:            nil,
 	}
-	sut := NewAccountService(
-		&accountRepoFake,
+	sut := NewUserService(
+		&userRepoFake,
 		cryptoUtil,
 		jwtUtil)
 
@@ -69,18 +69,18 @@ func TestAccountService_LoginIfRepoFails(t *testing.T) {
 	}
 }
 
-func TestAccountService_LoginIfPasswordsDontMatch(t *testing.T) {
-	account := models.AccountEntity{
+func TestUserService_LoginIfPasswordsDontMatch(t *testing.T) {
+	user := models.UserEntity{
 		Id:           "123",
 		Email:        "foo@foo.com",
 		PasswordHash: []byte{1},
 	}
-	accountRepoFake := AccountRepoFake{
+	userRepoFake := UserRepoFake{
 		isCreateAlwaysSuccess: false,
-		accountToFind:         &account,
+		userToFind:            &user,
 	}
-	sut := NewAccountService(
-		&accountRepoFake,
+	sut := NewUserService(
+		&userRepoFake,
 		cryptoUtil,
 		jwtUtil)
 
@@ -95,19 +95,19 @@ func TestAccountService_LoginIfPasswordsDontMatch(t *testing.T) {
 	}
 }
 
-type AccountRepoFake struct {
+type UserRepoFake struct {
 	isCreateAlwaysSuccess bool
-	accountToFind         *models.AccountEntity
+	userToFind            *models.UserEntity
 }
 
-func (arf *AccountRepoFake) Create(account models.AccountEntity) bool {
+func (arf *UserRepoFake) Create(user models.UserEntity) bool {
 	return arf.isCreateAlwaysSuccess
 }
 
-func (arf *AccountRepoFake) Find(email string) (models.AccountEntity, bool) {
-	if arf.accountToFind != nil {
-		return *arf.accountToFind, true
+func (arf *UserRepoFake) Find(email string) (models.UserEntity, bool) {
+	if arf.userToFind != nil {
+		return *arf.userToFind, true
 	} else {
-		return models.AccountEntity{}, false
+		return models.UserEntity{}, false
 	}
 }

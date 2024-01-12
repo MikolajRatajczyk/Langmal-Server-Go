@@ -6,8 +6,8 @@ import (
 )
 
 type ResultServiceInterface interface {
-	Save(result models.ResultEntity, accountId string) bool
-	Find(accountId string) []models.ResultDto
+	Save(result models.ResultEntity, userId string) bool
+	Find(userId string) []models.ResultDto
 }
 
 func NewResultService(resultRepo repositories.ResultRepoInterface, quizRepo repositories.QuizRepoInterface) ResultServiceInterface {
@@ -22,13 +22,13 @@ type resultService struct {
 	quizRepo   repositories.QuizRepoInterface
 }
 
-func (rs *resultService) Save(result models.ResultEntity, accountId string) bool {
+func (rs *resultService) Save(result models.ResultEntity, userId string) bool {
 	success := rs.resultRepo.Create(result)
 	return success
 }
 
-func (rs *resultService) Find(accountId string) []models.ResultDto {
-	results := rs.resultRepo.Find(accountId)
+func (rs *resultService) Find(userId string) []models.ResultDto {
+	results := rs.resultRepo.Find(userId)
 	return rs.addQuizTitleToResults(results)
 }
 
