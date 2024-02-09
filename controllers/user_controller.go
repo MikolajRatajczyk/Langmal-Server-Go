@@ -86,7 +86,7 @@ func (ac *UserController) Logout(ctx *gin.Context) {
 		return
 	}
 
-	success := ac.BlockedTokenRepo.Add(claims.Id)
+	success := ac.BlockedTokenRepo.Add(claims.ID)
 	if !success {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"message": "Already logged-out",

@@ -12,7 +12,7 @@ func TestJwtUtil_GenerateForValidId(t *testing.T) {
 	token, err := sut.Generate(validId)
 
 	if err != nil {
-		t.Error("Should not fail")
+		t.Fatal("Should not fail")
 	}
 
 	if token == "" {
@@ -71,7 +71,7 @@ func TestJwtUtil_ClaimsFromValidToken(t *testing.T) {
 	claims, ok := sut.Claims(validToken)
 
 	if !ok {
-		t.Error("Should not fail")
+		t.Fatal("Should not fail")
 	}
 
 	if claims.Subject != expectedId {
