@@ -7,7 +7,7 @@ import (
 	"github.com/MikolajRatajczyk/Langmal-Server/repositories"
 	"github.com/MikolajRatajczyk/Langmal-Server/testutils"
 	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 var token = gin.H{"token": "foo"}
@@ -84,6 +84,6 @@ type claimsExtractorFake struct {
 	successful bool
 }
 
-func (cef *claimsExtractorFake) Claims(tokenString string) (*jwt.StandardClaims, bool) {
-	return &jwt.StandardClaims{}, cef.successful
+func (cef *claimsExtractorFake) Claims(tokenString string) (*jwt.RegisteredClaims, bool) {
+	return &jwt.RegisteredClaims{}, cef.successful
 }

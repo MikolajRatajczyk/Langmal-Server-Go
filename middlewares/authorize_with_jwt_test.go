@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 func TestAuthorizeWithJWT_WhenValidToken(t *testing.T) {
@@ -14,7 +14,7 @@ func TestAuthorizeWithJWT_WhenValidToken(t *testing.T) {
 		generateValue: "foo",
 		generateError: nil,
 		isOkValue:     true,
-		claimsValue:   &jwt.StandardClaims{},
+		claimsValue:   &jwt.RegisteredClaims{},
 		claimsSuccess: true,
 	}
 	repo := blockedTokenRepoFake{
@@ -46,7 +46,7 @@ func TestAuthorizeWithJWT_WhenBlockedToken(t *testing.T) {
 		generateValue: "foo",
 		generateError: nil,
 		isOkValue:     true,
-		claimsValue:   &jwt.StandardClaims{},
+		claimsValue:   &jwt.RegisteredClaims{},
 		claimsSuccess: true,
 	}
 	repo := blockedTokenRepoFake{
@@ -78,7 +78,7 @@ func TestAuthorizeWithJWT_WhenNoToken(t *testing.T) {
 		generateValue: "foo",
 		generateError: nil,
 		isOkValue:     true,
-		claimsValue:   &jwt.StandardClaims{},
+		claimsValue:   &jwt.RegisteredClaims{},
 		claimsSuccess: true,
 	}
 	repo := blockedTokenRepoFake{
@@ -110,7 +110,7 @@ func TestAuthorizeWithJWT_WhenNoHeader(t *testing.T) {
 		generateValue: "foo",
 		generateError: nil,
 		isOkValue:     true,
-		claimsValue:   &jwt.StandardClaims{},
+		claimsValue:   &jwt.RegisteredClaims{},
 		claimsSuccess: true,
 	}
 	repo := blockedTokenRepoFake{
@@ -155,7 +155,7 @@ type jwtUtilsFake struct {
 	generateValue string
 	generateError error
 	isOkValue     bool
-	claimsValue   *jwt.StandardClaims
+	claimsValue   *jwt.RegisteredClaims
 	claimsSuccess bool
 }
 
@@ -167,6 +167,6 @@ func (juf *jwtUtilsFake) IsOk(tokenString string) bool {
 	return juf.isOkValue
 }
 
-func (juf *jwtUtilsFake) Claims(tokenString string) (*jwt.StandardClaims, bool) {
+func (juf *jwtUtilsFake) Claims(tokenString string) (*jwt.RegisteredClaims, bool) {
 	return juf.claimsValue, juf.claimsSuccess
 }

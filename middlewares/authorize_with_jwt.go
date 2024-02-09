@@ -32,7 +32,7 @@ func AuthorizeWithJWT(util utils.JwtUtilInterface, blockedTokensRepo repositorie
 			return
 		}
 
-		isBlocked := blockedTokensRepo.IsBlocked(claims.Id)
+		isBlocked := blockedTokensRepo.IsBlocked(claims.ID)
 		if isBlocked {
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 				"message": "Token is blocked",
