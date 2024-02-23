@@ -24,7 +24,12 @@ type JwtUtilInterface interface {
 
 func NewJWTUtil(secret string) JwtUtilInterface {
 	if secret == "" {
-		log.Println("JWT secret not set, using fallback!")
+		const escape = "\033["
+		const setRed = escape + "31m"
+		const setDefault = escape + "0m"
+		const message = "JWT secret not set, using fallback!"
+		log.Println(setRed + message + setDefault)
+
 		secret = "secret_fallback_123"
 	}
 
