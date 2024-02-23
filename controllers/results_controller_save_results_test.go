@@ -96,13 +96,13 @@ func (rsf *resultServiceFake) Save(result models.ResultEntity, userId string) bo
 	return rsf.saveSuccessful
 }
 
-func (*resultServiceFake) Find(userId string) []models.ResultDto {
-	result := models.ResultDto{
+func (*resultServiceFake) Find(userId string) []models.ResultReadDto {
+	result := models.ResultReadDto{
 		Correct:   1,
 		Wrong:     1,
 		QuizId:    "foo",
 		CreatedAt: 1,
 		QuizTitle: "bar",
 	}
-	return []models.ResultDto{result}
+	return []models.ResultReadDto{result}
 }

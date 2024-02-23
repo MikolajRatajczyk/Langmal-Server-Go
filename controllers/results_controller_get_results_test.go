@@ -76,11 +76,11 @@ func testResultsController_GetResults(
 	}
 }
 
-func parseResultDtos(body *bytes.Buffer) ([]models.ResultDto, bool) {
-	var parsed []models.ResultDto
+func parseResultDtos(body *bytes.Buffer) ([]models.ResultReadDto, bool) {
+	var parsed []models.ResultReadDto
 	err := json.Unmarshal(body.Bytes(), &parsed)
 	if err != nil {
-		return []models.ResultDto{}, false
+		return []models.ResultReadDto{}, false
 	}
 
 	return parsed, true

@@ -7,7 +7,7 @@ import (
 
 type ResultServiceInterface interface {
 	Save(result models.ResultEntity, userId string) bool
-	Find(userId string) []models.ResultDto
+	Find(userId string) []models.ResultReadDto
 }
 
 func NewResultService(resultRepo repositories.ResultRepoInterface, quizRepo repositories.QuizRepoInterface) ResultServiceInterface {
@@ -27,17 +27,17 @@ func (rs *resultService) Save(result models.ResultEntity, userId string) bool {
 	return success
 }
 
-func (rs *resultService) Find(userId string) []models.ResultDto {
+func (rs *resultService) Find(userId string) []models.ResultReadDto {
 	results := rs.resultRepo.Find(userId)
 	return rs.addQuizTitleToResults(results)
 }
 
-func (rs *resultService) addQuizTitleToResults(results []models.ResultEntity) []models.ResultDto {
-	resultDtos := []models.ResultDto{}
+func (rs *resultService) addQuizTitleToResults(results []models.ResultEntity) []models.ResultReadDto {
+	resultDtos := []models.ResultReadDto{}
 
 	for _, result := range results {
 		quiz, _ := rs.quizRepo.Find(result.QuizId)
-		resultDto := models.ResultDto{
+		resultDto := models.ResultReadDto{
 			Correct:   result.Correct,
 			Wrong:     result.Wrong,
 			QuizId:    result.QuizId,
