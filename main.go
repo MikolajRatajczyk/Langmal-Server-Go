@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+
 	"github.com/MikolajRatajczyk/Langmal-Server/controllers"
 	"github.com/MikolajRatajczyk/Langmal-Server/middlewares"
 	"github.com/MikolajRatajczyk/Langmal-Server/repositories"
@@ -10,7 +12,7 @@ import (
 )
 
 var (
-	jwtUtil        = utils.NewJWTUtil()
+	jwtUtil        = utils.NewJWTUtil(os.Getenv("LANGMAL_JWT_SECRET"))
 	quizRepo       = repositories.NewQuizRepo("quizzes")
 	quizService    = services.NewQuizService(quizRepo)
 	quizController = controllers.QuizController{Service: quizService}

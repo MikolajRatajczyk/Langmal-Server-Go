@@ -92,17 +92,20 @@ type resultServiceFake struct {
 	saveSuccessful bool
 }
 
-func (rsf *resultServiceFake) Save(result models.ResultEntity, userId string) bool {
+func (rsf *resultServiceFake) Save(result models.ResultWriteDto, userId string) bool {
 	return rsf.saveSuccessful
 }
 
-func (*resultServiceFake) Find(userId string) []models.ResultDto {
-	result := models.ResultDto{
-		Correct:   1,
-		Wrong:     1,
-		QuizId:    "foo",
-		CreatedAt: 1,
+func (*resultServiceFake) Find(userId string) []models.ResultReadDto {
+	result := models.ResultReadDto{
+		ResultWriteDto: models.ResultWriteDto{
+			Correct:   1,
+			Wrong:     1,
+			QuizId:    "foo",
+			CreatedAt: 1,
+		},
 		QuizTitle: "bar",
 	}
-	return []models.ResultDto{result}
+
+	return []models.ResultReadDto{result}
 }

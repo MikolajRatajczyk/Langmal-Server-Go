@@ -10,8 +10,10 @@ import (
 
 var (
 	cryptoUtil = utils.CryptoUtil{}
-	jwtUtil    = utils.NewJWTUtil()
+	jwtUtil    = utils.NewJWTUtil("")
+)
 
+const (
 	email    = "foo@foo.com"
 	password = "foo"
 )

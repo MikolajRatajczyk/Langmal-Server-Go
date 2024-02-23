@@ -15,8 +15,8 @@ type ResultsController struct {
 }
 
 func (rc *ResultsController) SaveResult(ctx *gin.Context) {
-	var request saveRequest
-	err := ctx.BindJSON(&request)
+	var result models.ResultWriteDto
+	err := ctx.BindJSON(&result)
 	if err != nil {
 		return
 	}
@@ -36,13 +36,6 @@ func (rc *ResultsController) SaveResult(ctx *gin.Context) {
 		})
 	}
 
-	result := models.ResultEntity{
-		Correct:   request.Correct,
-		Wrong:     request.Wrong,
-		QuizId:    request.QuizId,
-		CreatedAt: request.CreatedAt,
-		UserId:    userId,
-	}
 	saved := rc.ResultService.Save(result, userId)
 	if saved {
 		ctx.JSON(http.StatusCreated, gin.H{
@@ -76,11 +69,4 @@ func (rc *ResultsController) GetResults(ctx *gin.Context) {
 func (rc *ResultsController) extractUserId(tokenString string) (string, bool) {
 	claims, ok := rc.ClaimsExtractor.Claims(tokenString)
 	return claims.Subject, ok
-}
-
-type saveRequest struct {
-	Correct   int    `json:"correct" binding:"number"`
-	Wrong     int    `json:"wrong" binding:"number"`
-	QuizId    string `json:"quiz_id" binding:"required"`
-	CreatedAt int64  `json:"created_at" binding:"required"`
 }

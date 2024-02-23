@@ -4,9 +4,10 @@ import (
 	"testing"
 )
 
-const blockedTokensDbName = "blocked_tokens_test"
-
-var blockedTokenId = "123"
+const (
+	blockedTokensDbName = "blocked_tokens_test"
+	blockedTokenId      = "123"
+)
 
 func TestBlockedTokensRepo_Add(t *testing.T) {
 	defer removeDbFile(blockedTokensDbName, t)
