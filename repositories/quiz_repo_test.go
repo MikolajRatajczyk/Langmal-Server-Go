@@ -7,11 +7,12 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
-const quizzesDbName = "quizzes_test"
+const (
+	quizzesDbName = "quizzes_test"
+	quizId        = "123"
+)
 
 var (
-	quizId = "123"
-
 	quiz = models.QuizEntity{
 		Title:     "Quiz title",
 		Id:        quizId,

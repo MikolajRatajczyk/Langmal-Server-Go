@@ -7,7 +7,7 @@ import (
 
 func TestJwtUtil_GenerateForValidId(t *testing.T) {
 	sut := NewJWTUtil("")
-	validId := "abc"
+	const validId = "abc"
 
 	token, err := sut.Generate(validId)
 
@@ -22,7 +22,7 @@ func TestJwtUtil_GenerateForValidId(t *testing.T) {
 
 func TestJwtUtil_GenerateForInvalidId(t *testing.T) {
 	sut := NewJWTUtil("")
-	invalidId := ""
+	const invalidId = ""
 
 	token, err := sut.Generate(invalidId)
 
@@ -51,7 +51,7 @@ func TestJwtUtil_IsOkForValidToken(t *testing.T) {
 
 func TestJwtUtil_IsOkForInvalidToken(t *testing.T) {
 	sut := NewJWTUtil("")
-	invalidToken := "foo"
+	const invalidToken = "foo"
 
 	ok := sut.IsOk(invalidToken)
 
@@ -61,7 +61,7 @@ func TestJwtUtil_IsOkForInvalidToken(t *testing.T) {
 }
 
 func TestJwtUtil_ClaimsFromValidToken(t *testing.T) {
-	expectedId := "abc"
+	const expectedId = "abc"
 	sut := NewJWTUtil("")
 	validToken, err := sut.Generate(expectedId)
 	if err != nil {
@@ -81,7 +81,7 @@ func TestJwtUtil_ClaimsFromValidToken(t *testing.T) {
 
 func TestJwtUtil_ClaimsFromInvalidToken(t *testing.T) {
 	sut := NewJWTUtil("")
-	invalidToken := "foo"
+	const invalidToken = "foo"
 
 	_, ok := sut.Claims(invalidToken)
 

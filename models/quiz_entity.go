@@ -8,7 +8,7 @@ type QuizEntity struct {
 }
 
 func DefaultQuiz1() QuizEntity {
-	quizId := "4e2778d3-57df-4fe9-83ec-afffec1ec5c"
+	const quizId = "4e2778d3-57df-4fe9-83ec-afffec1ec5c"
 
 	question1 := QuestionEntity{
 		Title:        "First question from the server",
@@ -42,7 +42,8 @@ func DefaultQuiz1() QuizEntity {
 }
 
 func DefaultQuiz2() QuizEntity {
-	quizId := "5e8ef788-f305-4ee3-ad69-ba8924ca3806"
+	const quizId = "5e8ef788-f305-4ee3-ad69-ba8924ca3806"
+
 	question1 := QuestionEntity{
 		Title:        "First question from the server",
 		Id:           "3ba01efa-e7e7-4d3e-9cb3-b3f21016e7b7",

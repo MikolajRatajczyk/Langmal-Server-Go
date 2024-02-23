@@ -4,7 +4,7 @@ import "testing"
 
 func TestCryptoUtil_HashPasswordReturnNotEmptyHash(t *testing.T) {
 	sut := CryptoUtil{}
-	password := "somePassword123"
+	const password = "somePassword123"
 
 	hash, err := sut.HashPassword(password)
 
@@ -19,7 +19,7 @@ func TestCryptoUtil_HashPasswordReturnNotEmptyHash(t *testing.T) {
 
 func TestCryptoUtil_ComparePasswordReturnTrueWhenMatch(t *testing.T) {
 	sut := CryptoUtil{}
-	password := "somePassword123"
+	const password = "somePassword123"
 	passwordHash, _ := sut.HashPassword(password)
 
 	result := sut.ComparePassword(password, passwordHash)
@@ -31,8 +31,8 @@ func TestCryptoUtil_ComparePasswordReturnTrueWhenMatch(t *testing.T) {
 
 func TestCryptoUtil_ComparePasswordReturnFalseWhenNotMatch(t *testing.T) {
 	sut := CryptoUtil{}
-	passwordA := "somePassword123"
-	passwordB := "different"
+	const passwordA = "somePassword123"
+	const passwordB = "different"
 	passwordAHash, _ := sut.HashPassword(passwordA)
 
 	result := sut.ComparePassword(passwordB, passwordAHash)
