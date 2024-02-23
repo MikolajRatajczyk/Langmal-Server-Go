@@ -6,7 +6,7 @@ import (
 )
 
 type ResultServiceInterface interface {
-	Save(result models.ResultEntity, userId string) bool
+	Save(result models.ResultWriteDto, userId string) bool
 	Find(userId string) []models.ResultReadDto
 }
 
@@ -22,8 +22,16 @@ type resultService struct {
 	quizRepo   repositories.QuizRepoInterface
 }
 
-func (rs *resultService) Save(result models.ResultEntity, userId string) bool {
-	success := rs.resultRepo.Create(result)
+func (rs *resultService) Save(result models.ResultWriteDto, userId string) bool {
+	resultEntity := models.ResultEntity{
+		Correct:   result.Correct,
+		Wrong:     result.Wrong,
+		QuizId:    result.QuizId,
+		CreatedAt: result.CreatedAt,
+		UserId:    userId,
+	}
+
+	success := rs.resultRepo.Create(resultEntity)
 	return success
 }
 

@@ -92,7 +92,7 @@ type resultServiceFake struct {
 	saveSuccessful bool
 }
 
-func (rsf *resultServiceFake) Save(result models.ResultEntity, userId string) bool {
+func (rsf *resultServiceFake) Save(result models.ResultWriteDto, userId string) bool {
 	return rsf.saveSuccessful
 }
 

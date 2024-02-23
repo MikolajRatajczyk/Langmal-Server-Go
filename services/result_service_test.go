@@ -49,7 +49,7 @@ func TestResultService_SaveIfRepoFails(t *testing.T) {
 	}
 	sut := NewResultService(&fakeResultRepo, &fakeQuizRepo)
 
-	success := sut.Save(models.ResultEntity{}, "123")
+	success := sut.Save(models.ResultWriteDto{}, "123")
 
 	if success {
 		t.Error("Should fail if repo fails")
@@ -62,7 +62,7 @@ func TestResultService_SaveIfRepoSucceeds(t *testing.T) {
 	}
 	sut := NewResultService(&fakeResultRepo, &fakeQuizRepo)
 
-	success := sut.Save(models.ResultEntity{}, "123")
+	success := sut.Save(models.ResultWriteDto{}, "123")
 
 	if !success {
 		t.Error("Should not fail if repo succeeds")
