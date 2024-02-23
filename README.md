@@ -3,8 +3,8 @@
 </p>
 
 ## Overview
-Welcome to the backend of the [Langmal](https://github.com/MikolajRatajczyk/Langmal-Apple) quiz app!
-This project is written in [Go](https://go.dev/) and covered with unit tests.
+Welcome to the backend of the [Langmal](https://github.com/MikolajRatajczyk/Langmal-Apple) quiz app.<br>
+This project is written in [Go](https://go.dev/) and covered by unit tests.
 
 ## Quick start ⚡️
 ```sh
