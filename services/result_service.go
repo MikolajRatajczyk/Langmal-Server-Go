@@ -42,16 +42,18 @@ func (rs *resultService) Find(userId string) []models.ResultReadDto {
 
 func (rs *resultService) addQuizTitleToResults(results []models.ResultEntity) []models.ResultReadDto {
 	resultDtos := []models.ResultReadDto{}
-
 	for _, result := range results {
 		quiz, _ := rs.quizRepo.Find(result.QuizId)
 		resultDto := models.ResultReadDto{
-			Correct:   result.Correct,
-			Wrong:     result.Wrong,
-			QuizId:    result.QuizId,
-			CreatedAt: result.CreatedAt,
+			ResultWriteDto: models.ResultWriteDto{
+				Correct:   result.Correct,
+				Wrong:     result.Wrong,
+				QuizId:    result.QuizId,
+				CreatedAt: result.CreatedAt,
+			},
 			QuizTitle: quiz.Title,
 		}
+
 		resultDtos = append(resultDtos, resultDto)
 	}
 

@@ -98,11 +98,14 @@ func (rsf *resultServiceFake) Save(result models.ResultWriteDto, userId string) 
 
 func (*resultServiceFake) Find(userId string) []models.ResultReadDto {
 	result := models.ResultReadDto{
-		Correct:   1,
-		Wrong:     1,
-		QuizId:    "foo",
-		CreatedAt: 1,
+		ResultWriteDto: models.ResultWriteDto{
+			Correct:   1,
+			Wrong:     1,
+			QuizId:    "foo",
+			CreatedAt: 1,
+		},
 		QuizTitle: "bar",
 	}
+
 	return []models.ResultReadDto{result}
 }
