@@ -3,7 +3,6 @@ package utils
 import (
 	"errors"
 	"log"
-	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -23,11 +22,9 @@ type JwtUtilInterface interface {
 	ClaimsExtractorInterface
 }
 
-func NewJWTUtil() JwtUtilInterface {
-	const secretKey = "LANGMAL_JWT_SECRET"
-	secret := os.Getenv(secretKey)
+func NewJWTUtil(secret string) JwtUtilInterface {
 	if secret == "" {
-		log.Println("Environment variable " + secretKey + " not set, using fallback!")
+		log.Println("JWT secret not set, using fallback!")
 		secret = "secret_fallback_123"
 	}
 
