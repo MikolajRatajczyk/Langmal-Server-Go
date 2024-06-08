@@ -68,5 +68,9 @@ func (rc *ResultsController) GetResults(ctx *gin.Context) {
 
 func (rc *ResultsController) extractUserId(tokenString string) (string, bool) {
 	claims, ok := rc.ClaimsExtractor.Claims(tokenString)
-	return claims.Subject, ok
+	if ok {
+		return claims.Subject, true
+	} else {
+		return "", false
+	}
 }

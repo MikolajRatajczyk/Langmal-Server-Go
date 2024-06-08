@@ -1,10 +1,15 @@
+# Langmal-Server
 <p align="center">
-    <img width="256" height="256" src="gopher.jpg">
+    <img width="256" height="256" src="logo.jpg">
 </p>
 
-## Overview
-Welcome to the backend of the [Langmal](https://github.com/MikolajRatajczyk/Langmal-Apple) quiz app.<br>
-This project is written in [Go](https://go.dev/) and covered by unit tests.
+Welcome to the backend service of the [Langmal](https://github.com/MikolajRatajczyk/Langmal-Apple) quiz app.<br>
+This project is written in [Go](https://go.dev/) and covered by **unit tests**.
+
+## Features
+- Register, login, and logout user using JWT.
+- Store and serve quiz results from a DB.
+- Provide a health check endpoint for monitoring.
 
 ## Quick start ⚡️
 ```sh
