@@ -3,11 +3,11 @@ package main
 import (
 	"os"
 
-	"github.com/MikolajRatajczyk/Langmal-Server/controllers"
-	"github.com/MikolajRatajczyk/Langmal-Server/middlewares"
-	"github.com/MikolajRatajczyk/Langmal-Server/repositories"
-	"github.com/MikolajRatajczyk/Langmal-Server/services"
-	"github.com/MikolajRatajczyk/Langmal-Server/utils"
+	"github.com/MikolajRatajczyk/Langmal-Server-Go/controllers"
+	"github.com/MikolajRatajczyk/Langmal-Server-Go/middlewares"
+	"github.com/MikolajRatajczyk/Langmal-Server-Go/repositories"
+	"github.com/MikolajRatajczyk/Langmal-Server-Go/services"
+	"github.com/MikolajRatajczyk/Langmal-Server-Go/utils"
 	"github.com/gin-gonic/gin"
 )
 

@@ -1,4 +1,4 @@
-module github.com/MikolajRatajczyk/Langmal-Server
+module github.com/MikolajRatajczyk/Langmal-Server-Go
 
 go 1.23
 

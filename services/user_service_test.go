@@ -4,8 +4,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/MikolajRatajczyk/Langmal-Server/models"
-	"github.com/MikolajRatajczyk/Langmal-Server/utils"
+	"github.com/MikolajRatajczyk/Langmal-Server-Go/models"
+	"github.com/MikolajRatajczyk/Langmal-Server-Go/utils"
 )
 
 var (

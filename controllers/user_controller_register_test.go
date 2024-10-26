@@ -4,8 +4,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/MikolajRatajczyk/Langmal-Server/services"
-	"github.com/MikolajRatajczyk/Langmal-Server/testutils"
+	"github.com/MikolajRatajczyk/Langmal-Server-Go/services"
+	"github.com/MikolajRatajczyk/Langmal-Server-Go/testutils"
 	"github.com/gin-gonic/gin"
 )
 

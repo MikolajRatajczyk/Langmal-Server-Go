@@ -13,7 +13,7 @@ This project is written in [Go](https://go.dev/) and covered by **unit tests**.
 
 ## Quick start ⚡️
 ```sh
-git clone https://github.com/MikolajRatajczyk/Langmal-Server.git
+git clone https://github.com/MikolajRatajczyk/Langmal-Server-Go.git
 ```
 ```sh
 cd Langmal-Server

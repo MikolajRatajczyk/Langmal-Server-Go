@@ -3,7 +3,7 @@ package repositories
 import (
 	"log"
 
-	"github.com/MikolajRatajczyk/Langmal-Server/models"
+	"github.com/MikolajRatajczyk/Langmal-Server-Go/models"
 	"gorm.io/gorm"
 )
 
