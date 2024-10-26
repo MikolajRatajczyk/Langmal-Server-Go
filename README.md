@@ -1,6 +1,6 @@
 # Langmal-Server
 <p align="center">
-    <img width="256" height="256" src="logo.jpg">
+    <img width="256" height="256" src="logo.jpg" alt="Logo of Langmal backend project featuring a blue chinchilla sitting on a server.">
 </p>
 
 Welcome to the backend service of the [Langmal](https://github.com/MikolajRatajczyk/Langmal-Apple) quiz app.<br>
