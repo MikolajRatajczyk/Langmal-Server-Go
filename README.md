@@ -16,7 +16,7 @@ This project is written in [Go](https://go.dev/) and covered by **unit tests**.
 git clone https://github.com/MikolajRatajczyk/Langmal-Server-Go.git
 ```
 ```sh
-cd Langmal-Server
+cd Langmal-Server-Go
 ```
 ```sh
 go run main.go
