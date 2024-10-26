@@ -3,7 +3,7 @@ package repositories
 import (
 	"testing"
 
-	"github.com/MikolajRatajczyk/Langmal-Server/models"
+	"github.com/MikolajRatajczyk/Langmal-Server-Go/models"
 	"github.com/google/go-cmp/cmp"
 )
 

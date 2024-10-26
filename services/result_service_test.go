@@ -3,7 +3,7 @@ package services
 import (
 	"testing"
 
-	"github.com/MikolajRatajczyk/Langmal-Server/models"
+	"github.com/MikolajRatajczyk/Langmal-Server-Go/models"
 )
 
 var fakeQuizRepo = FakeQuizRepo{

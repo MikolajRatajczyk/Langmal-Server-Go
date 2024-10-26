@@ -7,62 +7,62 @@ type QuizEntity struct {
 	Questions []QuestionEntity `gorm:"foreignKey:QuizEntityId"`
 }
 
-func DefaultQuiz1() QuizEntity {
+func GiantsQuiz() QuizEntity {
 	const quizId = "4e2778d3-57df-4fe9-83ec-afffec1ec5c"
 
-	question1 := QuestionEntity{
-		Title:        "First question from the server",
+	mountain := QuestionEntity{
+		Title:        "What is the highest mountain 🏔️?",
 		Id:           "1953be72-bd01-4a94-916e-e7d5afb673c2",
-		Options:      []string{"Answer A", "Answer B", "Answer C"},
-		Answer:       0,
-		QuizEntityId: quizId,
-	}
-	question2 := QuestionEntity{
-		Title:        "Second question from the server",
-		Id:           "3c472c83-c935-4b2a-8840-150c7f7e1162",
-		Options:      []string{"Answer A", "Answer B", "Answer C"},
+		Options:      []string{"Nanga Parbat", "Mount Everest", "Galdhøpiggen"},
 		Answer:       1,
 		QuizEntityId: quizId,
 	}
-	question3 := QuestionEntity{
-		Title:        "Third question from the server",
+	city := QuestionEntity{
+		Title:        "What is the most populated city 🌇?",
+		Id:           "3c472c83-c935-4b2a-8840-150c7f7e1162",
+		Options:      []string{"Tokyo", "London", "São Paulo"},
+		Answer:       0,
+		QuizEntityId: quizId,
+	}
+	animal := QuestionEntity{
+		Title:        "What is the heaviest animal ⚖️?",
 		Id:           "f35504fa-0544-4976-be61-08b27df50a5a",
-		Options:      []string{"Answer A", "Answer B", "Answer C"},
+		Options:      []string{"Great White Shark", "African Elephant", "Blue Whale"},
 		Answer:       2,
 		QuizEntityId: quizId,
 	}
 
 	quiz := QuizEntity{
-		Title:     "First default quiz",
+		Title:     "Giants of the world 🌍",
 		Id:        quizId,
-		Questions: []QuestionEntity{question1, question2, question3},
+		Questions: []QuestionEntity{mountain, city, animal},
 	}
 
 	return quiz
 }
 
-func DefaultQuiz2() QuizEntity {
+func SpaceQuiz() QuizEntity {
 	const quizId = "5e8ef788-f305-4ee3-ad69-ba8924ca3806"
 
-	question1 := QuestionEntity{
-		Title:        "First question from the server",
+	redPlanet := QuestionEntity{
+		Title:        `Which planet is known as the "Red Planet" 🔴?`,
 		Id:           "3ba01efa-e7e7-4d3e-9cb3-b3f21016e7b7",
-		Options:      []string{"Answer A", "Answer B", "Answer C"},
+		Options:      []string{"Jupiter", "Saturn", "Mars"},
 		Answer:       2,
 		QuizEntityId: quizId,
 	}
-	question2 := QuestionEntity{
-		Title:        "Second question from the server",
+	galaxy := QuestionEntity{
+		Title:        "What galaxy is Earth located in 🌌?",
 		Id:           "6a4d0e7f-ea00-49ef-8aea-9bb3a9041a7e",
-		Options:      []string{"Answer A", "Answer B", "Answer C"},
+		Options:      []string{"Andromeda", "Milky Way", "Large Magellanic Cloud"},
 		Answer:       1,
 		QuizEntityId: quizId,
 	}
 
 	quiz := QuizEntity{
-		Title:     "Second default quiz",
+		Title:     "Space and beyond 🚀",
 		Id:        quizId,
-		Questions: []QuestionEntity{question1, question2},
+		Questions: []QuestionEntity{redPlanet, galaxy},
 	}
 
 	return quiz

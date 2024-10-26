@@ -3,7 +3,7 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/MikolajRatajczyk/Langmal-Server/services"
+	"github.com/MikolajRatajczyk/Langmal-Server-Go/services"
 	"github.com/gin-gonic/gin"
 )
 

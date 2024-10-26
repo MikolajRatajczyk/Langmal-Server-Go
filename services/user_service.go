@@ -3,9 +3,9 @@ package services
 import (
 	"errors"
 
-	"github.com/MikolajRatajczyk/Langmal-Server/models"
-	"github.com/MikolajRatajczyk/Langmal-Server/repositories"
-	"github.com/MikolajRatajczyk/Langmal-Server/utils"
+	"github.com/MikolajRatajczyk/Langmal-Server-Go/models"
+	"github.com/MikolajRatajczyk/Langmal-Server-Go/repositories"
+	"github.com/MikolajRatajczyk/Langmal-Server-Go/utils"
 	"github.com/google/uuid"
 )
 

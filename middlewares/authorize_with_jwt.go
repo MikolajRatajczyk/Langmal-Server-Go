@@ -3,8 +3,8 @@ package middlewares
 import (
 	"net/http"
 
-	"github.com/MikolajRatajczyk/Langmal-Server/repositories"
-	"github.com/MikolajRatajczyk/Langmal-Server/utils"
+	"github.com/MikolajRatajczyk/Langmal-Server-Go/repositories"
+	"github.com/MikolajRatajczyk/Langmal-Server-Go/utils"
 	"github.com/gin-gonic/gin"
 )
 

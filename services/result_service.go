@@ -1,8 +1,8 @@
 package services
 
 import (
-	"github.com/MikolajRatajczyk/Langmal-Server/models"
-	"github.com/MikolajRatajczyk/Langmal-Server/repositories"
+	"github.com/MikolajRatajczyk/Langmal-Server-Go/models"
+	"github.com/MikolajRatajczyk/Langmal-Server-Go/repositories"
 )
 
 type ResultServiceInterface interface {
