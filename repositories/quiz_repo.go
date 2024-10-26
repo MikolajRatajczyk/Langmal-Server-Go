@@ -20,8 +20,8 @@ func NewQuizRepo(dbName string) QuizRepoInterface {
 
 	noQuizzes := len(quizRepo.FindAll()) == 0
 	if noQuizzes {
-		quizRepo.Create(models.DefaultQuiz1())
-		quizRepo.Create(models.DefaultQuiz2())
+		quizRepo.Create(models.GiantsQuiz())
+		quizRepo.Create(models.SpaceQuiz())
 	}
 
 	return quizRepo
